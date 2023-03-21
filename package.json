@@ -1,0 +1,21 @@
+{
+  "name": "blind-typing-tutor",
+  "version": "1.0",
+  "description": "A keyboard trainer to help developing  ten-typing skills",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack serve",
+    "postinstall": "webpack",
+    "build": "webpack"
+  },
+  "author": "Stanislav Khatko",
+  "license": "ISC",
+  "homepage": "https://github.com/stanislavkhatko/blind-typing-tutor",
+  "dependencies": {
+    "webpack": "^5.76.2"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.12.0"
+  }
+}

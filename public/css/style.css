@@ -1,0 +1,442 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(-45deg, #fdfcf7, #f5d2dd, #c6eafa, #d0fff6);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
+}
+
+@keyframes gradient {
+0% {
+  background-position: 0% 50%;
+  }
+
+50% {
+  background-position: 100% 50%;
+  }
+
+100% {
+  background-position: 0% 50%;
+  }
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-width: 1000px;
+}
+
+.wordline-container {
+  margin: 80px 0 50px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.wordline,
+.inputline {
+  padding: 5px; 
+  font: 500 1.2em 'Ubuntu Mono';
+  color: #3d3d3d;
+  display: inline-block;
+}
+
+.wordline,
+.inputline {
+  min-width: calc(55px * 15.5);
+}
+
+.inputline {
+  outline: none;
+  border: none;
+  border-bottom: 1px dotted #3d3d3d;
+}
+
+.inputline.wrong {
+  background: yellow;
+  color: black;
+}
+
+.wordline span {
+  color: #aaa;
+}
+
+span.untyped {
+  color: #3d3d3d;
+}
+span.untyped.wrong {
+  color: red !important;
+}
+
+/************
+* topbar
+*************/
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 800px;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.error-stats,
+.speed-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: 300 15px 'Ubuntu Mono';
+  color: #3d3d3d;
+}
+
+.error-stats span,
+.speed-stats span {
+  position: relative;
+  padding: 0 2px;
+  cursor: pointer;
+}
+.error-stats span:first-of-type,
+.speed-stats span:first-of-type {
+  color: #000;
+  font-weight: bold;
+}
+
+.error-stats:hover .stats-hint,
+.speed-stats:hover .stats-hint {
+  opacity: .8;
+  transform: translateY(-140%);
+}
+
+.error-stats span:first-of-type i,
+.speed-stats span:first-of-type i {
+  color: #3d3d3d;
+  font-size: 20px;
+  margin: 0 5px;
+}
+
+.stats-hint {
+  display: flex;
+  padding: 5px 7px;
+  position: absolute;
+  top: 0;
+  background: #000;
+  opacity: 0;
+  color: #fff;
+  transform: translateY(-165%);
+  white-space: nowrap;
+  transition: all .2s;
+  pointer-events: none;
+  border-radius: 3px;
+}
+
+.placeholder {
+  color: #aaa;
+}
+
+/************
+* mode select
+*************/
+.mode-select {
+  font: normal 15px 'Ubuntu Mono';
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mode-select i {
+  color: #3d3d3d;
+  font-size: 20px;
+}
+
+.mode-title {
+  color: #3d3d3d;
+}
+
+.mode-select.open .mode-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mode-dropdown {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(115%);
+  opacity: 0;
+  background: #fff;
+  border: 1px solid #3d3d3d;
+  border-radius: 3px;
+  box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, .2);
+  color: #3d3d3d;
+  padding: 10px;
+  pointer-events: none;
+  min-width: 100%;
+}
+
+.mode-dropdown li {
+  margin: 2px 0;
+  list-style: none;
+}
+
+.mode-dropdown li:hover {
+  color: #aaa;
+}
+
+/******************
+* keyboard toolbar
+*******************/
+.keyboard-toolbar {
+  width: calc(55px * 15.5);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  user-select: none;
+}
+
+.tool {
+  font-size: 20px;
+  color: #3d3d3d;
+  cursor: pointer;
+  margin: 0 7px;
+  position: relative;
+}
+.tool:hover {
+  color: #6d6d6d;
+}
+.tool .hint {
+  display: block;
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  color: #fff;
+  background: #3d3d3d;
+  border-radius: 2px;
+  font: bold 14px 'Ubuntu Mono';
+  white-space: nowrap;
+  padding: 3px 5px;
+  transform: translateY(-140%);
+  transition: all .1s;
+  pointer-events: none;
+}
+.tool:hover .hint {
+  opacity: 1;
+  transform: translateY(-120%);
+}
+
+
+
+/************
+* keyboard
+*************/
+
+.keyboard-container {
+  opacity: 1;
+  transition: all .2s;
+}
+
+.keyboard-container.hidden {
+  opacity: 0;
+}
+
+.keyline {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.key {
+  flex-shrink: 0;
+  border-radius: 3px;
+  border: 1px solid #aaa;
+  width: 55px;
+  height: 55px;
+  margin: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: normal 14px 'Ubuntu Mono';
+  color: #3d3d3d;
+  text-transform: capitalize;
+  position: relative;
+  transition: background .1s;
+}
+
+.key.group-1.key-target,
+.key.group-8.key-target,
+#shift-l.key-target,
+#shift-r.key-target {
+  background: #AD7FA8;
+}
+
+.key.group-2.key-target,
+.key.group-7.key-target {
+  background: #729FCF
+}
+
+.key.group-3.key-target {background: #73D216}
+.key.group-5.key-target {background: #FCE94F}
+
+.key.group-4.key-target,
+.key.group-6.key-target {
+  background: #FCAF3E
+}
+
+.colorful .key.non-group {
+  background: #ccc;
+}
+.colorful .key.group-1,
+.colorful .key.group-8,
+.colorful #shift-l,
+.colorful #shift-r {
+  background: #AD7FA8;
+}
+.colorful .key.group-3 {background: #73D216}
+.colorful .key.group-5 {background: #FCE94F}
+
+.colorful .key.group-1,
+.colorful .key.group-8,
+.colorful #shift-l,
+.colorful #shift-r {
+   background: #AD7FA8;
+}
+
+.colorful .key.group-2,
+.colorful .key.group-7 {
+  background: #729FCF
+}
+
+.colorful .key.group-4,
+.colorful .key.group-6 {
+  background: #FCAF3E
+}
+
+.colorful .key.group-3 {background: #73D216}
+.colorful .key.group-5 {background: #FCE94F}
+
+.colorful .key.key-target {
+  border: 2px solid #3d3d3d;
+}
+
+#space.key-target {background: #727272}
+
+.key.key-target:after {
+  content: '';
+  height: 100px;
+  width: 58px;
+  background-image: url(../img/hands2.png);
+  position: absolute;
+  bottom: 0;
+  transform: translate(0%, 60%);
+  z-index: 1;
+}
+
+.non-hands .key-target:after {
+  background-image: none !important;
+}
+
+.key.group-2.key-target:after {
+  background-position: -58px 0;
+  transform: translate(-12px, 75%);
+}
+
+.key.group-3.key-target:after {
+  background-position: -116px 0;
+  transform: translate(-24px, 85%);
+}
+
+.key.group-4.key-target:after {
+  background-position: -174px 0;
+  transform: translate(-36px, 80%);
+}
+
+.key.group-5.key-target:after {
+  background-position: -348px 0;
+  transform: translate(-20px, 75%);
+}
+
+.key.group-6.key-target:after {
+  background-position: -406px 0;
+  transform: translate(-20px, 85%);
+}
+
+.key.group-7.key-target:after {
+  background-position: -464px 0;
+  transform: translate(-45px, 80%);
+}
+
+.key.group-8.key-target:after {
+  background-position: -522px 0;
+  transform: translate(-64px, 65%);
+}
+
+#space.key-target:after {
+  background-position: -232px 0;
+  transform: translate(-24px, 45%);
+}
+
+#space.key-target.righthand:after {
+  background-position: -290px 0 !important;
+  transform: translate(100%, 45%);
+}
+
+.subkey {
+  font: normal 13px 'Ubuntu Mono' !important;
+  transform: translate(50%, -50%);
+}
+
+#backspace,
+#tab {
+  width: calc(55px * 1.5);
+}
+
+#caps_lock,
+#enter {
+  width: calc(55px * 1.78);
+}
+
+#shift-l,
+#shift-r {
+  width: calc(55px * 2.32);
+}
+
+#space {
+  width: calc(55px * 6);
+  position: absolute;
+  left: calc(55px * 4);
+}
+
+#j, #f { text-decoration: underline; }
+
+#tab,
+#caps_lock,
+#shift-l {
+  padding: 8px;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+#backspace,
+#enter,
+#shift-r {
+  padding: 8px;
+  text-align: right;
+  justify-content: flex-end;
+}
