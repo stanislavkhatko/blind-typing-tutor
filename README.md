@@ -71,15 +71,15 @@ To run project locally perform next steps
 See the [open issues](https://github.com/stanislavkhatko/blind-typing-tutor/issues) for a full list of proposed features (and known issues).
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
 [contributors-url]: https://github.com/stanislavkhatko/blind-typing-tutor/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
 [forks-url]: https://github.com/stanislavkhatko/blind-typing-tutor/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
 [stars-url]: https://github.com/stanislavkhatko/blind-typing-tutor/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
 [issues-url]: https://github.com/stanislavkhatko/blind-typing-tutor/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
 [license-url]: https://github.com/stanislavkhatko/blind-typing-tutor/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/stanislavkhatko
