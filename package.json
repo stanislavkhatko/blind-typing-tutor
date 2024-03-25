@@ -12,10 +12,10 @@
   "license": "ISC",
   "homepage": "https://github.com/stanislavkhatko/blind-typing-tutor",
   "dependencies": {
-    "webpack": "^5.76.2"
+    "webpack": "^5.91.0"
   },
   "devDependencies": {
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.12.0"
+    "webpack-dev-server": "^4.15.2"
   }
 }
