@@ -50,7 +50,7 @@ body {
 
 .wordline,
 .inputline {
-  padding: 5px; 
+  padding: 5px;
   font: 500 1.2em 'Ubuntu Mono';
   color: #3d3d3d;
   display: inline-block;
@@ -107,9 +107,8 @@ span.untyped.wrong {
   color: #3d3d3d;
 }
 
-.error-stats span,
-.speed-stats span {
-  position: relative;
+.error-stats,
+.speed-stats {
   padding: 0 2px;
   cursor: pointer;
 }

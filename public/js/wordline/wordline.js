@@ -47,7 +47,7 @@ export default class Wordline {
 
       if(!isOk) {
         this.letters.length ? this.highlightMistake() : this.fill();
-      } 
+      }
 
       return isOk;
     });
@@ -76,7 +76,7 @@ export default class Wordline {
         if( $(`.${this.untypedClass}`).length == 0) {
           this.clean();
         }
-      } 
+      }
 
     });
   }
@@ -105,7 +105,7 @@ export default class Wordline {
       this.inputline.removeClass(this.wrongClass)
       untyped.removeClass(this.wrongClass)
     } , 200);
-    
+
     this.errorCounter.up();
 
     return false
@@ -170,7 +170,7 @@ export default class Wordline {
     this.wordline.html(markup);
 
     this.inputline.width(this.wordline.width());
-    
+
     this.hightlightKeyTarget();
   }
 

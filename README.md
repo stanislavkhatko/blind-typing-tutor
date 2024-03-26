@@ -40,6 +40,11 @@ There are quite a lot of blind typing tutors out there, but once searching I did
 ![JavaScript][JavaScript]
 
 
+### Support project development
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/stanislavkhatko)
+
+
+
 ## Getting Started
 To run project locally perform next steps
 

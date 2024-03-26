@@ -1,186 +1,201 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <title>Репетитор сліпого набору тексту</title>
-  <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-  <link rel="manifest" href="/favicon/site.webmanifest">
+    <meta charset="UTF-8">
+    <title>Репетитор сліпого набору тексту</title>
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
 </head>
 <body>
 
-  <div class="container">
+<div class="social" style="position: absolute; top: 0; right: 0;">
+    <a href="https://github.com/stanislavkhatko/blind-typing-tutor" style="display: block"><img style="display: block; width: 100%" src="img/github-corner-right.svg"/></a>
+</div>
+
+<div class="coffee" style="display: flex; flex-direction: column; align-items: center; position: absolute; bottom: 0;padding: 10px;">
+    <p>Support project development</p><br>
+    <a href="https://www.buymeacoffee.com/stanislavkhatko" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+</div>
+
+<div class="container">
 
     <div class="topbar">
-      <div class="speed-stats">
-        <a href="/en.html">Англійська</a>
-        <span>
-          <div class="stats-hint">Швидкість</div>
-          <i class="ion-speedometer"></i>
-        </span>
-        <span class="speed-current">376</span>
-        <span>/</span>
-        <span class="speed-average">321</span>
-      </div>
 
-      <div class="mode-select">
-        <i class="ion-ios-game-controller-b"></i>
-        <span class="mode-title">Виберіть режим</span>
-        <ul class="mode-dropdown">
-          <li id="beginner">Початківець</li>
-          <li id="novice">Практика</li>
-        </ul>
-      </div>
+        <div class="language-selection">
+            <a href="/en.html">Англійська</a>
+        </div>
 
-      <div class="error-stats">
+        <div class="speed-stats">
+            <span>
+                <span class="stats-hint">Швидкість</span>
+                <i class="ion-speedometer"></i>
+            </span>
+            <span class="speed-current">376</span>
+            <span>/</span>
+            <span class="speed-average">321</span>
+        </div>
+
+        <div class="mode-select">
+            <i class="ion-ios-game-controller-b"></i>
+            <span class="mode-title">Виберіть режим</span>
+            <ul class="mode-dropdown">
+                <li id="beginner">Початківець</li>
+                <li id="novice">Практика</li>
+            </ul>
+        </div>
+
+        <div class="error-stats">
         <span>
           <div class="stats-hint">Помилки</div>
           <i class="ion-bug"></i>
         </span>
-        <span class="error-current"></span>
-        <span>/</span>
-        <span class="error-average"></span>
-      </div>
+            <span class="error-current"></span>
+            <span>/</span>
+            <span class="error-average"></span>
+        </div>
     </div>
 
     <div class="wordline-container">
-      <input class="inputline" type="text" spellcheck="false" autofocus/>
-      <div class="wordline">
+        <input class="inputline" type="text" spellcheck="false" autofocus/>
+        <div class="wordline">
         <span class="placeholder">Все буде Україна...
           <img src="img/wait.gif">
         </span>
-      </div>
+        </div>
     </div>
-    
+
     <div class="keyboard-toolbar">
-      <i id="keyboard-toggle" class="tool ion-eye">
-        <span class="hint">Показувати клавіатуру</span>
-      </i>
-      <i id="hands-toggle" class="tool ion-android-hand">
-        <span class="hint">Показувати руки</span>
-      </i>
-      <i id="color-toggle" class="tool ion-paintbucket">
-        <span class="hint">Показувати кольори</span>
-      </i>
+        <i id="keyboard-toggle" class="tool ion-eye">
+            <span class="hint">Показувати клавіатуру</span>
+        </i>
+        <i id="hands-toggle" class="tool ion-android-hand">
+            <span class="hint">Показувати руки</span>
+        </i>
+        <i id="color-toggle" class="tool ion-paintbucket">
+            <span class="hint">Показувати кольори</span>
+        </i>
     </div>
 
     <div class="keyboard-container">
-      <div class="keyline">
-        <div class="key group-1" id="`">`
-          <div class="subkey">~</div>
+        <div class="keyline">
+            <div class="key group-1" id="`">`
+                <div class="subkey">~</div>
+            </div>
+            <div class="key group-1" id="1">1
+                <div class="subkey">!</div>
+            </div>
+            <div class="key group-2" id="2">2
+                <div class="subkey">@</div>
+            </div>
+            <div class="key group-3" id="3">3
+                <div class="subkey">#</div>
+            </div>
+            <div class="key group-4" id="4">4
+                <div class="subkey">$</div>
+            </div>
+            <div class="key group-4" id="5">5
+                <div class="subkey">%</div>
+            </div>
+            <div class="key group-5" id="6">6
+                <div class="subkey">^</div>
+            </div>
+            <div class="key group-5" id="7">7
+                <div class="subkey">&</div>
+            </div>
+            <div class="key group-6" id="8">8
+                <div class="subkey">*</div>
+            </div>
+            <div class="key group-7" id="9">9
+                <div class="subkey">(</div>
+            </div>
+            <div class="key group-8" id="0">0
+                <div class="subkey">)</div>
+            </div>
+            <div class="key group-8" id="underscore">_
+                <div class="subkey">-</div>
+            </div>
+            <div class="key group-8" id="equal">=
+                <div class="subkey">+</div>
+            </div>
+            <div class="key non-group" id="backspace">backspace</div>
         </div>
-        <div class="key group-1" id="1">1
-          <div class="subkey">!</div>
+        <div class="keyline">
+            <div class="key non-group" id="tab">tab</div>
+            <div class="key group-1" id="q">й</div>
+            <div class="key group-2" id="w">ц</div>
+            <div class="key group-3" id="e">у</div>
+            <div class="key group-4" id="r">к</div>
+            <div class="key group-4" id="t">е</div>
+            <div class="key group-5" id="y">н</div>
+            <div class="key group-5" id="u">г</div>
+            <div class="key group-6" id="i">ш</div>
+            <div class="key group-7" id="o">щ</div>
+            <div class="key group-8" id="p">з</div>
+            <div class="key group-8" id="leftSquareBracket">х
+                <div class="subkey">{</div>
+            </div>
+            <div class="key group-8" id="rightSquareBracket">ї
+                <div class="subkey">}</div>
+                ]
+            </div>
+            <div class="key group-8" id="backSlash">\
+                <div class="subkey">|</div>
+            </div>
         </div>
-        <div class="key group-2" id="2">2
-          <div class="subkey">@</div>
+        <div class="keyline">
+            <div class="key non-group" id="caps_lock">Caps Lock</div>
+            <div class="key group-1" id="a">ф</div>
+            <div class="key group-2" id="s">і</div>
+            <div class="key group-3" id="d">в</div>
+            <div class="key group-4" id="f">а</div>
+            <div class="key group-4" id="g">п</div>
+            <div class="key group-5" id="h">р</div>
+            <div class="key group-5" id="j">о</div>
+            <div class="key group-6" id="k">л</div>
+            <div class="key group-7" id="l">д</div>
+            <div class="key group-8" id="cologn">ж
+                <div class="subkey">:</div>
+            </div>
+            <div class="key group-8" id="quote">є
+                <div class="subkey">,</div>
+            </div>
+            <div class="key non-group" id="enter">Enter</div>
         </div>
-        <div class="key group-3" id="3">3
-          <div class="subkey">#</div>
+        <div class="keyline">
+            <div class="key group-1" id="shift-l">Shift</div>
+            <div class="key group-1" id="z">я</div>
+            <div class="key group-2" id="x">ч</div>
+            <div class="key group-3" id="c">с</div>
+            <div class="key group-4" id="v">м</div>
+            <div class="key group-4" id="b">и</div>
+            <div class="key group-5" id="n">т</div>
+            <div class="key group-5" id="m">ь</div>
+            <div class="key group-6" id="comma">б
+                <div class="subkey">,</div>
+            </div>
+            <div class="key group-7" id="period">ю
+                <div class="subkey">.</div>
+            </div>
+            <div class="key group-8" id="slash">.
+                <div class="subkey">?</div>
+            </div>
+            <div class="key group-8" id="shift-r">shift</div>
         </div>
-        <div class="key group-4" id="4">4
-          <div class="subkey">$</div>
+        <div class="keyline">
+            <div class="key" id="space"></div>
         </div>
-        <div class="key group-4" id="5">5
-          <div class="subkey">%</div>
-        </div>
-        <div class="key group-5" id="6">6
-          <div class="subkey">^</div>
-        </div>
-        <div class="key group-5" id="7">7
-          <div class="subkey">&</div>
-        </div>
-        <div class="key group-6" id="8">8
-          <div class="subkey">*</div>
-        </div>
-        <div class="key group-7" id="9">9
-          <div class="subkey">(</div>
-        </div>
-        <div class="key group-8" id="0">0
-          <div class="subkey">)</div>
-        </div>
-        <div class="key group-8" id="underscore">_
-          <div class="subkey">-</div>
-        </div>
-        <div class="key group-8" id="equal">=
-          <div class="subkey">+</div>
-        </div>
-        <div class="key non-group" id="backspace">backspace</div>
-      </div>
-      <div class="keyline">
-        <div class="key non-group" id="tab">tab</div>
-        <div class="key group-1" id="q">й</div>
-        <div class="key group-2" id="w">ц</div>
-        <div class="key group-3" id="e">у</div>
-        <div class="key group-4" id="r">к</div>
-        <div class="key group-4" id="t">е</div>
-        <div class="key group-5" id="y">н</div>
-        <div class="key group-5" id="u">г</div>
-        <div class="key group-6" id="i">ш</div>
-        <div class="key group-7" id="o">щ</div>
-        <div class="key group-8" id="p">з</div>
-        <div class="key group-8" id="leftSquareBracket">х
-          <div class="subkey">{</div>
-        </div>
-        <div class="key group-8" id="rightSquareBracket">ї
-          <div class="subkey">}</div>]
-        </div>
-        <div class="key group-8" id="backSlash">\
-          <div class="subkey">|</div>
-        </div>
-      </div>
-      <div class="keyline">
-        <div class="key non-group" id="caps_lock">Caps Lock</div>
-        <div class="key group-1" id="a">ф</div>
-        <div class="key group-2" id="s">і</div>
-        <div class="key group-3" id="d">в</div>
-        <div class="key group-4" id="f">а</div>
-        <div class="key group-4" id="g">п</div>
-        <div class="key group-5" id="h">р</div>
-        <div class="key group-5" id="j">о</div>
-        <div class="key group-6" id="k">л</div>
-        <div class="key group-7" id="l">д</div>
-        <div class="key group-8" id="cologn">ж
-          <div class="subkey">:</div>
-        </div>
-        <div class="key group-8" id="quote">є
-          <div class="subkey">,</div>
-        </div>
-        <div class="key non-group" id="enter">Enter</div>
-      </div>
-      <div class="keyline">
-        <div class="key group-1" id="shift-l">Shift</div>
-        <div class="key group-1" id="z">я</div>
-        <div class="key group-2" id="x">ч</div>
-        <div class="key group-3" id="c">с</div>
-        <div class="key group-4" id="v">м</div>
-        <div class="key group-4" id="b">и</div>
-        <div class="key group-5" id="n">т</div>
-        <div class="key group-5" id="m">ь</div>
-        <div class="key group-6" id="comma">б
-          <div class="subkey">,</div>
-        </div>
-        <div class="key group-7" id="period">ю
-          <div class="subkey">.</div>
-        </div>
-        <div class="key group-8" id="slash">.
-          <div class="subkey">?</div>
-        </div>
-        <div class="key group-8" id="shift-r">shift</div>
-      </div>
-      <div class="keyline">
-        <div class="key" id="space"></div>
-      </div>
     </div>
-  </div>
-  
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-  <script src="js/utils/uk.js"></script>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="js/utils/uk.js"></script>
 <!--  <script src="js/utils/ukTest.js"></script>-->
-  <script src="build/build.js"></script>
+<script src="build/build.js"></script>
 </body>
 </html>

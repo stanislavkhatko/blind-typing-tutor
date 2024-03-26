@@ -6,6 +6,7 @@ class Counter {
   }
 
   set(count) {
+    console.log(count);
     this.count = count
   }
 
