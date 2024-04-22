@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blind typing tutor</title>
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+</head>
+<body>
+
+<div class="github" style="position: absolute; top: 0; right: 0;">
+    <a href="https://github.com/stanislavkhatko/blind-typing-tutor" style="display: block"><img style="display: block; width: 100%" src="img/github-corner-right.svg"/></a>
+</div>
+
+<div class="coffee" style="display: flex; flex-direction: column; align-items: center; position: absolute; bottom: 0;padding: 10px;">
+    <p>Support project development</p><br>
+    <a href="https://www.buymeacoffee.com/stanislavkhatko" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+</div>
+
+
+<div class="container">
+
+
+    <div class="topbar">
+
+        <div class="language-selection">
+            <a href="/index.html">Ukrainian</a>
+        </div>
+
+        <div class="speed-stats">
+            <span>
+                <span class="stats-hint">Speed stats</span>
+                <i class="ion-speedometer"></i>
+            </span>
+            <span class="speed-current">376</span>
+            <span>/</span>
+            <span class="speed-average">321</span>
+        </div>
+
+        <div class="mode-select">
+            <i class="ion-ios-game-controller-b"></i>
+            <span class="mode-title">Select mode</span>
+            <ul class="mode-dropdown">
+                <li id="beginner">Beginner</li>
+                <li id="novice">Novice</li>
+            </ul>
+        </div>
+
+        <div class="error-stats">
+        <span>
+          <div class="stats-hint">Error stats</div>
+          <i class="ion-bug"></i>
+        </span>
+            <span class="error-current"></span>
+            <span>/</span>
+            <span class="error-average"></span>
+        </div>
+    </div>
+
+    <div class="wordline-container">
+        <input class="inputline" type="text" spellcheck="false" autofocus/>
+        <div class="wordline">
+        <span class="placeholder">Words are coming...
+          <img src="img/wait.gif">
+        </span>
+        </div>
+    </div>
+
+    <div class="keyboard-toolbar">
+        <i id="keyboard-toggle" class="tool ion-eye">
+            <span class="hint">Toggle keyboard</span>
+        </i>
+        <i id="hands-toggle" class="tool ion-android-hand">
+            <span class="hint">Toggle hands</span>
+        </i>
+        <i id="color-toggle" class="tool ion-paintbucket">
+            <span class="hint">Toggle colors</span>
+        </i>
+    </div>
+
+    <div class="keyboard-container">
+        <div class="keyline">
+            <div class="key group-1" id="`">`
+                <div class="subkey">~</div>
+            </div>
+            <div class="key group-1" id="1">1
+                <div class="subkey">!</div>
+            </div>
+            <div class="key group-2" id="2">2
+                <div class="subkey">@</div>
+            </div>
+            <div class="key group-3" id="3">3
+                <div class="subkey">#</div>
+            </div>
+            <div class="key group-4" id="4">4
+                <div class="subkey">$</div>
+            </div>
+            <div class="key group-4" id="5">5
+                <div class="subkey">%</div>
+            </div>
+            <div class="key group-5" id="6">6
+                <div class="subkey">^</div>
+            </div>
+            <div class="key group-5" id="7">7
+                <div class="subkey">&</div>
+            </div>
+            <div class="key group-6" id="8">8
+                <div class="subkey">*</div>
+            </div>
+            <div class="key group-7" id="9">9
+                <div class="subkey">(</div>
+            </div>
+            <div class="key group-8" id="0">0
+                <div class="subkey">)</div>
+            </div>
+            <div class="key group-8" id="underscore">_
+                <div class="subkey">-</div>
+            </div>
+            <div class="key group-8" id="equal">=
+                <div class="subkey">+</div>
+            </div>
+            <div class="key non-group" id="backspace">backspace</div>
+        </div>
+        <div class="keyline">
+            <div class="key non-group" id="tab">tab</div>
+            <div class="key group-1" id="q">q</div>
+            <div class="key group-2" id="w">w</div>
+            <div class="key group-3" id="e">e</div>
+            <div class="key group-4" id="r">r</div>
+            <div class="key group-4" id="t">t</div>
+            <div class="key group-5" id="y">y</div>
+            <div class="key group-5" id="u">u</div>
+            <div class="key group-6" id="i">i</div>
+            <div class="key group-7" id="o">o</div>
+            <div class="key group-8" id="p">p</div>
+            <div class="key group-8" id="leftSquareBracket">[
+                <div class="subkey">{</div>
+            </div>
+            <div class="key group-8" id="rightSquareBracket">]
+                <div class="subkey">}</div>
+            </div>
+            <div class="key group-8" id="backSlash">\
+                <div class="subkey">|</div>
+            </div>
+        </div>
+        <div class="keyline">
+            <div class="key non-group" id="caps_lock">Caps Lock</div>
+            <div class="key group-1" id="a">a</div>
+            <div class="key group-2" id="s">s</div>
+            <div class="key group-3" id="d">d</div>
+            <div class="key group-4" id="f">f</div>
+            <div class="key group-4" id="g">g</div>
+            <div class="key group-5" id="h">h</div>
+            <div class="key group-5" id="j">j</div>
+            <div class="key group-6" id="k">k</div>
+            <div class="key group-7" id="l">l</div>
+            <div class="key group-8" id="cologn">;
+                <div class="subkey">:</div>
+            </div>
+            <div class="key group-8" id="quote">"
+                <div class="subkey">,</div>
+            </div>
+            <div class="key non-group" id="enter">Enter</div>
+        </div>
+        <div class="keyline">
+            <div class="key group-1" id="shift-l">Shift</div>
+            <div class="key group-1" id="z">z</div>
+            <div class="key group-2" id="x">x</div>
+            <div class="key group-3" id="c">c</div>
+            <div class="key group-4" id="v">v</div>
+            <div class="key group-4" id="b">b</div>
+            <div class="key group-5" id="n">n</div>
+            <div class="key group-5" id="m">m</div>
+            <div class="key group-6" id="comma"><
+                <div class="subkey">,</div>
+            </div>
+            <div class="key group-7" id="period">>
+                <div class="subkey">.</div>
+            </div>
+            <div class="key group-8" id="slash">/
+                <div class="subkey">?</div>
+            </div>
+            <div class="key group-8" id="shift-r">shift</div>
+        </div>
+        <div class="keyline">
+            <div class="key" id="space"></div>
+        </div>
+    </div>
+</div>
+
+<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="js/utils/words.js"></script>
+<script src="build/build.js"></script>
+</body>
+</html>

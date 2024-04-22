@@ -1,0 +1,23 @@
+class Counter {
+  constructor(start = 0) { this.count = start }
+
+  get() {
+    return this.count
+  }
+
+  set(count) {
+    console.log(count);
+    this.count = count
+  }
+
+  up() {
+    return ++this.count
+  }
+
+  reset() {
+    this.count = 0
+  }
+
+}
+
+export default Counter;
