@@ -16,6 +16,9 @@ body {
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   height: 100vh;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 @keyframes gradient {
@@ -51,7 +54,11 @@ body {
 .wordline,
 .inputline {
   padding: 5px;
-  font: 500 1.2em 'Ubuntu Mono';
+  font-family: "Roboto Mono", monospace;
+  font-size: 18px;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
   color: #3d3d3d;
   display: inline-block;
 }
@@ -103,7 +110,6 @@ span.untyped.wrong {
   display: flex;
   justify-content: center;
   align-items: center;
-  font: 300 15px 'Ubuntu Mono';
   color: #3d3d3d;
 }
 
@@ -154,7 +160,6 @@ span.untyped.wrong {
 * mode select
 *************/
 .mode-select {
-  font: normal 15px 'Ubuntu Mono';
   position: relative;
   cursor: pointer;
   user-select: none;
@@ -228,7 +233,6 @@ span.untyped.wrong {
   color: #fff;
   background: #3d3d3d;
   border-radius: 2px;
-  font: bold 14px 'Ubuntu Mono';
   white-space: nowrap;
   padding: 3px 5px;
   transform: translateY(-140%);
@@ -263,15 +267,16 @@ span.untyped.wrong {
 
 .key {
   flex-shrink: 0;
-  border-radius: 3px;
-  border: 1px solid #aaa;
+  border-radius: 5px;
+  border: 1px solid black;
   width: 55px;
   height: 55px;
   margin: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font: normal 14px 'Ubuntu Mono';
+  /*font-family: "Roboto Mono", monospace;*/
+  font-size: 14px;
   color: #3d3d3d;
   text-transform: capitalize;
   position: relative;
@@ -397,7 +402,6 @@ span.untyped.wrong {
 }
 
 .subkey {
-  font: normal 13px 'Ubuntu Mono' !important;
   transform: translate(50%, -50%);
 }
 

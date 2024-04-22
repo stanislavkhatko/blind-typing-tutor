@@ -4,7 +4,6 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <br />
@@ -84,9 +83,7 @@ See the [open issues](https://github.com/stanislavkhatko/blind-typing-tutor/issu
 [stars-url]: https://github.com/stanislavkhatko/blind-typing-tutor/stargazers
 [issues-shield]: https://img.shields.io/github/issues/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
 [issues-url]: https://github.com/stanislavkhatko/blind-typing-tutor/issues
-[license-shield]: https://img.shields.io/github/license/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
-[license-url]: https://github.com/stanislavkhatko/blind-typing-tutor/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/stanislavkhatko
+[linkedin-url]: https://linkedin.com/in/stanislav-khatko
 [product-screenshot]: screenshot.png
 [JavaScript]: https://img.shields.io/badge/logo-javascript-blue?logo=javascript
