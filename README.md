@@ -74,6 +74,10 @@ To run project locally perform next steps
 
 See the [open issues](https://github.com/stanislavkhatko/blind-typing-tutor/issues) for a full list of proposed features (and known issues).
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
 [contributors-shield]: https://img.shields.io/github/contributors/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
 [contributors-url]: https://github.com/stanislavkhatko/blind-typing-tutor/graphs/contributors
