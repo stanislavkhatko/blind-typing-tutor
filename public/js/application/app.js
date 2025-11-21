@@ -30,18 +30,41 @@ export default class Application {
    * @param {string} mode - The typing mode to set
    */
   setMode(mode) {
-    try {
-      this.modeTitle.html($(`#${mode}`).text());
-      // Initialize the wordline with the selected mode
-      this.wordline = new Wordline(mode);
-      this.wordline.setFocus();
-    } catch (error) {
-      console.error('Error setting mode:', error);
-      // Fallback to default mode if there's an error
-      if (mode !== 'novice') {
-        this.setMode('novice');
+    const fallbackMode = 'novice';
+    const attemptMode = currentMode => {
+      const modeOption = $(`#${currentMode}`);
+
+      if (!modeOption.length) {
+        console.error(`Mode "${currentMode}" is not available in the DOM.`);
+        return false;
       }
+
+      try {
+        if (this.wordline && typeof this.wordline.destroy === 'function') {
+          this.wordline.destroy();
+          this.wordline = null;
+        }
+
+        this.modeTitle.html(modeOption.text());
+        this.mode = currentMode;
+        this.wordline = new Wordline(currentMode);
+        this.wordline.setFocus();
+        return true;
+      } catch (error) {
+        console.error(`Error initializing mode "${currentMode}":`, error);
+        return false;
+      }
+    };
+
+    if (attemptMode(mode)) {
+      return;
     }
+
+    if (mode !== fallbackMode && attemptMode(fallbackMode)) {
+      return;
+    }
+
+    console.error(`Failed to initialize both "${mode}" and fallback mode "${fallbackMode}".`);
   }
 
   /**

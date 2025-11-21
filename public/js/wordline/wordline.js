@@ -177,4 +177,22 @@ export default class Wordline {
   setFocus() {
     this.inputline.focus();
   }
+
+  destroy() {
+    if (this.generator && typeof this.generator.dispose === 'function') {
+      this.generator.dispose();
+      this.generator = null;
+    }
+
+    if (this.inputline) {
+      this.inputline.off();
+      this.inputline.removeClass(this.wrongClass);
+      this.inputline = null;
+    }
+
+    if (this.keyboard && this.keyboard.keys) {
+      this.keyboard.keys.removeClass(this.keyboard.keyTargetClass);
+    }
+    this.keyboard = null;
+  }
 }

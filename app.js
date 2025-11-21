@@ -1,13 +1,18 @@
 const express = require('express');
+const path = require('path');
+
 const app = express();
-const join = require('path').join;
 
-app.use(express.static( join(__dirname, '/public') ));
+const publicDir = path.join(__dirname, 'public');
 
-let port = process.env.PORT || 8000;
+app.use(express.static(publicDir));
 
-app.listen(port, (err) => {
-  if(err) throw err;
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(publicDir, 'index.html'));
 });
 
-app.get('/', (req, res) => res.render('index') );
+const port = process.env.PORT || 8000;
+
+app.listen(port, err => {
+  if (err) throw err;
+});

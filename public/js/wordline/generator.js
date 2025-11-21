@@ -4,7 +4,9 @@ export default class Generator {
     this.number = args.number || 8;
     this.words = this._update();
 
-    setInterval(() => this.words = this._update(), this.interval);
+    this.intervalId = setInterval(() => {
+      this.words = this._update();
+    }, this.interval);
   }
 
   /**************
@@ -44,12 +46,19 @@ export default class Generator {
   getOne() {
     let output = [];
 
-    let word = words[this._rand(0, words.length)];
+    let word = words[this._rand(0, words.length - 1)];
 
     for(let i = 0; i < this.number; i++)
       output.push(word);
 
     return output.join(' ');
+  }
+
+  dispose() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
   }
 
 }
