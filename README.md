@@ -1,93 +1,73 @@
-<a name="readme-top"></a>
+# React + TypeScript + Vite
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-<br />
-<div align="center">
-  <a href="https://github.com/stanislavkhatko/blind-typing-tutor">
-    <img src="public/favicon/favicon.png" alt="Logo" width="80" height="80">
-  </a>
+Currently, two official plugins are available:
 
-<h3 align="center">Blind Typing Tutor</h3>
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-  <p align="center">
-    A blind keyboard typing trainer app for English and Ukrainian languages
-    <br />
-    <br />
-    <br />
-    <a href="https://typot.netlify.app/en.html">View Demo</a>
-    ·
-    <a href="https://github.com/stanislavkhatko/blind-typing-tutor/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/stanislavkhatko/blind-typing-tutor/issues">Request Feature</a>
-  </p>
-</div>
+## React Compiler
 
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## About The Project
+## Expanding the ESLint configuration
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-There are quite a lot of blind typing tutors out there, but once searching I didn't find Ukrainian language so I made own solution.
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-### Built With
-![JavaScript][JavaScript]
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-### Support project development
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/stanislavkhatko)
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-
-
-## Getting Started
-To run project locally perform next steps
-
-### Installation
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/stanislavkhatko/blind-typing-tutor.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
-3. Build assets and files by running at terminal
-   ```sh
-   npm run build
-   ```
-4. Open file in browser
-   ```
-   public/index.html or public/en.html
-   ```
-
-
-## Roadmap
-
-- [ ] More languages
-- [ ] Vocabulary choice
-
-See the [open issues](https://github.com/stanislavkhatko/blind-typing-tutor/issues) for a full list of proposed features (and known issues).
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
-[contributors-shield]: https://img.shields.io/github/contributors/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
-[contributors-url]: https://github.com/stanislavkhatko/blind-typing-tutor/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
-[forks-url]: https://github.com/stanislavkhatko/blind-typing-tutor/network/members
-[stars-shield]: https://img.shields.io/github/stars/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
-[stars-url]: https://github.com/stanislavkhatko/blind-typing-tutor/stargazers
-[issues-shield]: https://img.shields.io/github/issues/stanislavkhatko/blind-typing-tutor.svg?style=for-the-badge
-[issues-url]: https://github.com/stanislavkhatko/blind-typing-tutor/issues
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/stanislav-khatko
-[product-screenshot]: screenshot.png
-[JavaScript]: https://img.shields.io/badge/logo-javascript-blue?logo=javascript
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```

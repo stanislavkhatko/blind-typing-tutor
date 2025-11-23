@@ -1,0 +1,56 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg-gradient: linear-gradient(-45deg, #fdfcf7, #f5d2dd, #c6eafa, #d0fff6);
+}
+
+:root.dark {
+  --bg-gradient: linear-gradient(-45deg, #1a1b26, #24283b, #1f2335, #16161e);
+}
+
+body {
+  background: var(--bg-gradient);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  font-family: "Inter", system-ui, sans-serif;
+  color: #1f2937;
+}
+
+code, pre, .font-mono {
+  font-family: "JetBrains Mono", monospace;
+}
+
+.dark body {
+  color: #f3f4f6;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Keyboard Hand Styles */
+.key.key-target:after {
+  content: '';
+  height: 100px;
+  width: 58px;
+  background-image: url('/img/hands2.png');
+  position: absolute;
+  bottom: 0;
+  transform: translate(0%, 60%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.key.group-2.key-target:after { background-position: -58px 0; transform: translate(-12px, 75%); }
+.key.group-3.key-target:after { background-position: -116px 0; transform: translate(-24px, 85%); }
+.key.group-4.key-target:after { background-position: -174px 0; transform: translate(-36px, 80%); }
+.key.group-5.key-target:after { background-position: -348px 0; transform: translate(-20px, 75%); }
+.key.group-6.key-target:after { background-position: -406px 0; transform: translate(-20px, 85%); }
+.key.group-7.key-target:after { background-position: -464px 0; transform: translate(-45px, 80%); }
+.key.group-8.key-target:after { background-position: -522px 0; transform: translate(-64px, 65%); }
+
+#space.key-target:after { background-position: -232px 0; transform: translate(-24px, 45%); }
+#space.key-target.righthand:after { background-position: -290px 0 !important; transform: translate(100%, 45%); }

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://blind-typing-tutor.wordmemo.net/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
