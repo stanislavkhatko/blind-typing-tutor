@@ -1,282 +1,354 @@
-import { useEffect, useState } from 'react';
-
-interface KeyConfig {
-  id: string;
-  en: string;
-  uk: string;
-  group?: number;
-}
-
-const keyboardMatrix: KeyConfig[] = [
-  {id: '1', en: '1', uk: '1', group: 1},
-  {id: '2', en: '2', uk: '2', group: 1},
-  {id: '3', en: '3', uk: '3', group: 2},
-  {id: '4', en: '4', uk: '4', group: 3},
-  {id: '5', en: '5', uk: '5', group: 4},
-  {id: '6', en: '6', uk: '6', group: 4},
-  {id: '7', en: '7', uk: '7', group: 5},
-  {id: '8', en: '8', uk: '8', group: 5},
-  {id: '9', en: '9', uk: '9', group: 6},
-  {id: '0', en: '0', uk: '0', group: 7},
-  {id: 'underscore', en: '-', uk: '-', group: 8},
-  {id: 'equal', en: '=', uk: '=', group: 8},
-  {id: 'q', en: 'q', uk: 'й', group: 1},
-  {id: 'w', en: 'w', uk: 'ц', group: 2},
-  {id: 'e', en: 'e', uk: 'у', group: 3},
-  {id: 'r', en: 'r', uk: 'к', group: 4},
-  {id: 't', en: 't', uk: 'е', group: 4},
-  {id: 'y', en: 'y', uk: 'н', group: 5},
-  {id: 'u', en: 'u', uk: 'г', group: 5},
-  {id: 'i', en: 'i', uk: 'ш', group: 6},
-  {id: 'o', en: 'o', uk: 'щ', group: 7},
-  {id: 'p', en: 'p', uk: 'з', group: 8},
-  {id: 'leftSquareBracket', en: '[', uk: 'х', group: 8},
-  {id: 'rightSquareBracket', en: ']', uk: 'ї', group: 8},
-  {id: 'a', en: 'a', uk: 'ф', group: 1},
-  {id: 's', en: 's', uk: 'і', group: 2},
-  {id: 'd', en: 'd', uk: 'в', group: 3},
-  {id: 'f', en: 'f', uk: 'а', group: 4},
-  {id: 'g', en: 'g', uk: 'п', group: 4},
-  {id: 'h', en: 'h', uk: 'р', group: 5},
-  {id: 'j', en: 'j', uk: 'о', group: 5},
-  {id: 'k', en: 'k', uk: 'л', group: 6},
-  {id: 'l', en: 'l', uk: 'д', group: 7},
-  {id: 'cologn', en: ';', uk: 'ж', group: 8},
-  {id: 'quote', en: "'", uk: 'є', group: 8},
-  {id: 'backSlash', en: '\\', uk: 'ʼ', group: 8},
-  {id: 'z', en: 'z', uk: 'я', group: 1},
-  {id: 'x', en: 'x', uk: 'ч', group: 2},
-  {id: 'c', en: 'c', uk: 'с', group: 3},
-  {id: 'v', en: 'v', uk: 'м', group: 4},
-  {id: 'b', en: 'b', uk: 'и', group: 4},
-  {id: 'n', en: 'n', uk: 'т', group: 5},
-  {id: 'm', en: 'm', uk: 'ь', group: 5},
-  {id: 'comma', en: ',', uk: 'б', group: 6},
-  {id: 'period', en: '.', uk: 'ю', group: 7},
-  {id: 'slash', en: '/', uk: '.', group: 8}
-];
-
-const leftHalf = 'q w e r t a s d f g z x c v b'.split(/\s/);
-const leftHalfUK = 'й ц у к е ф і в а п я ч с м и'.split(/\s/);
+import { useMemo } from 'react';
+import type { KeyboardLayoutId, KeyDefinition } from '../types/keyboard';
+import { getLayout } from '../config/layouts';
 
 interface KeyboardProps {
   activeKey: string | null;
-  language: 'en' | 'uk';
+  layoutId: KeyboardLayoutId;
   showHands: boolean;
   showColors: boolean;
+  showEnglishHints?: boolean; // Show English characters as hints on non-English layouts
+  lastPressedKey?: string | null; // Last key that was physically pressed (for highlighting)
 }
 
-export const Keyboard: React.FC<KeyboardProps> = ({ activeKey, language, showHands, showColors }) => {
-  const [targetKeyId, setTargetKeyId] = useState<string | null>(null);
-  const [shiftTarget, setShiftTarget] = useState<'l' | 'r' | null>(null);
-  const [spaceHand, setSpaceHand] = useState<'l' | 'r' | null>(null);
+export const Keyboard: React.FC<KeyboardProps> = ({ 
+  activeKey, 
+  layoutId, 
+  showHands, 
+  showColors,
+  showEnglishHints = false,
+  lastPressedKey = null
+}) => {
+  // Removed console.log to reduce noise - component will re-render when props change
+  const layout = getLayout(layoutId);
+  const enLayout = layoutId !== 'en-us' ? getLayout('en-us') : null;
 
-  useEffect(() => {
+  // Compute target key and shift state from activeKey using useMemo instead of useEffect
+  const { targetKeyId, shiftTarget, spaceHand } = useMemo(() => {
     if (!activeKey) {
-      setTargetKeyId(null);
-      setShiftTarget(null);
-      setSpaceHand(null);
-      return;
+      return { targetKeyId: null, shiftTarget: null, spaceHand: null };
     }
 
-    if (activeKey === ' ') {
-      setTargetKeyId('space');
-      // Determine hand for space based on previous key? Or just default?
-      // Legacy code: _handForSpace(pressed) - depends on what was JUST pressed.
-      // But here we only know what TO press.
-      // Actually legacy logic was: if last pressed key was left hand, space is right hand.
-      // For now, let's just default or random, or maybe we need state of last pressed key.
-      // We'll leave it simple for now.
-      setSpaceHand('r'); // Default to right thumb
-      return;
+    // Handle space character
+    if (activeKey === ' ' || activeKey === '\u00A0') { // Regular space or non-breaking space
+      return { targetKeyId: 'space', shiftTarget: null, spaceHand: 'r' as const };
     }
 
-    const isUpper = activeKey !== activeKey.toLowerCase();
-    const lowerKey = activeKey.toLowerCase();
+    // Normalize the key for comparison (handle case-insensitive matching)
+    const normalizedKey = activeKey.toLowerCase();
+    const isUpperCase = activeKey !== normalizedKey;
     
-    const keyConfig = keyboardMatrix.find(k => k.en === lowerKey || k.uk === lowerKey);
-    
-    if (keyConfig) {
-      setTargetKeyId(keyConfig.id);
+    // Find the key in the layout - check primary, shifted, and altGr
+    const keyDef = layout.keys.find(k => {
+      const primaryMatch = k.primary.toLowerCase() === normalizedKey;
+      const shiftedMatch = k.shifted?.toLowerCase() === normalizedKey;
+      const altGrMatch = k.altGr?.toLowerCase() === normalizedKey;
       
-      if (isUpper) {
-        // Determine shift side
-        const isLeft = leftHalf.includes(keyConfig.en) || leftHalfUK.includes(keyConfig.uk);
-        setShiftTarget(isLeft ? 'r' : 'l'); // Opposite hand for shift
+      // For exact case matching when key is uppercase
+      if (isUpperCase) {
+        return k.shifted === activeKey || k.primary === activeKey || k.altGr === activeKey;
+      }
+      
+      return primaryMatch || shiftedMatch || altGrMatch;
+    });
+    
+    if (keyDef) {
+      console.log('Expected key:', {
+        id: keyDef.id,
+        primary: keyDef.primary,
+        shifted: keyDef.shifted,
+        altGr: keyDef.altGr,
+        group: keyDef.group
+      });
+      
+      // Check if shift is needed
+      // Shift is needed ONLY if:
+      // 1. The activeKey is uppercase AND matches the shifted key, OR
+      // 2. The activeKey (case-insensitive) matches the shifted key AND the primary key is different
+      // For lowercase characters, they should match the primary key (no shift needed)
+      let isShifted = false;
+      if (isUpperCase) {
+        // Uppercase character - check if it matches the shifted key
+        isShifted = keyDef.shifted === activeKey;
       } else {
-        setShiftTarget(null);
+        // Lowercase character - check if it matches primary key
+        // If it matches shifted key but not primary, then shift is needed (for special characters)
+        const matchesPrimary = keyDef.primary.toLowerCase() === normalizedKey;
+        const matchesShifted = keyDef.shifted?.toLowerCase() === normalizedKey;
+        // Only need shift if it matches shifted but NOT primary (e.g., '!' on '1' key)
+        isShifted = matchesShifted && !matchesPrimary;
+      }
+      
+      if (isShifted) {
+        // Determine shift side based on which hand types the key
+        const isLeftHand = layout.leftHandKeys.includes(keyDef.primary.toLowerCase());
+        return { 
+          targetKeyId: keyDef.id, 
+          shiftTarget: (isLeftHand ? 'r' : 'l') as 'l' | 'r', 
+          spaceHand: null 
+        };
+      } else {
+        return { targetKeyId: keyDef.id, shiftTarget: null, spaceHand: null };
       }
     } else {
-        setTargetKeyId(null);
+      // Key not found in layout - might be a special character
+      return { targetKeyId: null, shiftTarget: null, spaceHand: null };
+    }
+  }, [activeKey, layout.keys, layout.leftHandKeys]);
+
+  // Compute pressed key ID from lastPressedKey using useMemo instead of useEffect
+  const pressedKeyId = useMemo(() => {
+    if (!lastPressedKey) {
+      return null;
     }
 
-  }, [activeKey, language]);
+    // Handle special keys
+    if (lastPressedKey === 'backspace') {
+      return 'backspace';
+    }
+    if (lastPressedKey === 'enter') {
+      return 'enter';
+    }
+    if (lastPressedKey === 'tab') {
+      return 'tab';
+    }
+    if (lastPressedKey === ' ') {
+      return 'space';
+    }
 
-  const getKeyClass = (keyId: string, group?: number) => {
-    let classes = "key flex justify-center items-center border border-gray-800 dark:border-gray-600 rounded m-0.5 text-sm capitalize transition-colors duration-100 relative ";
+    // Find the key in the layout
+    const normalizedKey = lastPressedKey.toLowerCase();
+    const isUpperCase = lastPressedKey !== normalizedKey;
     
-    // Size classes
-    if (keyId === 'backspace' || keyId === 'tab') classes += "w-[82px] h-[55px] ";
-    else if (keyId === 'caps_lock' || keyId === 'enter') classes += "w-[98px] h-[55px] ";
-    else if (keyId === 'shift-l' || keyId === 'shift-r') classes += "w-[128px] h-[55px] ";
-    else if (keyId === 'space') classes += "w-[330px] h-[55px] absolute left-[220px] ";
+    const keyDef = layout.keys.find(k => {
+      const primaryMatch = k.primary.toLowerCase() === normalizedKey;
+      const shiftedMatch = k.shifted?.toLowerCase() === normalizedKey;
+      const altGrMatch = k.altGr?.toLowerCase() === normalizedKey;
+      
+      if (isUpperCase) {
+        return k.shifted === lastPressedKey || k.primary === lastPressedKey || k.altGr === lastPressedKey;
+      }
+      
+      return primaryMatch || shiftedMatch || altGrMatch;
+    });
+    
+    return keyDef ? keyDef.id : null;
+  }, [lastPressedKey, layout.keys]);
+
+  // Color mapping based on hands2.png - centralized for easy maintenance
+  const getGroupColor = (group: number | null, opacity: number = 1): { backgroundColor: string } | null => {
+    if (group === null) return null;
+    
+    // hands2.png color mapping
+    const colors: Record<number, string> = {
+      1: '#AD7FA8', // Left pinky - light purple
+      2: '#729FCF', // Left index - light blue
+      3: '#73D216', // Left middle - bright green
+      4: '#FCAF3E', // Left ring - orange
+      5: '#FCE94F', // Right index - yellow
+      6: '#FCAF3E', // Right middle - orange
+      7: '#729FCF', // Right ring - light blue
+      8: '#AD7FA8', // Right pinky - light purple
+    };
+    
+    const color = colors[group];
+    if (!color) return null;
+    
+    // Convert hex to rgba for opacity support
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    return {
+      backgroundColor: `rgba(${r}, ${g}, ${b}, ${opacity})`
+    };
+  };
+
+  const getKeyClass = (keyId: string, group?: number): { className: string; style?: React.CSSProperties } => {
+    let classes = "key flex justify-center items-center border border-gray-800 rounded m-0.5 text-sm capitalize transition-colors duration-100 relative ";
+    let style: React.CSSProperties | undefined;
+    
+    // Size classes based on width property
+    const key = layout.keys.find(k => k.id === keyId);
+    if (key?.width === 'tab') classes += "w-[82px] h-[55px] ";
+    else if (key?.width === 'caps') classes += "w-[98px] h-[55px] ";
+    else if (key?.width === 'enter') classes += "w-[98px] h-[55px] ";
+    else if (key?.width === 'shift') classes += "w-[128px] h-[55px] ";
+    else if (key?.width === 'space') classes += "w-[330px] h-[55px] ";
     else classes += "w-[55px] h-[55px] ";
 
-    // Active state
-    const isActive = keyId === targetKeyId || (keyId === `shift-${shiftTarget}`);
-    
-    if (isActive) {
-        // Active group colors - darker/more saturated in light mode for better contrast with dark text
-        // In dark mode, use the original lighter colors
-        if (group === 1 || group === 8 || keyId.startsWith('shift')) {
-            classes += "bg-purple-600 dark:bg-[#AD7FA8] ";
-        } else if (group === 2 || group === 7) {
-            classes += "bg-blue-600 dark:bg-[#729FCF] ";
-        } else if (group === 3) {
-            classes += "bg-green-600 dark:bg-[#73D216] ";
-        } else if (group === 5) {
-            classes += "bg-yellow-500 dark:bg-[#FCE94F] ";
-        } else if (group === 4 || group === 6) {
-            classes += "bg-orange-600 dark:bg-[#FCAF3E] ";
-        } else if (keyId === 'space') {
-            classes += "bg-gray-600 dark:bg-[#727272] ";
-        }
-        
-        // White text on dark backgrounds in light mode, dark text on bright backgrounds in dark mode
-        classes += "text-white dark:text-gray-900 border-2 border-gray-800 dark:border-gray-600 ";
-        
-        // Only add key-target class (for hand display) if showHands is true
-        if (showHands) classes += "key-target ";
-    } else {
-        // Passive zone colors (only if showColors is true)
-        if (showColors) {
-            if (group === 1 || group === 8 || keyId.startsWith('shift')) classes += "bg-purple-100/40 dark:bg-purple-900/80 ";
-            else if (group === 2 || group === 7) classes += "bg-blue-100/40 dark:bg-blue-900/80 ";
-            else if (group === 3) classes += "bg-green-100/40 dark:bg-green-900/80 ";
-            else if (group === 5) classes += "bg-yellow-100/40 dark:bg-yellow-900/80 ";
-            else if (group === 4 || group === 6) classes += "bg-orange-100/40 dark:bg-orange-900/80 ";
-            else if (keyId === 'space') classes += "bg-gray-200/60 dark:bg-gray-700/80 ";
-            else classes += "bg-gray-100 dark:bg-gray-800 ";
-        } else {
-            classes += "bg-gray-100 dark:bg-gray-800 ";
-        }
-        
-        // Text color for inactive keys: dark in light mode, light in dark mode
-        classes += "text-gray-800 dark:text-gray-200 ";
+    // Override group for shift keys: both left and right shift use left pinky (group 1)
+    // Assign groups to special keys that don't have them in layout
+    let effectiveGroup = group;
+    if (keyId === 'shift-l' || keyId === 'shift-r') {
+      effectiveGroup = 1; // Both shift keys use left pinky
+    } else if (keyId === 'tab' || keyId === 'caps_lock') {
+      effectiveGroup = 1; // Tab and Caps Lock use left pinky
+    } else if (keyId === 'backspace' || keyId === 'enter') {
+      effectiveGroup = 8; // Backspace and Enter use right pinky
     }
 
-    if (group) classes += `group-${group} `;
+    // Space uses gray color (thumbs)
+    const isSpace = keyId === 'space';
+
+    // Active state (correct key)
+    const isActive = keyId === targetKeyId || (keyId === `shift-${shiftTarget}`);
+    
+    // Pressed state (any key pressed, even if incorrect)
+    const isPressed = keyId === pressedKeyId || (pressedKeyId === 'space' && keyId === 'space');
+    
+    if (isActive) {
+      // Active: full color from hands2.png - always white text on colored background
+      if (isSpace) {
+        style = { backgroundColor: '#727272' };
+      } else if (effectiveGroup) {
+        const colorStyle = getGroupColor(effectiveGroup, 1);
+        if (colorStyle) style = colorStyle;
+      }
+      classes += "text-black border-2 border-gray-800 ";
+      if (showHands) classes += "key-target ";
+    } else if (isPressed) {
+      // Pressed: gray highlight - white text on gray background
+      classes += "bg-gray-400 text-white border-2 border-gray-600 transition-all duration-200 ";
+    } else {
+      // Passive: lighter colors if showColors is enabled - dark text on light background
+      if (showColors) {
+        if (isSpace) {
+          style = { backgroundColor: 'rgba(114, 114, 114, 0.3)' };
+        } else if (effectiveGroup) {
+          const colorStyle = getGroupColor(effectiveGroup, 0.3);
+          if (colorStyle) style = colorStyle;
+        } else {
+          classes += "bg-gray-100 ";
+        }
+      } else {
+        classes += "bg-gray-100 ";
+      }
+      // Always dark text on light backgrounds (keyboard colors are consistent across themes)
+      classes += "text-gray-900 ";
+    }
+
+    // Use effectiveGroup for CSS class to ensure correct hand visualization
+    if (effectiveGroup) classes += `group-${effectiveGroup} `;
     if (keyId === 'space' && spaceHand === 'r') classes += "righthand ";
 
-    return classes;
+    return { className: classes, style };
   };
 
-  // Helper to render a row of keys
-  const renderRow = (keys: string[]) => {
-    return (
-      <>
-        {keys.map(k => {
-            if (['tab', 'caps_lock', 'shift-l', 'backspace', 'enter', 'shift-r'].includes(k)) {
-                 return <div key={k} id={k} className={getKeyClass(k)}>{k.replace('-', ' ')}</div>
-            }
-            const config = keyboardMatrix.find(m => m.id === k);
-            if (!config) return null;
-            
-            // Show both EN and UK characters when in Ukrainian mode
-            if (language === 'uk') {
-                return (
-                    <div key={k} id={k} className={getKeyClass(k, config.group)}>
-                        <div className="flex flex-col items-center justify-center leading-tight">
-                            <span className="text-[10px] opacity-60">{config.en}</span>
-                            <span className="text-sm font-medium">{config.uk}</span>
-                        </div>
-                    </div>
-                );
-            }
-            
-            // Show only English in English mode
-            return (
-                <div key={k} id={k} className={getKeyClass(k, config.group)}>
-                    {config.en}
-                </div>
-            );
-        })}
-      </>
-    );
+  // Render key content with optional English hints
+  const renderKeyContent = (keyDef: KeyDefinition) => {
+    // Special keys
+    if (['tab', 'caps_lock', 'shift-l', 'shift-r', 'backspace', 'enter', 'space'].includes(keyDef.id)) {
+      return keyDef.primary.replace('-', ' ');
+    }
+
+    // Show English hints for non-English layouts
+    if (showEnglishHints && enLayout) {
+      const enKey = enLayout.keys.find(k => k.id === keyDef.id);
+      if (enKey && enKey.primary !== keyDef.primary) {
+        return (
+          <div className="flex flex-col items-center justify-center leading-tight">
+            <span className="text-[10px] opacity-60">{enKey.primary}</span>
+            <span className="text-sm font-medium">{keyDef.primary}</span>
+          </div>
+        );
+      }
+    }
+
+    return keyDef.primary;
   };
+
+  // Get keys for each row using a more robust row detection system
+  // This determines rows based on key positions relative to row markers
+  const rowKeys = useMemo(() => {
+    const keys = layout.keys;
+    const tabIndex = keys.findIndex(k => k.id === 'tab');
+    const capsIndex = keys.findIndex(k => k.id === 'caps_lock');
+    const shiftLIndex = keys.findIndex(k => k.id === 'shift-l');
+    const spaceIndex = keys.findIndex(k => k.id === 'space');
+    
+    // Determine which row each key belongs to based on its position
+    const getKeyRow = (keyIndex: number): number => {
+      if (keyIndex < tabIndex || (tabIndex === -1 && keyIndex < capsIndex)) return 1;
+      if (keyIndex >= tabIndex && keyIndex < capsIndex) return 2;
+      if (keyIndex >= capsIndex && keyIndex < shiftLIndex) return 3;
+      if (keyIndex >= shiftLIndex && keyIndex < spaceIndex) return 4;
+      if (keyIndex === spaceIndex) return 5;
+      return 0; // Unknown
+    };
+    
+    const rows: KeyDefinition[][] = [[], [], [], [], []];
+    keys.forEach((key, index) => {
+      const row = getKeyRow(index);
+      if (row > 0 && row <= 5) {
+        rows[row - 1].push(key);
+      }
+    });
+    
+    return rows;
+  }, [layout.keys]);
+  
+  const [row1Keys, row2Keys, row3Keys, row4Keys, row5Keys] = rowKeys;
+  const spaceKey = row5Keys?.[0];
 
   return (
-    <div className="flex flex-col items-center mt-12 select-none opacity-100 transition-opacity duration-200 w-[900px] mx-auto">
-        {/* Row 1 */}
-        <div className="flex w-full">
-            {renderRow(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'underscore', 'equal', 'backspace'])}
-        </div>
-        {/* Row 2 */}
-        <div className="flex w-full">
-             <div id="tab" className={getKeyClass('tab')}>tab</div>
-             {['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'leftSquareBracket', 'rightSquareBracket', 'backSlash'].map(k => {
-                 const config = keyboardMatrix.find(m => m.id === k);
-                 if (!config) return null;
-                 
-                 if (language === 'uk') {
-                     return (
-                         <div key={k} id={k} className={getKeyClass(k, config.group)}>
-                             <div className="flex flex-col items-center justify-center leading-tight">
-                                 <span className="text-[10px] opacity-60">{config.en}</span>
-                                 <span className="text-sm font-medium">{config.uk}</span>
-                             </div>
-                         </div>
-                     );
-                 }
-                 return <div key={k} id={k} className={getKeyClass(k, config.group)}>{config.en}</div>
-             })}
-        </div>
-        {/* Row 3 */}
-        <div className="flex w-full">
-             <div id="caps_lock" className={getKeyClass('caps_lock')}>caps</div>
-             {['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'cologn', 'quote', 'enter'].map(k => {
-                 if(k === 'enter') return <div key={k} id={k} className={getKeyClass(k)}>enter</div>
-                 const config = keyboardMatrix.find(m => m.id === k);
-                 if (!config) return null;
-                 
-                 if (language === 'uk') {
-                     return (
-                         <div key={k} id={k} className={getKeyClass(k, config.group)}>
-                             <div className="flex flex-col items-center justify-center leading-tight">
-                                 <span className="text-[10px] opacity-60">{config.en}</span>
-                                 <span className="text-sm font-medium">{config.uk}</span>
-                             </div>
-                         </div>
-                     );
-                 }
-                 return <div key={k} id={k} className={getKeyClass(k, config.group)}>{config.en}</div>
-             })}
-        </div>
-        {/* Row 4 */}
-        <div className="flex w-full">
-             <div id="shift-l" className={getKeyClass('shift-l')}>shift</div>
-             {['z', 'x', 'c', 'v', 'b', 'n', 'm', 'comma', 'period', 'slash'].map(k => {
-                 const config = keyboardMatrix.find(m => m.id === k);
-                 if (!config) return null;
-                 
-                 if (language === 'uk') {
-                     return (
-                         <div key={k} id={k} className={getKeyClass(k, config.group)}>
-                             <div className="flex flex-col items-center justify-center leading-tight">
-                                 <span className="text-[10px] opacity-60">{config.en}</span>
-                                 <span className="text-sm font-medium">{config.uk}</span>
-                             </div>
-                         </div>
-                     );
-                 }
-                 return <div key={k} id={k} className={getKeyClass(k, config.group)}>{config.en}</div>
-             })}
-             <div id="shift-r" className={getKeyClass('shift-r')}>shift</div>
-        </div>
-        {/* Row 5 (Space) */}
-        <div className="flex w-full relative h-[60px]">
-            <div id="space" className={getKeyClass('space')}></div>
-        </div>
+    <div className="flex flex-col items-center justify-center mt-12 select-none opacity-100 transition-opacity duration-200 w-full max-w-[855px] mx-auto">
+      {/* Row 1 - Number row */}
+      <div className="flex w-full">
+        {row1Keys.map(key => {
+          const { className, style } = getKeyClass(key.id, key.group);
+          return (
+            <div key={key.id} id={key.id} className={className} style={style}>
+              {renderKeyContent(key)}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Row 2 - Top letter row */}
+      <div className="flex w-full">
+        {row2Keys.map(key => {
+          const { className, style } = getKeyClass(key.id, key.group);
+          return (
+            <div key={key.id} id={key.id} className={className} style={style}>
+              {renderKeyContent(key)}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Row 3 - Home row */}
+      <div className="flex w-full">
+        {row3Keys.map(key => {
+          const { className, style } = getKeyClass(key.id, key.group);
+          return (
+            <div key={key.id} id={key.id} className={className} style={style}>
+              {renderKeyContent(key)}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Row 4 - Bottom row */}
+      <div className="flex w-full">
+        {row4Keys.map(key => {
+          const { className, style } = getKeyClass(key.id, key.group);
+          return (
+            <div key={key.id} id={key.id} className={className} style={style}>
+              {renderKeyContent(key)}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Row 5 - Space bar */}
+      <div className="flex w-full justify-center h-[60px]">
+        {spaceKey && spaceKey.id === 'space' && (() => {
+          const { className, style } = getKeyClass('space');
+          return <div id="space" className={className} style={style}></div>;
+        })()}
+      </div>
     </div>
   );
 };

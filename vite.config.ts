@@ -39,9 +39,9 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react', 'react-dom', 'lucide-react']
   },
-  // Esbuild options for better minification
+  // Esbuild options for better minification (only in production)
   esbuild: {
-    drop: ['console', 'debugger'],
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none'
   }
 })

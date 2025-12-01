@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
+/* Configure dark mode to use class-based selector (.dark) instead of media query */
+@variant dark (&:is(.dark *));
+
 :root {
   --bg-gradient: linear-gradient(-45deg, #fdfcf7, #f5d2dd, #c6eafa, #d0fff6);
 }
@@ -44,13 +47,14 @@ code, pre, .font-mono {
   pointer-events: none;
 }
 
-.key.group-2.key-target:after { background-position: -58px 0; transform: translate(-12px, 75%); }
-.key.group-3.key-target:after { background-position: -116px 0; transform: translate(-24px, 85%); }
-.key.group-4.key-target:after { background-position: -174px 0; transform: translate(-36px, 80%); }
-.key.group-5.key-target:after { background-position: -348px 0; transform: translate(-20px, 75%); }
-.key.group-6.key-target:after { background-position: -406px 0; transform: translate(-20px, 85%); }
-.key.group-7.key-target:after { background-position: -464px 0; transform: translate(-45px, 80%); }
+.key.group-1.key-target:after { background-position: 0 0; transform: translate(0%, 85%); }
+.key.group-2.key-target:after { background-position: -58px 0; transform: translate(-10px, 85%); }
+.key.group-3.key-target:after { background-position: -116px 0; transform: translate(-10px, 85%); }
+.key.group-4.key-target:after { background-position: -174px 0; transform: translate(-10px, 85%); }
+.key.group-5.key-target:after { background-position: -348px 0; transform: translate(10px, 85%); }
+.key.group-6.key-target:after { background-position: -406px 0; transform: translate(0px, 85%); }
+.key.group-7.key-target:after { background-position: -464px 0; transform: translate(10px, 85%); }
 .key.group-8.key-target:after { background-position: -522px 0; transform: translate(-64px, 65%); }
 
 #space.key-target:after { background-position: -232px 0; transform: translate(-24px, 45%); }
-#space.key-target.righthand:after { background-position: -290px 0 !important; transform: translate(100%, 45%); }
+#space.key-target.righthand:after { background-position: -290px 0 !important; transform: translate(100%, 75%); }
