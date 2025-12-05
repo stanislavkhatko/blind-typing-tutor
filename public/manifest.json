@@ -1,7 +1,7 @@
 {
-  "name": "Blind Typing Tutor",
+  "name": "Blind Typing Tutor - Free Touch Typing Trainer",
   "short_name": "Typing Tutor",
-  "description": "Learn touch typing with real-time feedback, WPM tracking, and accuracy statistics",
+  "description": "Master touch typing with 28+ keyboard layouts, 8 learning languages, real-time WPM tracking, accuracy stats, visual keyboard, and audio feedback. Free and open source.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -11,12 +11,20 @@
     {
       "src": "/favicon-16x16.png",
       "sizes": "16x16",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/favicon-32x32.png",
       "sizes": "32x32",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/android-chrome-192x192.png",
@@ -31,9 +39,27 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["education", "productivity"],
+  "categories": ["education", "productivity", "utilities"],
   "lang": "en",
   "dir": "ltr",
   "scope": "/",
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Blind Typing Tutor Interface"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Typing",
+      "short_name": "Type",
+      "description": "Start a typing practice session",
+      "url": "/",
+      "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
+    }
+  ]
 }
