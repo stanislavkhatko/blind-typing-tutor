@@ -1,10 +1,17 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Blind Typing Tutor E2E Tests', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    // Wait for the app to load
-    await page.waitForSelector('[data-testid="app-title"]', { timeout: 10000 });
+  test.beforeEach(async ({ page, browserName }) => {
+    // Use 'load' for Firefox to ensure all resources are loaded
+    const waitUntil = browserName === 'firefox' ? 'load' : 'domcontentloaded';
+    await page.goto('/', { waitUntil });
+    
+    // Wait for React to hydrate and the app to render
+    // Firefox may need more time
+    const timeout = browserName === 'firefox' ? 30000 : 10000;
+    
+    // Wait for the app title to be visible
+    await page.waitForSelector('[data-testid="app-title"]', { timeout, state: 'visible' });
   });
 
   test('should load the application and display keyboard', async ({ page }) => {
