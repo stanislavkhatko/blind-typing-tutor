@@ -1,5 +1,3 @@
-import { type Language } from './Generator';
-
 export type InterfaceLanguage = 'en' | 'uk' | 'tr' | 'de' | 'fr' | 'es' | 'pt' | 'ru' | 'zh' | 'ja' | 'ko' | 'ar' | 'hi' | 'it' | 'pl' | 'nl' | 'sv' | 'no' | 'da' | 'fi' | 'cs' | 'hu' | 'ro' | 'el' | 'he' | 'th' | 'vi' | 'id' | 'ms';
 
 type Translations = {

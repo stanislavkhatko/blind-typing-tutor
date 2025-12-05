@@ -30,3 +30,24 @@ repomix-output.xml
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Build artifacts
+*.tsbuildinfo

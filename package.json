@@ -1,8 +1,38 @@
 {
   "name": "blind-typing-tutor",
-  "private": true,
   "version": "1.0.0",
+  "description": "A modern, feature-rich touch typing tutor application with support for 28+ keyboard layouts and 8 learning languages",
   "type": "module",
+  "author": {
+    "name": "Stanislav Khatko",
+    "url": "https://github.com/stanislavkhatko"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stanislavkhatko/blind-typing-tutor.git"
+  },
+  "homepage": "https://github.com/stanislavkhatko/blind-typing-tutor#readme",
+  "bugs": {
+    "url": "https://github.com/stanislavkhatko/blind-typing-tutor/issues"
+  },
+  "keywords": [
+    "typing",
+    "touch-typing",
+    "keyboard",
+    "typing-tutor",
+    "typing-practice",
+    "wpm",
+    "typing-speed",
+    "keyboard-trainer",
+    "learn-typing",
+    "typing-test",
+    "react",
+    "typescript",
+    "vite",
+    "educational",
+    "accessibility"
+  ],
   "scripts": {
     "dev": "vite --force",
     "build": "tsc -b && vite build",
