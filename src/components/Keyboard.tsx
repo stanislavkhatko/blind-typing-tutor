@@ -19,7 +19,6 @@ export const Keyboard: React.FC<KeyboardProps> = ({
   showEnglishHints = false,
   lastPressedKey = null
 }) => {
-  // Removed console.log to reduce noise - component will re-render when props change
   const layout = getLayout(layoutId);
   const enLayout = layoutId !== 'en-us' ? getLayout('en-us') : null;
 
@@ -53,14 +52,6 @@ export const Keyboard: React.FC<KeyboardProps> = ({
     });
     
     if (keyDef) {
-      console.log('Expected key:', {
-        id: keyDef.id,
-        primary: keyDef.primary,
-        shifted: keyDef.shifted,
-        altGr: keyDef.altGr,
-        group: keyDef.group
-      });
-      
       // Check if shift is needed
       // Shift is needed ONLY if:
       // 1. The activeKey is uppercase AND matches the shifted key, OR

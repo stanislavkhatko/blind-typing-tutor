@@ -6,6 +6,7 @@ import { Keyboard } from './Keyboard';
 import { Stats } from './Stats';
 import { translations } from '../utils/translations';
 import { soundManager } from '../utils/SoundManager';
+import { getStorageItem, setStorageItem } from '../utils/storage';
 import { Keyboard as KeyboardIcon, Hand, Palette, CheckCircle, Volume2, VolumeX } from 'lucide-react';
 
 interface GameProps {
@@ -30,6 +31,7 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
   const [text, setText] = useState('');
   const [input, setInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const completionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const t = translations[language];
 
   // Create generator using useMemo - automatically recreates when language changes
@@ -37,7 +39,7 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
 
   // Custom Mode State
   const [customText, setCustomText] = useState(() => {
-    const saved = localStorage.getItem('customText');
+    const saved = getStorageItem('customText');
     return saved || '';
   });
   
@@ -57,28 +59,38 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
 
   // Global keypress listener for keyboard highlighting
   useEffect(() => {
+    const timeoutRefs: NodeJS.Timeout[] = [];
+    
     const handleKeyDown = (e: KeyboardEvent) => {
-      console.log('e.key', e.key);
       // Only track keys when the game is active (not in custom setup)
       if (isCustomSetup) return;
+      
+      // Clear any existing timeouts
+      timeoutRefs.forEach(timeout => clearTimeout(timeout));
+      timeoutRefs.length = 0;
       
       // Track the pressed key for keyboard highlighting
       if (e.key.length === 1) {
         setLastPressedKey(e.key);
         // Clear after a short delay
-        setTimeout(() => setLastPressedKey(null), 200);
+        const timeout = setTimeout(() => setLastPressedKey(null), 200);
+        timeoutRefs.push(timeout);
       } else if (e.key === 'Backspace') {
         setLastPressedKey('backspace');
-        setTimeout(() => setLastPressedKey(null), 200);
+        const timeout = setTimeout(() => setLastPressedKey(null), 200);
+        timeoutRefs.push(timeout);
       } else if (e.key === 'Enter') {
         setLastPressedKey('enter');
-        setTimeout(() => setLastPressedKey(null), 200);
+        const timeout = setTimeout(() => setLastPressedKey(null), 200);
+        timeoutRefs.push(timeout);
       } else if (e.key === 'Tab') {
         setLastPressedKey('tab');
-        setTimeout(() => setLastPressedKey(null), 200);
+        const timeout = setTimeout(() => setLastPressedKey(null), 200);
+        timeoutRefs.push(timeout);
       } else if (e.key === ' ') {
         setLastPressedKey(' ');
-        setTimeout(() => setLastPressedKey(null), 200);
+        const timeout = setTimeout(() => setLastPressedKey(null), 200);
+        timeoutRefs.push(timeout);
       }
     };
 
@@ -88,8 +100,20 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
     // Cleanup
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      // Clear all pending timeouts
+      timeoutRefs.forEach(timeout => clearTimeout(timeout));
     };
   }, [isCustomSetup]);
+
+  // Cleanup completion timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (completionTimeoutRef.current) {
+        clearTimeout(completionTimeoutRef.current);
+        completionTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const generateText = useCallback(() => {
     if (mode === 'custom') {
@@ -125,23 +149,19 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
     const isFirstMount = !initializedRef.current;
     
     if (isFirstMount || modeChanged || languageChanged) {
-      console.log('[Game] Initializing text - isFirstMount:', isFirstMount, 'modeChanged:', modeChanged, 'languageChanged:', languageChanged);
       // Defer state updates to avoid synchronous setState in effect
       queueMicrotask(() => {
         if (mode === 'custom') {
           // Check if we have saved custom text
-          const savedCustomText = localStorage.getItem('customText');
+          const savedCustomText = getStorageItem('customText');
           if (savedCustomText && savedCustomText.trim()) {
-            console.log('[Game] Loading saved custom text');
             setText(savedCustomText.trim());
             setIsCustomSetup(false);
           } else {
-            console.log('[Game] No custom text, showing setup');
             setIsCustomSetup(true);
             setText('');
           }
         } else {
-          console.log('[Game] Generating text for mode:', mode);
           setIsCustomSetup(false);
           generateText();
         }
@@ -173,7 +193,7 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
           const trimmedText = customText.trim();
           setText(trimmedText);
           // Save to localStorage
-          localStorage.setItem('customText', trimmedText);
+          setStorageItem('customText', trimmedText);
           setIsCustomSetup(false);
           setStartTime(null);
           setErrors(0);
@@ -181,6 +201,7 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
           setWpm(0);
           setAccuracy(100);
           setInput('');
+          // Focus input after a short delay
           setTimeout(() => inputRef.current?.focus(), 100);
       }
   };
@@ -253,9 +274,14 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
     
     // Check completion - trigger when all characters are typed (even if there are errors)
     if (val.length === text.length) {
+        // Clear any existing completion timeout
+        if (completionTimeoutRef.current) {
+            clearTimeout(completionTimeoutRef.current);
+        }
         // Small delay to show completion before moving to next phrase
-        setTimeout(() => {
+        completionTimeoutRef.current = setTimeout(() => {
             generateText();
+            completionTimeoutRef.current = null;
         }, 300);
     }
   };

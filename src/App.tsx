@@ -5,50 +5,26 @@ import type { LanguageCode } from './types/keyboard';
 import { getAllLayouts } from './config/layouts';
 import { translations, type InterfaceLanguage } from './utils/translations';
 import { soundManager } from './utils/SoundManager';
+import { detectKeyboardLayout, detectLearningLanguage, detectInterfaceLanguage } from './utils/browserDetection';
+import { getStorageItem, setStorageItem } from './utils/storage';
 import { Moon, Sun, Keyboard as KeyboardIcon, Gamepad2, ChevronDown, Coffee, Languages, BookOpen } from 'lucide-react';
 
 function App() {
   // Initialize layout from localStorage with fallback defaults
   const [layoutId, setLayoutId] = useState<KeyboardLayoutId>(() => {
-    const saved = localStorage.getItem('layoutId');
+    const saved = getStorageItem('layoutId');
     // All valid layouts are now defined in the types, so we check against getAllLayouts
     const allValidLayouts = getAllLayouts().map(l => l.id);
     if (saved && allValidLayouts.includes(saved as KeyboardLayoutId)) {
       return saved as KeyboardLayoutId;
     }
     // Auto-detect based on browser language
-    const browserLang = navigator.language.toLowerCase();
-    if (browserLang.startsWith('en-gb') || browserLang === 'en-gb') return 'en-gb';
-    if (browserLang.startsWith('uk')) return 'uk-ua';
-    if (browserLang.startsWith('tr')) return 'tr-q';
-    if (browserLang.startsWith('de')) return 'de-de';
-    if (browserLang.startsWith('fr')) return 'fr-fr';
-    if (browserLang.startsWith('es')) return 'es-es';
-    if (browserLang.startsWith('pt')) return 'pt-pt';
-    if (browserLang.startsWith('ru')) return 'ru-ru';
-    if (browserLang.startsWith('it')) return 'it-it';
-    if (browserLang.startsWith('nl')) return 'nl-nl';
-    if (browserLang.startsWith('sv')) return 'sv-se';
-    if (browserLang.startsWith('fi')) return 'fi-fi';
-    if (browserLang.startsWith('no')) return 'no-no';
-    if (browserLang.startsWith('da')) return 'da-dk';
-    if (browserLang.startsWith('pl')) return 'pl-pl';
-    if (browserLang.startsWith('cs')) return 'cs-cz';
-    if (browserLang.startsWith('hu')) return 'hu-hu';
-    if (browserLang.startsWith('ro')) return 'ro-ro';
-    if (browserLang.startsWith('el')) return 'el-gr';
-    if (browserLang.startsWith('he')) return 'he-il';
-    if (browserLang.startsWith('ja')) return 'ja-jp';
-    if (browserLang.startsWith('ko')) return 'ko-kr';
-    if (browserLang.startsWith('zh')) return 'zh-cn';
-    if (browserLang.startsWith('ar')) return 'ar-sa';
-    if (browserLang.startsWith('hi')) return 'hi-in';
-    return 'en-us';
+    return detectKeyboardLayout() as KeyboardLayoutId;
   });
 
   // Initialize other state from localStorage with fallback defaults
   const [mode, setMode] = useState<'practice' | 'beginner' | 'custom'>(() => {
-    const saved = localStorage.getItem('mode');
+    const saved = getStorageItem('mode');
     // Migrate old 'novice' to 'practice'
     if (saved === 'novice' || saved === 'practice') return 'practice';
     if (saved === 'beginner' || saved === 'custom') return saved;
@@ -58,84 +34,47 @@ function App() {
 
   // Learning language (content language) - separate from keyboard layout
   const [learningLanguage, setLearningLanguage] = useState<LanguageCode>(() => {
-    const saved = localStorage.getItem('learningLanguage');
+    const saved = getStorageItem('learningLanguage');
     const validLanguages: LanguageCode[] = ['en', 'uk', 'tr', 'de', 'fr', 'es', 'pt', 'ru'];
     if (saved && validLanguages.includes(saved as LanguageCode)) {
       return saved as LanguageCode;
     }
     // If no mode selected, use random learning language
-    const savedMode = localStorage.getItem('mode');
+    const savedMode = getStorageItem('mode');
     if (!savedMode || savedMode === 'null' || savedMode === '') {
       // Random selection from available languages
       const randomLang = validLanguages[Math.floor(Math.random() * validLanguages.length)];
       return randomLang;
     }
     // Auto-detect based on browser language
-    const browserLang = navigator.language.toLowerCase();
-    if (browserLang.startsWith('uk')) return 'uk';
-    if (browserLang.startsWith('tr')) return 'tr';
-    if (browserLang.startsWith('de')) return 'de';
-    if (browserLang.startsWith('fr')) return 'fr';
-    if (browserLang.startsWith('es')) return 'es';
-    if (browserLang.startsWith('pt')) return 'pt';
-    if (browserLang.startsWith('ru')) return 'ru';
-    return 'en';
+    return detectLearningLanguage() as LanguageCode;
   });
 
   // Learning content type (words, phrases, programming)
   const [learningContentType, setLearningContentType] = useState<'words' | 'phrases' | 'programming'>(() => {
-    const saved = localStorage.getItem('learningContentType');
+    const saved = getStorageItem('learningContentType');
     if (saved === 'words' || saved === 'phrases' || saved === 'programming') return saved;
     return 'words';
   });
 
   // Interface language (UI language) - separate from learning language
   const [interfaceLanguage, setInterfaceLanguage] = useState<InterfaceLanguage>(() => {
-    const saved = localStorage.getItem('interfaceLanguage');
+    const saved = getStorageItem('interfaceLanguage');
     const validLanguages: InterfaceLanguage[] = ['en', 'uk', 'tr', 'de', 'fr', 'es', 'pt', 'ru', 'zh', 'ja', 'ko', 'ar', 'hi', 'it', 'pl', 'nl', 'sv', 'no', 'da', 'fi', 'cs', 'hu', 'ro', 'el', 'he', 'th', 'vi', 'id', 'ms'];
     if (saved && validLanguages.includes(saved as InterfaceLanguage)) {
       return saved as InterfaceLanguage;
     }
     // Auto-detect based on browser language
-    const browserLang = navigator.language.toLowerCase();
-    if (browserLang.startsWith('uk')) return 'uk';
-    if (browserLang.startsWith('tr')) return 'tr';
-    if (browserLang.startsWith('de')) return 'de';
-    if (browserLang.startsWith('fr')) return 'fr';
-    if (browserLang.startsWith('es')) return 'es';
-    if (browserLang.startsWith('pt')) return 'pt';
-    if (browserLang.startsWith('ru')) return 'ru';
-    if (browserLang.startsWith('zh')) return 'zh';
-    if (browserLang.startsWith('ja')) return 'ja';
-    if (browserLang.startsWith('ko')) return 'ko';
-    if (browserLang.startsWith('ar')) return 'ar';
-    if (browserLang.startsWith('hi')) return 'hi';
-    if (browserLang.startsWith('it')) return 'it';
-    if (browserLang.startsWith('pl')) return 'pl';
-    if (browserLang.startsWith('nl')) return 'nl';
-    if (browserLang.startsWith('sv')) return 'sv';
-    if (browserLang.startsWith('no')) return 'no';
-    if (browserLang.startsWith('da')) return 'da';
-    if (browserLang.startsWith('fi')) return 'fi';
-    if (browserLang.startsWith('cs')) return 'cs';
-    if (browserLang.startsWith('hu')) return 'hu';
-    if (browserLang.startsWith('ro')) return 'ro';
-    if (browserLang.startsWith('el')) return 'el';
-    if (browserLang.startsWith('he')) return 'he';
-    if (browserLang.startsWith('th')) return 'th';
-    if (browserLang.startsWith('vi')) return 'vi';
-    if (browserLang.startsWith('id')) return 'id';
-    if (browserLang.startsWith('ms')) return 'ms';
-    return 'en';
+    return detectInterfaceLanguage() as InterfaceLanguage;
   });
   
   const [soundEnabled, setSoundEnabled] = useState(() => {
-    const saved = localStorage.getItem('soundEnabled');
+    const saved = getStorageItem('soundEnabled');
     return saved === 'true';
   });
   
   const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('darkMode');
+    const saved = getStorageItem('darkMode');
     // If saved preference exists, use it
     if (saved === 'true' || saved === 'false') {
     return saved === 'true';
@@ -148,22 +87,22 @@ function App() {
   });
   
   const [showKeyboard, setShowKeyboard] = useState(() => {
-    const saved = localStorage.getItem('showKeyboard');
+    const saved = getStorageItem('showKeyboard');
     return saved !== 'false'; // Default to true
   });
   
   const [showHands, setShowHands] = useState(() => {
-    const saved = localStorage.getItem('showHands');
+    const saved = getStorageItem('showHands');
     return saved !== 'false'; // Default to true
   });
   
   const [showColors, setShowColors] = useState(() => {
-    const saved = localStorage.getItem('showColors');
+    const saved = getStorageItem('showColors');
     return saved !== 'false'; // Default to true
   });
   
   const [correctionMode, setCorrectionMode] = useState(() => {
-    const saved = localStorage.getItem('correctionMode');
+    const saved = getStorageItem('correctionMode');
     // Default to true if not set
     if (saved === null || saved === '') return true;
     return saved === 'true';
@@ -270,27 +209,27 @@ function App() {
 
   // Persist settings to localStorage
   useEffect(() => {
-    localStorage.setItem('layoutId', layoutId);
+    setStorageItem('layoutId', layoutId);
   }, [layoutId]);
 
   useEffect(() => {
-    localStorage.setItem('mode', mode);
+    setStorageItem('mode', mode);
   }, [mode]);
 
   useEffect(() => {
-    localStorage.setItem('learningLanguage', learningLanguage);
+    setStorageItem('learningLanguage', learningLanguage);
   }, [learningLanguage]);
 
   useEffect(() => {
-    localStorage.setItem('learningContentType', learningContentType);
+    setStorageItem('learningContentType', learningContentType);
   }, [learningContentType]);
 
   useEffect(() => {
-    localStorage.setItem('interfaceLanguage', interfaceLanguage);
+    setStorageItem('interfaceLanguage', interfaceLanguage);
   }, [interfaceLanguage]);
 
   useEffect(() => {
-    localStorage.setItem('soundEnabled', String(soundEnabled));
+    setStorageItem('soundEnabled', String(soundEnabled));
     soundManager.setEnabled(soundEnabled);
   }, [soundEnabled]);
 
@@ -300,7 +239,7 @@ function App() {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const handleChange = (e: MediaQueryListEvent) => {
         // Only auto-update if user hasn't manually set a preference
-        const saved = localStorage.getItem('darkMode');
+        const saved = getStorageItem('darkMode');
         if (saved === null || saved === '') {
           setDarkMode(e.matches);
         }
@@ -320,7 +259,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('darkMode', String(darkMode));
+    setStorageItem('darkMode', String(darkMode));
     if (darkMode) {
       document.documentElement.classList.add('dark');
     } else {
@@ -329,19 +268,19 @@ function App() {
   }, [darkMode]);
 
   useEffect(() => {
-    localStorage.setItem('showKeyboard', String(showKeyboard));
+    setStorageItem('showKeyboard', String(showKeyboard));
   }, [showKeyboard]);
 
   useEffect(() => {
-    localStorage.setItem('showHands', String(showHands));
+    setStorageItem('showHands', String(showHands));
   }, [showHands]);
 
   useEffect(() => {
-    localStorage.setItem('showColors', String(showColors));
+    setStorageItem('showColors', String(showColors));
   }, [showColors]);
 
   useEffect(() => {
-    localStorage.setItem('correctionMode', String(correctionMode));
+    setStorageItem('correctionMode', String(correctionMode));
   }, [correctionMode]);
 
   const toggleSound = () => {
@@ -417,11 +356,14 @@ function App() {
 
           {/* Keyboard Layout Selector (Dropdown) */}
           <div className="relative group">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-700 dark:text-gray-300">
+                <KeyboardIcon size={18} />
+            </div>
             <select
                 data-testid="keyboard-layout-selector"
                 value={layoutId}
                 onChange={(e) => setLayoutId(e.target.value as KeyboardLayoutId)}
-                className="appearance-none bg-gray-100 dark:bg-gray-700 border-none text-gray-900 dark:text-white py-1.5 pl-3 pr-8 rounded-lg cursor-pointer focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm font-medium transition-colors"
+                className="appearance-none bg-gray-100 dark:bg-gray-700 border-none text-gray-900 dark:text-white py-1.5 pl-10 pr-8 rounded-lg cursor-pointer focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm font-medium transition-colors"
                 title="Select keyboard layout"
             >
                 {availableLayouts.map(layout => (

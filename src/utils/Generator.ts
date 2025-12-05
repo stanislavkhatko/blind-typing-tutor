@@ -19,6 +19,14 @@ export class Generator {
   constructor(lang: Language = 'en', number: number = 8) {
     this.language = lang;
     this.allWords = this.getWordsForLanguage(lang);
+    
+    // Validate that we have words to work with
+    if (this.allWords.length === 0) {
+      console.error(`No words found for language: ${lang}. Falling back to English.`);
+      this.allWords = this.getWordsForLanguage('en');
+      this.language = 'en';
+    }
+    
     this.number = number;
     this.update();
   }
@@ -50,6 +58,12 @@ export class Generator {
   }
 
   public update() {
+    if (this.allWords.length === 0) {
+      console.error('Cannot update: word list is empty');
+      this.words = [];
+      return;
+    }
+    
     const output: string[] = [];
     for (let i = 0; i < this.number; i++) {
       output.push(this.allWords[this.rand(0, this.allWords.length - 1)]);
@@ -67,10 +81,21 @@ export class Generator {
   }
 
   public getWords() {
+    if (this.words.length === 0) {
+      console.error('Cannot get words: word list is empty. Attempting to update...');
+      this.update();
+      if (this.words.length === 0) {
+        return '';
+      }
+    }
     return this.shuffle(this.words).join(' ');
   }
 
   public getOne() {
+    if (this.allWords.length === 0) {
+      console.error('Cannot get word: word list is empty');
+      return '';
+    }
     const word = this.allWords[this.rand(0, this.allWords.length - 1)];
     return Array(this.number).fill(word).join(' ');
   }
