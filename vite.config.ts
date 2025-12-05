@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   build: {
     // Optimize chunk splitting for better caching
@@ -41,7 +41,7 @@ export default defineConfig({
   },
   // Esbuild options for better minification (only in production)
   esbuild: {
-    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    drop: mode === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none'
   }
-})
+}))
