@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 /* Configure dark mode to use class-based selector (.dark) instead of media query */
 @variant dark (&:is(.dark *));
@@ -20,7 +20,9 @@ body {
   color: #1f2937;
 }
 
-code, pre, .font-mono {
+code,
+pre,
+.font-mono {
   font-family: "JetBrains Mono", monospace;
 }
 
@@ -29,17 +31,23 @@ code, pre, .font-mono {
 }
 
 @keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Keyboard Hand Styles */
 .key.key-target:after {
-  content: '';
+  content: "";
   height: 100px;
   width: 58px;
-  background-image: url('/img/hands2.png');
+  background-image: url("/img/hands2.png");
   position: absolute;
   bottom: 0;
   transform: translate(0%, 60%);
@@ -47,14 +55,138 @@ code, pre, .font-mono {
   pointer-events: none;
 }
 
-.key.group-1.key-target:after { background-position: 0 0; transform: translate(0%, 85%); }
-.key.group-2.key-target:after { background-position: -58px 0; transform: translate(-10px, 85%); }
-.key.group-3.key-target:after { background-position: -116px 0; transform: translate(-10px, 85%); }
-.key.group-4.key-target:after { background-position: -174px 0; transform: translate(-10px, 85%); }
-.key.group-5.key-target:after { background-position: -348px 0; transform: translate(10px, 85%); }
-.key.group-6.key-target:after { background-position: -406px 0; transform: translate(0px, 85%); }
-.key.group-7.key-target:after { background-position: -464px 0; transform: translate(10px, 85%); }
-.key.group-8.key-target:after { background-position: -522px 0; transform: translate(-64px, 65%); }
+.key.group-1.key-target:after {
+  background-position: 0 0;
+  transform: translate(0%, 85%);
+}
+.key.group-2.key-target:after {
+  background-position: -58px 0;
+  transform: translate(-10px, 85%);
+}
+.key.group-3.key-target:after {
+  background-position: -116px 0;
+  transform: translate(-10px, 85%);
+}
+.key.group-4.key-target:after {
+  background-position: -174px 0;
+  transform: translate(-10px, 85%);
+}
+.key.group-5.key-target:after {
+  background-position: -348px 0;
+  transform: translate(10px, 85%);
+}
+.key.group-6.key-target:after {
+  background-position: -406px 0;
+  transform: translate(0px, 85%);
+}
+.key.group-7.key-target:after {
+  background-position: -464px 0;
+  transform: translate(10px, 85%);
+}
+.key.group-8.key-target:after {
+  background-position: -522px 0;
+  transform: translate(-64px, 65%);
+}
 
-#space.key-target:after { background-position: -232px 0; transform: translate(-24px, 45%); }
-#space.key-target.righthand:after { background-position: -290px 0 !important; transform: translate(100%, 75%); }
+#space.key-target:after {
+  background-position: -232px 0;
+  transform: translate(-24px, 45%);
+}
+#space.key-target.righthand:after {
+  background-position: -290px 0 !important;
+  transform: translate(100%, 75%);
+}
+
+/* RTL (Right-to-Left) Language Support */
+
+/* Base RTL/LTR direction */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+}
+
+/* RTL text alignment - only for text content, not flex containers */
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] div:not(.flex):not([class*="flex"]):not([class*="grid"]) {
+  text-align: right;
+}
+
+/* RTL adjustments for select dropdowns */
+[dir="rtl"] select {
+  text-align: right;
+  padding-right: 2.5rem;
+  padding-left: 0.75rem;
+}
+
+[dir="rtl"] select option {
+  text-align: right;
+}
+
+/* RTL adjustments for input fields */
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="search"] {
+  text-align: right;
+}
+
+/* RTL adjustments for text areas */
+[dir="rtl"] textarea {
+  text-align: right;
+}
+
+/* Keyboard layout should always remain LTR for typing */
+[dir="rtl"] .keyboard-container,
+[dir="rtl"] [class*="keyboard"] {
+  direction: ltr !important; /* Keyboard layouts are always LTR for typing */
+}
+
+/* RTL adjustments for header navigation - use logical properties */
+[dir="rtl"] header {
+  direction: rtl;
+}
+
+/* RTL font support - ensure proper font rendering for Arabic and Hebrew */
+[lang="ar"] {
+  font-family: "Inter", "Segoe UI", "Tahoma", "Arial", "Arabic Typesetting",
+    sans-serif;
+}
+
+[lang="he"] {
+  font-family: "Inter", "Segoe UI", "Tahoma", "Arial", "David", "Guttman Yad",
+    sans-serif;
+}
+
+/* RTL support for Tailwind logical properties - use margin-inline and padding-inline */
+/* Note: Tailwind v4+ supports logical properties natively, but we add fallbacks here */
+
+/* RTL adjustments for spacing utilities using logical properties */
+[dir="rtl"] .space-x-2 > * + * {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .space-x-3 > * + * {
+  margin-left: 0;
+  margin-right: 0.75rem;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+/* RTL adjustments for gap utilities */
+[dir="rtl"] .gap-2 {
+  gap: 0.5rem;
+}
+
+[dir="rtl"] .gap-3 {
+  gap: 0.75rem;
+}
+
+[dir="rtl"] .gap-4 {
+  gap: 1rem;
+}
