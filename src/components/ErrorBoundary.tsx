@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -36,7 +36,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
@@ -96,7 +96,7 @@ export class ErrorBoundary extends Component<Props, State> {
               An unexpected error occurred. Please try refreshing the page or contact support if the problem persists.
             </p>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <details className="mb-4">
                 <summary className="cursor-pointer text-sm text-gray-500 dark:text-gray-400 mb-2">
                   Error details (development only)

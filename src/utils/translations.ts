@@ -488,6 +488,8 @@ export const translations: Translations = {
     words: 'Ord',
     phrases: 'Fraser',
     programming: 'Programmering',
+    support: 'Stöd',
+    supportTitle: 'Stöd detta projekt',
   },
   no: {
     title: 'Blindskriving Trener',

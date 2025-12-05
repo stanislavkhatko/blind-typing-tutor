@@ -31,7 +31,7 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
   const [text, setText] = useState('');
   const [input, setInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const completionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const completionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const t = translations[language];
 
   // Create generator using useMemo - automatically recreates when language changes
@@ -59,7 +59,7 @@ export const Game: React.FC<GameProps> = ({ mode, layoutId, language, showKeyboa
 
   // Global keypress listener for keyboard highlighting
   useEffect(() => {
-    const timeoutRefs: NodeJS.Timeout[] = [];
+    const timeoutRefs: ReturnType<typeof setTimeout>[] = [];
     
     const handleKeyDown = (e: KeyboardEvent) => {
       // Only track keys when the game is active (not in custom setup)
