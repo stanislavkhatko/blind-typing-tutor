@@ -105,7 +105,7 @@ export const Game: React.FC<GameProps> = ({
         wpm={wpm}
         accuracy={accuracy}
         errors={errors}
-        language={language}
+        translations={gameTranslations}
       />
 
       <GameControls
