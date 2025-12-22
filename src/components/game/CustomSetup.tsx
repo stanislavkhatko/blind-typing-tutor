@@ -4,6 +4,7 @@ interface CustomSetupProps {
   customText: string;
   setCustomText: (text: string) => void;
   handleCustomSubmit: () => void;
+  onCancel: () => void;
   translations: Record<string, string>;
 }
 
@@ -11,6 +12,7 @@ export const CustomSetup: React.FC<CustomSetupProps> = ({
   customText,
   setCustomText,
   handleCustomSubmit,
+  onCancel,
   translations,
 }) => {
   return (
@@ -26,14 +28,22 @@ export const CustomSetup: React.FC<CustomSetupProps> = ({
           value={customText}
           onChange={(e) => setCustomText(e.target.value)}
         />
-        <button
-          data-testid="custom-start-button"
-          onClick={handleCustomSubmit}
-          disabled={!customText.trim()}
-          className="self-end px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
-        >
-          {translations.start}
-        </button>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onCancel}
+            className="px-6 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >
+            {translations.cancel}
+          </button>
+          <button
+            data-testid="custom-start-button"
+            onClick={handleCustomSubmit}
+            disabled={!customText.trim()}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          >
+            {translations.start}
+          </button>
+        </div>
       </div>
     </div>
   );

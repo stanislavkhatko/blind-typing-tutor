@@ -41,23 +41,43 @@ interface GameProps {
 }
 
 export const Game: React.FC<GameProps> = ({
-  mode, setMode,
-  layoutId, setLayoutId,
-  learningLanguage, setLearningLanguage,
-  learningContentType, setLearningContentType,
+  mode,
+  setMode,
+  layoutId,
+  setLayoutId,
+  learningLanguage,
+  setLearningLanguage,
+  learningContentType,
+  setLearningContentType,
   language,
-  showKeyboard, showHands, showColors, correctionMode, soundEnabled,
-  onToggleKeyboard, onToggleHands, onToggleColors, onToggleCorrection, onToggleSound,
+  showKeyboard,
+  showHands,
+  showColors,
+  correctionMode,
+  soundEnabled,
+  onToggleKeyboard,
+  onToggleHands,
+  onToggleColors,
+  onToggleCorrection,
+  onToggleSound,
   translations: gameTranslations,
   availableLayouts,
   learningLanguageOptions,
 }) => {
   const {
-    text, input, inputRef,
-    wpm, accuracy, errors,
-    lastPressedKey, activeKey,
-    customText, setCustomText, isCustomSetup,
-    handleInput, handleCustomSubmit
+    text,
+    input,
+    inputRef,
+    wpm,
+    accuracy,
+    errors,
+    lastPressedKey,
+    activeKey,
+    customText,
+    setCustomText,
+    isCustomSetup,
+    handleInput,
+    handleCustomSubmit,
   } = useTypingEngine({ mode, language, correctionMode });
 
   const currentLayout = useMemo(() => getLayout(layoutId), [layoutId]);
@@ -69,14 +89,24 @@ export const Game: React.FC<GameProps> = ({
         customText={customText}
         setCustomText={setCustomText}
         handleCustomSubmit={handleCustomSubmit}
+        onCancel={() => setMode("practice")}
         translations={gameTranslations}
       />
     );
   }
 
   return (
-    <div className={`flex flex-col items-center bg-transparent p-4 ${!showKeyboard ? "pb-24" : ""}`}>
-      <Stats wpm={wpm} accuracy={accuracy} errors={errors} language={language} />
+    <div
+      className={`flex flex-col items-center bg-transparent p-4 ${
+        !showKeyboard ? "pb-24" : ""
+      }`}
+    >
+      <Stats
+        wpm={wpm}
+        accuracy={accuracy}
+        errors={errors}
+        language={language}
+      />
 
       <GameControls
         mode={mode}

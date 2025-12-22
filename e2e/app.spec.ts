@@ -352,4 +352,31 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
       expect(await keyboardToggle.isVisible()).toBe(true);
     }
   });
+  test("should allow canceling custom setup", async ({ page }) => {
+    // Find learning mode dropdown
+    const modeDropdown = page.locator('[data-testid="learning-mode-selector"]');
+    await expect(modeDropdown).toBeVisible();
+
+    // Change to Custom mode
+    await modeDropdown.selectOption("custom");
+    await page.waitForTimeout(1000);
+
+    // Verify Custom Setup is displayed (check for textarea)
+    const textarea = page.locator('[data-testid="custom-text-input"]');
+    await expect(textarea).toBeVisible();
+
+    // Find and click Cancel button
+    // The cancel button doesn't have a testid yet, but it's the first button in the div.flex.justify-end.gap-3
+    const cancelButton = page.locator('button:has-text("Cancel")');
+    await expect(cancelButton).toBeVisible();
+    await cancelButton.click();
+    await page.waitForTimeout(1000);
+
+    // Verify we are back in Practice mode
+    const selectedValue = await modeDropdown.inputValue();
+    expect(selectedValue).toBe("practice");
+
+    // Verify Custom Setup is gone
+    await expect(textarea).not.toBeVisible();
+  });
 });
