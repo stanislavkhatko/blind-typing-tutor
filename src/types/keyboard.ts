@@ -3,7 +3,7 @@
  * Supports multiple keyboard layouts with extensible architecture
  */
 
-export type KeyboardLayoutId = 
+export type KeyboardLayoutId =
   | 'en-us' | 'en-gb'  // English
   | 'de-de' | 'de-ch'  // German
   | 'fr-fr' | 'fr-be'  // French
@@ -30,10 +30,10 @@ export type KeyboardLayoutId =
   | 'ar-sa'            // Arabic
   | 'hi-in';           // Hindi
 
-export type LanguageCode = 
-  | 'en' | 'de' | 'fr' | 'es' | 'pt' | 'it' | 'nl' | 'sv' | 'fi' | 'no' | 'da' 
-  | 'pl' | 'cs' | 'hu' | 'ro' | 'el' | 'he' | 'ru' | 'uk' | 'tr' | 'ja' | 'ko' 
-  | 'zh' | 'ar' | 'hi';
+export type LanguageCode =
+  | 'en' | 'de' | 'fr' | 'es' | 'pt' | 'it' | 'nl' | 'sv' | 'fi' | 'no' | 'da'
+  | 'pl' | 'cs' | 'hu' | 'ro' | 'el' | 'he' | 'ru' | 'uk' | 'tr' | 'ja' | 'ko'
+  | 'zh' | 'ar' | 'hi' | 'th' | 'vi' | 'id' | 'ms';
 
 /**
  * Defines a single key on the keyboard

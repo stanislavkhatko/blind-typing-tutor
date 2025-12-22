@@ -6,6 +6,27 @@ import { words as frWords } from './words_fr';
 import { words as esWords } from './words_es';
 import { words as ptWords } from './words_pt';
 import { words as ruWords } from './words_ru';
+import { words as itWords } from './words_it';
+import { words as plWords } from './words_pl';
+import { words as nlWords } from './words_nl';
+import { words as svWords } from './words_sv';
+import { words as noWords } from './words_no';
+import { words as daWords } from './words_da';
+import { words as fiWords } from './words_fi';
+import { words as csWords } from './words_cs';
+import { words as huWords } from './words_hu';
+import { words as roWords } from './words_ro';
+import { words as elWords } from './words_el';
+import { words as heWords } from './words_he';
+import { words as jaWords } from './words_ja';
+import { words as koWords } from './words_ko';
+import { words as zhWords } from './words_zh';
+import { words as arWords } from './words_ar';
+import { words as hiWords } from './words_hi';
+import { words as thWords } from './words_th';
+import { words as viWords } from './words_vi';
+import { words as idWords } from './words_id';
+import { words as msWords } from './words_ms';
 import type { LanguageCode } from '../types/keyboard';
 
 export type Language = LanguageCode;
@@ -19,34 +40,48 @@ export class Generator {
   constructor(lang: Language = 'en', number: number = 8) {
     this.language = lang;
     this.allWords = this.getWordsForLanguage(lang);
-    
+
     // Validate that we have words to work with
     if (this.allWords.length === 0) {
       console.error(`No words found for language: ${lang}. Falling back to English.`);
       this.allWords = this.getWordsForLanguage('en');
       this.language = 'en';
     }
-    
+
     this.number = number;
     this.update();
   }
 
   private getWordsForLanguage(lang: Language): string[] {
     switch (lang) {
-      case 'uk':
-        return ukWords;
-      case 'tr':
-        return trWords;
-      case 'de':
-        return deWords;
-      case 'fr':
-        return frWords;
-      case 'es':
-        return esWords;
-      case 'pt':
-        return ptWords;
-      case 'ru':
-        return ruWords;
+      case 'uk': return ukWords;
+      case 'tr': return trWords;
+      case 'de': return deWords;
+      case 'fr': return frWords;
+      case 'es': return esWords;
+      case 'pt': return ptWords;
+      case 'ru': return ruWords;
+      case 'it': return itWords;
+      case 'pl': return plWords;
+      case 'nl': return nlWords;
+      case 'sv': return svWords;
+      case 'no': return noWords;
+      case 'da': return daWords;
+      case 'fi': return fiWords;
+      case 'cs': return csWords;
+      case 'hu': return huWords;
+      case 'ro': return roWords;
+      case 'el': return elWords;
+      case 'he': return heWords;
+      case 'ja': return jaWords;
+      case 'ko': return koWords;
+      case 'zh': return zhWords;
+      case 'ar': return arWords;
+      case 'hi': return hiWords;
+      case 'th': return thWords;
+      case 'vi': return viWords;
+      case 'id': return idWords;
+      case 'ms': return msWords;
       case 'en':
       default:
         return enWords;
@@ -63,7 +98,7 @@ export class Generator {
       this.words = [];
       return;
     }
-    
+
     const output: string[] = [];
     for (let i = 0; i < this.number; i++) {
       output.push(this.allWords[this.rand(0, this.allWords.length - 1)]);
