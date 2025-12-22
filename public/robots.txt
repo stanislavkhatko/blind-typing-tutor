@@ -1,31 +1,4 @@
-# robots.txt for Blind Typing Tutor
-# https://blind-typing-tutor.wordmemo.net/
-
 User-agent: *
 Allow: /
-Disallow: /test-results/
-Disallow: /playwright-report/
-Disallow: /node_modules/
-Disallow: /.git/
-Disallow: /dist/
-Disallow: /*.json$
-Allow: /manifest.json
 
-# Sitemap
 Sitemap: https://blind-typing-tutor.wordmemo.net/sitemap.xml
-
-# Crawl-delay (optional, be respectful)
-Crawl-delay: 1
-
-# Specific bots
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 0
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 0
-
-User-agent: Slurp
-Allow: /
-Crawl-delay: 0

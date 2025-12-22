@@ -10,6 +10,7 @@ import {
 import { getStorageItem, setStorageItem } from "../utils/storage";
 import { updateDocumentDirection } from "../utils/textDirection";
 import { soundManager } from "../utils/SoundManager";
+import { getLanguageFromUrl, updateUrlLanguage } from "../utils/url";
 
 export function useAppSettings() {
     // Initialize layout from localStorage with fallback defaults
@@ -56,6 +57,9 @@ export function useAppSettings() {
 
     const [interfaceLanguage, setInterfaceLanguage] = useState<InterfaceLanguage>(
         () => {
+            const urlLang = getLanguageFromUrl();
+            if (urlLang) return urlLang;
+
             const saved = getStorageItem("interfaceLanguage");
             const validLanguages: InterfaceLanguage[] = [
                 "en", "uk", "tr", "de", "fr", "es", "pt", "ru", "zh", "ja", "ko", "ar",
@@ -115,6 +119,7 @@ export function useAppSettings() {
     useEffect(() => {
         setStorageItem("interfaceLanguage", interfaceLanguage);
         updateDocumentDirection(interfaceLanguage);
+        updateUrlLanguage(interfaceLanguage);
     }, [interfaceLanguage]);
 
     useEffect(() => {
@@ -135,6 +140,18 @@ export function useAppSettings() {
     useEffect(() => { setStorageItem("showHands", String(showHands)); }, [showHands]);
     useEffect(() => { setStorageItem("showColors", String(showColors)); }, [showColors]);
     useEffect(() => { setStorageItem("correctionMode", String(correctionMode)); }, [correctionMode]);
+
+    // URL change listener (e.g. back button)
+    useEffect(() => {
+        const handlePopState = () => {
+            const urlLang = getLanguageFromUrl();
+            if (urlLang && urlLang !== interfaceLanguage) {
+                setInterfaceLanguage(urlLang);
+            }
+        };
+        window.addEventListener("popstate", handlePopState);
+        return () => window.removeEventListener("popstate", handlePopState);
+    }, [interfaceLanguage]);
 
     // System theme detection
     useEffect(() => {
