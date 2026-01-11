@@ -5,11 +5,15 @@ import type { LanguageCode } from "../../types/keyboard";
 interface GameControlsProps {
   mode: "practice" | "beginner" | "custom";
   setMode: (mode: "practice" | "beginner" | "custom") => void;
-  learningContentType: "words" | "phrases" | "programming";
-  setLearningContentType: (type: "words" | "phrases" | "programming") => void;
+  learningContentType: "words" | "phrases" | "custom";
+  setLearningContentType: (type: "words" | "phrases" | "custom") => void;
   learningLanguage: LanguageCode;
   setLearningLanguage: (lang: LanguageCode) => void;
-  learningLanguageOptions: Array<{ code: LanguageCode; name: string; flag: string }>;
+  learningLanguageOptions: Array<{
+    code: LanguageCode;
+    name: string;
+    flag: string;
+  }>;
   translations: Record<string, string>;
 }
 
@@ -32,7 +36,9 @@ export const GameControls: React.FC<GameControlsProps> = ({
         <select
           data-testid="learning-mode-selector"
           value={mode}
-          onChange={(e) => setMode(e.target.value as "practice" | "beginner" | "custom")}
+          onChange={(e) =>
+            setMode(e.target.value as "practice" | "beginner" | "custom")
+          }
           className="appearance-none bg-white dark:bg-gray-800 border-2 border-indigo-200 dark:border-indigo-800 text-gray-900 dark:text-white py-2.5 pl-10 pr-8 rounded-lg cursor-pointer focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none text-sm font-semibold transition-all shadow-sm hover:shadow-md"
           title={translations.learningMode}
         >
@@ -54,7 +60,9 @@ export const GameControls: React.FC<GameControlsProps> = ({
           value={`${learningContentType}-${learningLanguage}`}
           onChange={(e) => {
             const [contentType, lang] = e.target.value.split("-");
-            setLearningContentType(contentType as "words" | "phrases" | "programming");
+            setLearningContentType(
+              contentType as "words" | "phrases" | "custom"
+            );
             setLearningLanguage(lang as LanguageCode);
           }}
           className="appearance-none bg-white dark:bg-gray-800 border-2 border-indigo-200 dark:border-indigo-800 text-gray-900 dark:text-white py-2.5 pl-10 pr-8 rounded-lg cursor-pointer focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none text-sm font-semibold transition-all shadow-sm hover:shadow-md"

@@ -18,8 +18,8 @@ interface GameProps {
   setLayoutId: (layoutId: KeyboardLayoutId) => void;
   learningLanguage: LanguageCode;
   setLearningLanguage: (lang: LanguageCode) => void;
-  learningContentType: "words" | "phrases" | "programming";
-  setLearningContentType: (type: "words" | "phrases" | "programming") => void;
+  learningContentType: "words" | "phrases" | "custom";
+  setLearningContentType: (type: "words" | "phrases" | "custom") => void;
   language: Language;
   showKeyboard: boolean;
   showHands: boolean;

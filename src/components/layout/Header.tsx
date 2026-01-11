@@ -1,5 +1,13 @@
 import React from "react";
-import { Keyboard as KeyboardIcon, Github, Coffee, Languages, ChevronDown, Moon, Sun } from "lucide-react";
+import {
+  Keyboard as KeyboardIcon,
+  Github,
+  Coffee,
+  Languages,
+  ChevronDown,
+  Moon,
+  Sun,
+} from "lucide-react";
 import type { InterfaceLanguage } from "../../utils/translations";
 
 interface HeaderProps {
@@ -13,23 +21,36 @@ interface HeaderProps {
   darkMode: string;
   interfaceLanguage: InterfaceLanguage;
   setInterfaceLanguage: (lang: InterfaceLanguage) => void;
-  interfaceLanguageOptions: Array<{ code: InterfaceLanguage; name: string; flag: string }>;
+  interfaceLanguageOptions: Array<{
+    code: InterfaceLanguage;
+    name: string;
+    flag: string;
+  }>;
   isDarkMode: boolean;
   setDarkMode: (dark: boolean) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  title, reportIssue, reportIssueTitle, support, supportTitle,
-  interfaceLanguageLabel, lightMode, darkMode: darkModeLabel,
-  interfaceLanguage, setInterfaceLanguage, interfaceLanguageOptions,
-  isDarkMode, setDarkMode
+  title,
+  reportIssue,
+  reportIssueTitle,
+  support,
+  supportTitle,
+  interfaceLanguageLabel,
+  lightMode,
+  darkMode: darkModeLabel,
+  interfaceLanguage,
+  setInterfaceLanguage,
+  interfaceLanguageOptions,
+  isDarkMode,
+  setDarkMode,
 }) => {
   return (
     <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm px-6 py-4 flex justify-between items-center fixed w-full top-0 z-50 transition-colors duration-300">
       <div className="flex items-center gap-4">
         <h1
           data-testid="app-title"
-          className="text-xl font-bold text-gray-900 dark:text-white whitespace-nowrap transition-colors flex items-center gap-2"
+          className="text-xl font-bold text-gray-900 dark:text-white whitespace-nowrap transition-colors flex items-center gap-2 font-mono"
         >
           <KeyboardIcon className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
           {title}
@@ -37,6 +58,27 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="flex items-center gap-3">
+        <a
+          data-testid="wordmemo-link"
+          href="https://wordmemo.net"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors group"
+          title="WordMemo - Language Learning Platform"
+          aria-label="WordMemo - Language Learning Platform"
+        >
+          <img
+            src="/wordmemo-logo.svg"
+            alt="WordMemo"
+            className="h-6 w-6 transition-transform group-hover:scale-105"
+            width="24"
+            height="24"
+          />
+          <span className="hidden sm:inline font-medium text-sm text-gray-900 dark:text-white">
+            WordMemo.net
+          </span>
+        </a>
+
         <a
           data-testid="github-issue-link"
           href="https://github.com/stanislavkhatko/blind-typing-tutor/issues/new"
@@ -70,7 +112,9 @@ export const Header: React.FC<HeaderProps> = ({
           <select
             data-testid="interface-language-selector"
             value={interfaceLanguage}
-            onChange={(e) => setInterfaceLanguage(e.target.value as InterfaceLanguage)}
+            onChange={(e) =>
+              setInterfaceLanguage(e.target.value as InterfaceLanguage)
+            }
             className="appearance-none bg-gray-100 dark:bg-gray-700 border-none text-gray-900 dark:text-white py-1.5 pl-10 pr-8 rounded-lg cursor-pointer focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm font-medium transition-colors"
             title={interfaceLanguageLabel}
           >

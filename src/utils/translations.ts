@@ -93,7 +93,8 @@ export const translations: Translations = {
     supportTitle: "Support this project",
     reportIssue: "Report Issue",
     reportIssueTitle: "Report an issue on GitHub",
-    metaDescription: "Master touch typing with our free online blind typing tutor. Practice on 28+ keyboard layouts (QWERTY, QWERTZ, AZERTY) in 8 languages. Real-time words/minute tracking, accuracy stats, visual keyboard, and audio feedback.",
+    metaDescription:
+      "Master touch typing with our free online blind typing tutor. Practice on 28+ keyboard layouts (QWERTY, QWERTZ, AZERTY) in 8 languages. Real-time words/minute tracking, accuracy stats, visual keyboard, and audio feedback.",
     cancel: "Cancel",
     selectKeyboardLayout: "Select keyboard layout",
   },
@@ -125,7 +126,8 @@ export const translations: Translations = {
     supportTitle: "Підтримати цей проект",
     reportIssue: "Повідомити про проблему",
     reportIssueTitle: "Повідомити про проблему на GitHub",
-    metaDescription: "Опануйте сліпий друк за допомогою нашого безкоштовного онлайн-тренажера. Практикуйтеся на 28+ розкладках клавіатури 8-ми мовами. Відстеження швидкості (слів за хвилину), точності, віртуальна клавіатура та аудіовідгук.",
+    metaDescription:
+      "Опануйте сліпий друк за допомогою нашого безкоштовного онлайн-тренажера. Практикуйтеся на 28+ розкладках клавіатури 8-ми мовами. Відстеження швидкості (слів за хвилину), точності, віртуальна клавіатура та аудіовідгук.",
     cancel: "Скасувати",
     selectKeyboardLayout: "Виберіть розкладку клавіатури",
   },
@@ -157,7 +159,8 @@ export const translations: Translations = {
     supportTitle: "Bu projeyi destekle",
     reportIssue: "Sorun Bildir",
     reportIssueTitle: "GitHub'da sorun bildir",
-    metaDescription: "Ücretsiz çevrimiçi kör yazma eğitmenimizle on parmak yazmayı öğrenin. 8 dilde 28'den fazla klavye düzeninde (QWERTY, QWERTZ, AZERTY) pratik yapın. Gerçek zamanlı DPD takibi, doğruluk istatistikleri ve görsel klavye.",
+    metaDescription:
+      "Ücretsiz çevrimiçi kör yazma eğitmenimizle on parmak yazmayı öğrenin. 8 dilde 28'den fazla klavye düzeninde (QWERTY, QWERTZ, AZERTY) pratik yapın. Gerçek zamanlı DPD takibi, doğruluk istatistikleri ve görsel klavye.",
     cancel: "İptal",
     selectKeyboardLayout: "Klavye düzenini seçin",
   },
@@ -189,7 +192,8 @@ export const translations: Translations = {
     supportTitle: "Dieses Projekt unterstützen",
     reportIssue: "Problem Melden",
     reportIssueTitle: "Problem auf GitHub melden",
-    metaDescription: "Meistern Sie das Blindschreiben mit unserem kostenlosen Online-Trainer. Üben Sie auf über 28 Tastaturlayouts in 8 Sprachen. Echtzeit-Wörter/Minute-Tracking, Genauigkeitsstatistiken, virtuelle Tastatur und Audio-Feedback.",
+    metaDescription:
+      "Meistern Sie das Blindschreiben mit unserem kostenlosen Online-Trainer. Üben Sie auf über 28 Tastaturlayouts in 8 Sprachen. Echtzeit-Wörter/Minute-Tracking, Genauigkeitsstatistiken, virtuelle Tastatur und Audio-Feedback.",
     cancel: "Abbrechen",
     selectKeyboardLayout: "Tastaturlayout auswählen",
   },
@@ -221,7 +225,8 @@ export const translations: Translations = {
     supportTitle: "Soutenir ce projet",
     reportIssue: "Signaler un Problème",
     reportIssueTitle: "Signaler un problème sur GitHub",
-    metaDescription: "Maîtrisez la dactylographie avec notre entraîneur en ligne gratuit. Entraînez-vous sur plus de 28 dispositions de clavier dans 8 langues. Suivi du MPM en temps réel, statistiques de précision et clavier visuel.",
+    metaDescription:
+      "Maîtrisez la dactylographie avec notre entraîneur en ligne gratuit. Entraînez-vous sur plus de 28 dispositions de clavier dans 8 langues. Suivi du MPM en temps réel, statistiques de précision et clavier visuel.",
     cancel: "Annuler",
     selectKeyboardLayout: "Dispositions de clavier",
   },
@@ -253,7 +258,8 @@ export const translations: Translations = {
     supportTitle: "Apoyar este proyecto",
     reportIssue: "Reportar Problema",
     reportIssueTitle: "Reportar un problema en GitHub",
-    metaDescription: "Domine la mecanografía con nuestro entrenador en línea gratuito. Practique en más de 28 diseños de teclado en 8 idiomas. Seguimiento de PPM en tiempo real, estadísticas de precisión, teclado visual y respuesta de audio.",
+    metaDescription:
+      "Domine la mecanografía con nuestro entrenador en línea gratuito. Practique en más de 28 diseños de teclado en 8 idiomas. Seguimiento de PPM en tiempo real, estadísticas de precisión, teclado visual y respuesta de audio.",
     cancel: "Cancelar",
     selectKeyboardLayout: "Disposiciones de teclado",
   },
@@ -285,7 +291,8 @@ export const translations: Translations = {
     supportTitle: "Apoiar este projeto",
     reportIssue: "Reportar Problema",
     reportIssueTitle: "Reportar un problema no GitHub",
-    metaDescription: "Domine a digitação com nosso treinador online gratuito. Pratique em mais de 28 layouts de teclado em 8 idiomas. Acompanhamento de PPM em tempo real, estatísticas de precisão, teclado visual e feedback de áudio.",
+    metaDescription:
+      "Domine a digitação com nosso treinador online gratuito. Pratique em mais de 28 layouts de teclado em 8 idiomas. Acompanhamento de PPM em tempo real, estatísticas de precisão, teclado visual e feedback de áudio.",
     cancel: "Cancelar",
     selectKeyboardLayout: "Disposiciones de teclado",
   },
@@ -317,7 +324,8 @@ export const translations: Translations = {
     supportTitle: "Поддержать этот проект",
     reportIssue: "Сообщить о Проблеме",
     reportIssueTitle: "Сообщить о проблеме на GitHub",
-    metaDescription: "Освойте слепую печать с нашим бесплатным онлайн-тренажером. Практикуйтесь на 28+ раскладках клавиатуры на 8 языках. Отслеживание скорости (слов в минуту) в реальном времени, статистика точности и визуальная клавиатура.",
+    metaDescription:
+      "Освойте слепую печать с нашим бесплатным онлайн-тренажером. Практикуйтесь на 28+ раскладках клавиатуры на 8 языках. Отслеживание скорости (слов в минуту) в реальном времени, статистика точности и визуальная клавиатура.",
     cancel: "Отмена",
     selectKeyboardLayout: "Выберите раскладку клавиатуры",
   },
@@ -350,7 +358,8 @@ export const translations: Translations = {
     supportTitle: "支持这个项目",
     reportIssue: "报告问题",
     reportIssueTitle: "在 GitHub 上报告问题",
-    metaDescription: "通过我们的免费在线盲打训练器掌握触摸打字。在 8 种语言의 28 多种键盘布局（QWERTY、QWERTZ、AZERTY）上进行练习。实时词/分钟跟踪、准确度统计和视觉键盘。",
+    metaDescription:
+      "通过我们的免费在线盲打训练器掌握触摸打字。在 8 种语言의 28 多种键盘布局（QWERTY、QWERTZ、AZERTY）上进行练习。实时词/分钟跟踪、准确度统计和视觉键盘。",
     cancel: "取消",
     selectKeyboardLayout: "选择键盘布局",
   },
@@ -382,7 +391,8 @@ export const translations: Translations = {
     supportTitle: "このプロジェクトをサポート",
     reportIssue: "問題を報告",
     reportIssueTitle: "GitHubで問題を報告",
-    metaDescription: "無料のオンラインブラインドタイピング練習でタッチタイピングをマスターしましょう。8つの言語で28以上のキーボードレイアウト（QWERTY、QWERTZ、AZERTY）で練習できます。リアルタイムの単語/分追跡、正確性の統計、および視覚的なキーボードが利用可能です。",
+    metaDescription:
+      "無料のオンラインブラインドタイピング練習でタッチタイピングをマスターしましょう。8つの言語で28以上のキーボードレイアウト（QWERTY、QWERTZ、AZERTY）で練習できます。リアルタイムの単語/分追跡、正確性の統計、および視覚的なキーボードが利用可能です。",
     cancel: "キャンセル",
     selectKeyboardLayout: "キーボードレイアウトを選択",
   },
@@ -414,7 +424,8 @@ export const translations: Translations = {
     supportTitle: "이 프로젝트 지원",
     reportIssue: "문제 보고",
     reportIssueTitle: "GitHub에서 문제 보고",
-    metaDescription: "무료 온라인 맹목 타이핑 튜터로 터치 타이핑을 마스터하세요. 8개 국어의 28개 이상의 키보드 레이아웃(QWERTY, QWERTZ, AZERTY)에서 연습하세요。 실시간 단어/분 추적, 정확도 통계 및 시각적 키보드를 제공합니다。",
+    metaDescription:
+      "무료 온라인 맹목 타이핑 튜터로 터치 타이핑을 마스터하세요. 8개 국어의 28개 이상의 키보드 레이아웃(QWERTY, QWERTZ, AZERTY)에서 연습하세요。 실시간 단어/분 추적, 정확도 통계 및 시각적 키보드를 제공합니다。",
     cancel: "취소",
     selectKeyboardLayout: "키보드 레이아웃 선택",
   },
@@ -446,7 +457,8 @@ export const translations: Translations = {
     supportTitle: "دعم هذا المشروع",
     reportIssue: "الإبلاغ عن مشكلة",
     reportIssueTitle: "الإبلاغ عن مشكلة على GitHub",
-    metaDescription: "أتقن الكتابة باللمس من خلال مدرب الكتابة العمياء المجاني عبر الإنترنت. تدرب على أكثر من 28 تخطيطاً للوحة المفاتيح بـ 8 لغات. تتبع السرعة (كلمة/دقيقة) في الوقت الفعلي، وإحصاءات الدقة، ولوحة مفاتيح مرئية。",
+    metaDescription:
+      "أتقن الكتابة باللمس من خلال مدرب الكتابة العمياء المجاني عبر الإنترنت. تدرب على أكثر من 28 تخطيطاً للوحة المفاتيح بـ 8 لغات. تتبع السرعة (كلمة/دقيقة) في الوقت الفعلي، وإحصاءات الدقة، ولوحة مفاتيح مرئية。",
     cancel: "إلغاء",
     selectKeyboardLayout: "تبديل تخطيط لوحة المفاتيح",
   },
@@ -478,7 +490,8 @@ export const translations: Translations = {
     supportTitle: "इस परियोजना का समर्थन करें",
     reportIssue: "समस्या रिपोर्ट करें",
     reportIssueTitle: "GitHub पर समस्या रिपोर्ट करें",
-    metaDescription: "हमारे मुफ़्त ऑनलाइन ब्लाइंड टाइपिंग ट्यूटर के साथ टच टाइपिंग में महारत हासिल करें। 8 भाषाओं में 28+ कीबोर्ड लेआउट (QWERTY, QWERTZ, AZERTY) पर अभ्यास करें। रीयल-टाइम शब्द/मिनट ट्रैकिंग, सटीकता आँकड़े और विज़ुअल कीबोर्ड।",
+    metaDescription:
+      "हमारे मुफ़्त ऑनलाइन ब्लाइंड टाइपिंग ट्यूटर के साथ टच टाइपिंग में महारत हासिल करें। 8 भाषाओं में 28+ कीबोर्ड लेआउट (QWERTY, QWERTZ, AZERTY) पर अभ्यास करें। रीयल-टाइम शब्द/मिनट ट्रैकिंग, सटीकता आँकड़े और विज़ुअल कीबोर्ड।",
     cancel: "रद्द करें",
     selectKeyboardLayout: "कीबोर्ड लेआउट चुनें",
   },
@@ -510,7 +523,8 @@ export const translations: Translations = {
     supportTitle: "Supporta questo progetto",
     reportIssue: "Segnala Problema",
     reportIssueTitle: "Segnala un problema su GitHub",
-    metaDescription: "Impara la dattilografia con il nostro tutor online gratuito. Esercitati su oltre 28 layout di tastiera in 8 lingue. Monitoraggio parole/minuto in tempo reale, statistiche di precisione, tastiera visiva e feedback audio.",
+    metaDescription:
+      "Impara la dattilografia con il nostro tutor online gratuito. Esercitati su oltre 28 layout di tastiera in 8 lingue. Monitoraggio parole/minuto in tempo reale, statistiche di precisione, tastiera visiva e feedback audio.",
     cancel: "Annulla",
     selectKeyboardLayout: "Seleziona layout tastiera",
   },
@@ -542,7 +556,8 @@ export const translations: Translations = {
     supportTitle: "Wspieraj ten projekt",
     reportIssue: "Zgłoś Problem",
     reportIssueTitle: "Zgłoś problem na GitHub",
-    metaDescription: "Opanuj pisanie bezwzrokowe z naszym darmowym trenerem online. Ćwicz na ponad 28 układach klawiatury w 8 językach. Śledzenie słów/minutę w czasie rzeczywistym, statystyki dokładności, wizualna klawiatura i dźwięki.",
+    metaDescription:
+      "Opanuj pisanie bezwzrokowe z naszym darmowym trenerem online. Ćwicz na ponad 28 układach klawiatury w 8 językach. Śledzenie słów/minutę w czasie rzeczywistym, statystyki dokładności, wizualna klawiatura i dźwięki.",
     cancel: "Anuluj",
     selectKeyboardLayout: "Wybierz układ klawiatury",
   },
@@ -574,7 +589,8 @@ export const translations: Translations = {
     supportTitle: "Ondersteun dit project",
     reportIssue: "Probleem Melden",
     reportIssueTitle: "Probleem melden op GitHub",
-    metaDescription: "Leer blind typen met onze gratis online trainer. Oefen op meer dan 28 toetsenbordindelingen in 8 talen. Realtime woorden/minuut-tracking, nauwkeurigheidsstatistieken, visueel toetsenbord en audiofeedback.",
+    metaDescription:
+      "Leer blind typen met onze gratis online trainer. Oefen op meer dan 28 toetsenbordindelingen in 8 talen. Realtime woorden/minuut-tracking, nauwkeurigheidsstatistieken, visueel toetsenbord en audiofeedback.",
     cancel: "Annuleren",
     selectKeyboardLayout: "Toetsenbordindeling selecteren",
   },
@@ -606,7 +622,8 @@ export const translations: Translations = {
     supportTitle: "Stöd detta projekt",
     reportIssue: "Rapportera Problem",
     reportIssueTitle: "Rapportera ett problem på GitHub",
-    metaDescription: "Lär dig blindskrift med vår gratis onlinetränare. Öva på över 28 tangentbordslayouter på 8 språk. ord/minut-spårning i realtid, noggrannhetsstatistik, visuellt tangentbord och ljudåterkoppling.",
+    metaDescription:
+      "Lär dig blindskrift med vår gratis onlinetränare. Öva på över 28 tangentbordslayouter på 8 språk. ord/minut-spårning i realtid, noggrannhetsstatistik, visuellt tangentbord och ljudåterkoppling.",
     cancel: "Avbryt",
     selectKeyboardLayout: "Tangentbordslayout välja",
   },
@@ -638,7 +655,8 @@ export const translations: Translations = {
     supportTitle: "Støtt dette prosjektet",
     reportIssue: "Rapporter Problem",
     reportIssueTitle: "Rapporter et problem på GitHub",
-    metaDescription: "Lær blindskrift med vår gratis online trener. Øv på over 28 tastaturoppsett på 8 språk. Real-time ord/minutt-sporing, nøyaktighetsstatistikk, visuelt tastatur og lydtilbakemelding.",
+    metaDescription:
+      "Lær blindskrift med vår gratis online trener. Øv på over 28 tastaturoppsett på 8 språk. Real-time ord/minutt-sporing, nøyaktighetsstatistikk, visuelt tastatur og lydtilbakemelding.",
     cancel: "Avbryt",
     selectKeyboardLayout: "Tastaturoppsett velge",
   },
@@ -670,7 +688,8 @@ export const translations: Translations = {
     supportTitle: "Støt dette projekt",
     reportIssue: "Rapporter Problem",
     reportIssueTitle: "Rapporter et problem på GitHub",
-    metaDescription: "Lær blindskrift med vores gratis online træner. Øv dig på over 28 tastaturlayouts på 8 sprog. Realtids ord/minut-sporing, nøjagtighedsstatistik, visuelt tastatur og lydfeedback.",
+    metaDescription:
+      "Lær blindskrift med vores gratis online træner. Øv dig på over 28 tastaturlayouts på 8 sprog. Realtids ord/minut-sporing, nøjagtighedsstatistik, visuelt tastatur og lydfeedback.",
     cancel: "Annuller",
     selectKeyboardLayout: "Tastaturlayout vælg",
   },
@@ -702,7 +721,8 @@ export const translations: Translations = {
     supportTitle: "Tue tätä projektia",
     reportIssue: "Ilmoita Ongelma",
     reportIssueTitle: "Ilmoita ongelma GitHubissa",
-    metaDescription: "Opi sokkakirjoitus ilmaisella verkkovalmentajallamme. Harjoittele yli 28 näppäimistöasettelulla 8 kielellä. Reaaliaikainen sanaa/minuutti-seuranta, tarkkuustilastot, visuaalinen näppäimistö ja äänipalaute.",
+    metaDescription:
+      "Opi sokkakirjoitus ilmaisella verkkovalmentajallamme. Harjoittele yli 28 näppäimistöasettelulla 8 kielellä. Reaaliaikainen sanaa/minuutti-seuranta, tarkkuustilastot, visuaalinen näppäimistö ja äänipalaute.",
     cancel: "Peruuta",
     selectKeyboardLayout: "Näppäimistöasettelu valitse",
   },
@@ -734,7 +754,8 @@ export const translations: Translations = {
     supportTitle: "Podpořit tento projekt",
     reportIssue: "Nahlásit Problém",
     reportIssueTitle: "Nahlásit problém na GitHub",
-    metaDescription: "Naučte se psát všemi deseti s naším bezplatným online trenérem. Cvičte na více než 28 rozloženích klávesnice v 8 jazycích. Sledování slov/minutu v reálném čase, statistiky přesnosti a vizuální klávesnice.",
+    metaDescription:
+      "Naučte se psát všemi deseti s naším bezplatným online trenérem. Cvičte na více než 28 rozloženích klávesnice v 8 jazycích. Sledování slov/minutu v reálném čase, statistiky přesnosti a vizuální klávesnice.",
     cancel: "Zrušit",
     selectKeyboardLayout: "Klávesnici výběr",
   },
@@ -766,7 +787,8 @@ export const translations: Translations = {
     supportTitle: "Támogasd ezt a projektet",
     reportIssue: "Probléma Bejelentése",
     reportIssueTitle: "Probléma bejelentése a GitHubon",
-    metaDescription: "Tanuljon meg vakon gépelni ingyenes online oktatónkkal. Gyakoroljon több mint billentyűzetkiosztáson 8 nyelven. Valós idejű szó/perc-követés, pontossági statisztikák és vizuális billentyűzet.",
+    metaDescription:
+      "Tanuljon meg vakon gépelni ingyenes online oktatónkkal. Gyakoroljon több mint billentyűzetkiosztáson 8 nyelven. Valós idejű szó/perc-követés, pontossági statisztikák és vizuális billentyűzet.",
     cancel: "Mégse",
     selectKeyboardLayout: "Billentyűzetkiosztás kiválasztása",
   },
@@ -798,7 +820,8 @@ export const translations: Translations = {
     supportTitle: "Sprijină acest proiect",
     reportIssue: "Raportează Problemă",
     reportIssueTitle: "Raportează o problemă pe GitHub",
-    metaDescription: "Învață dactilografia cu ajutorul antrenorului nostru online gratuit. Exersează pe peste 28 de aspecte de tastatură în 8 limbi. Monitorizare cuvinte/minut în timp real, statistici de precizie și tastatură vizuală.",
+    metaDescription:
+      "Învață dactilografia cu ajutorul antrenorului nostru online gratuit. Exersează pe peste 28 de aspecte de tastatură în 8 limbi. Monitorizare cuvinte/minut în timp real, statistici de precizie și tastatură vizuală.",
     cancel: "Anulează",
     selectKeyboardLayout: "Selectează aspectul tastaturii",
   },
@@ -830,7 +853,8 @@ export const translations: Translations = {
     supportTitle: "Υποστηρίξτε αυτό το έργο",
     reportIssue: "Αναφορά Προβλήματος",
     reportIssueTitle: "Αναφορά προβλήματος στο GitHub",
-    metaDescription: "Μάθετε τυφλό σύστημα πληκτρολόγησης με τον δωρεάν διαδικτυακό μας εκπαιδευτή. Εξασκηθείτε σε περισσότερες από 28 διατάξεις πληκτρολογίου σε 8 γλώσσες. Παρακολούθηση λέξεις/λεπτό σε πραγματικό χρόνο, στατιστικά ακρίβειας.",
+    metaDescription:
+      "Μάθετε τυφλό σύστημα πληκτρολόγησης με τον δωρεάν διαδικτυακό μας εκπαιδευτή. Εξασκηθείτε σε περισσότερες από 28 διατάξεις πληκτρολογίου σε 8 γλώσσες. Παρακολούθηση λέξεις/λεπτό σε πραγματικό χρόνο, στατιστικά ακρίβειας.",
     cancel: "Ακύρωση",
     selectKeyboardLayout: "Επιλογή διατάξεως πληκτρολογίου",
   },
@@ -862,7 +886,8 @@ export const translations: Translations = {
     supportTitle: "תמכו בפרויקט זה",
     reportIssue: "דווח על בעיה",
     reportIssueTitle: "דווח על בעיה ב-GitHub",
-    metaDescription: "למד הקלדה עיוורת עם המורה המקוון החינמי שלנו. תרגל ביותר מ-28 פריסות מקלדת ב-8 שפות. מעקב אחר מילים/דקה בזמן אמת, סטטיסטיקת דיוק ומקלדת ויזואלית.",
+    metaDescription:
+      "למד הקלדה עיוורת עם המורה המקוון החינמי שלנו. תרגל ביותר מ-28 פריסות מקלדת ב-8 שפות. מעקב אחר מילים/דקה בזמן אמת, סטטיסטיקת דיוק ומקלדת ויזואלית.",
     cancel: "ביטול",
     selectKeyboardLayout: "Wybierz układ klawiatury",
   },
@@ -894,7 +919,8 @@ export const translations: Translations = {
     supportTitle: "สนับสนุนโปรเจกต์นี้",
     reportIssue: "รายงานปัญหา",
     reportIssueTitle: "รายงานปัญหาบน GitHub",
-    metaDescription: "เรียนรู้การพิมพ์สัมผัสด้วยครูสอนพิมพ์สัมผัสออนไลน์ฟรีของเรา ฝึกฝนบนรูปแบบแป้นพิมพ์กว่า 28 รูปแบบใน 8 ภาษา ติดตาม คำ/นาที แบบเรียลไทม์ สถิติความแม่นยำ และแป้นพิมพ์เสมือนจริง",
+    metaDescription:
+      "เรียนรู้การพิมพ์สัมผัสด้วยครูสอนพิมพ์สัมผัสออนไลน์ฟรีของเรา ฝึกฝนบนรูปแบบแป้นพิมพ์กว่า 28 รูปแบบใน 8 ภาษา ติดตาม คำ/นาที แบบเรียลไทม์ สถิติความแม่นยำ และแป้นพิมพ์เสมือนจริง",
     cancel: "ยกเลิก",
     selectKeyboardLayout: "เลือกแบบแป้นพิมพ์",
   },
@@ -926,7 +952,8 @@ export const translations: Translations = {
     supportTitle: "Hỗ trợ dự án này",
     reportIssue: "Báo Cáo Vấn Đề",
     reportIssueTitle: "Báo cáo vấn đề trên GitHub",
-    metaDescription: "Làm chủ kỹ năng đánh máy bằng phương pháp cảm ứng với gia sư đánh máy mù trực tuyến miễn phí của chúng tôi. Luyện tập trên hơn 28 bố cục bàn phím ở 8 ngôn ngữ. Theo dõi từ/phút thời gian thực, độ chính xác.",
+    metaDescription:
+      "Làm chủ kỹ năng đánh máy bằng phương pháp cảm ứng với gia sư đánh máy mù trực tuyến miễn phí của chúng tôi. Luyện tập trên hơn 28 bố cục bàn phím ở 8 ngôn ngữ. Theo dõi từ/phút thời gian thực, độ chính xác.",
     cancel: "Hủy",
     selectKeyboardLayout: "Chọn bố cục bàn phím",
   },
@@ -958,7 +985,8 @@ export const translations: Translations = {
     supportTitle: "Dukung proyek ini",
     reportIssue: "Laporkan Masalah",
     reportIssueTitle: "Laporkan masalah di GitHub",
-    metaDescription: "Kuasai teknik mengetik sepuluh jari dengan tutor mengetik buta online gratis kami. Berlatihlah di lebih dari 28 tata letak keyboard dalam 8 bahasa. Pelacakan kata/menit real-time, statistik akurasi, dan keyboard visual.",
+    metaDescription:
+      "Kuasai teknik mengetik sepuluh jari dengan tutor mengetik buta online gratis kami. Berlatihlah di lebih dari 28 tata letak keyboard dalam 8 bahasa. Pelacakan kata/menit real-time, statistik akurasi, dan keyboard visual.",
     cancel: "Batal",
     selectKeyboardLayout: "Pilih tata letak keyboard",
   },
@@ -990,8 +1018,97 @@ export const translations: Translations = {
     supportTitle: "Sokong projek ini",
     reportIssue: "Laporkan Masalah",
     reportIssueTitle: "Laporkan masalah di GitHub",
-    metaDescription: "Kuasai kemahiran menaip pantas dengan tutor menaip buta dalam talian percuma kami. Berlatih pada lebih 28 reka letak papan kekunci dalam 8 bahasa. Penjejakan perkataan/minit masa nyata, statistik ketepatan dan papan kekunci visual.",
+    metaDescription:
+      "Kuasai kemahiran menaip pantas dengan tutor menaip buta dalam talian percuma kami. Berlatih pada lebih 28 reka letak papan kekunci dalam 8 bahasa. Penjejakan perkataan/minit masa nyata, statistik ketepatan dan papan kekunci visual.",
     cancel: "Batal",
     selectKeyboardLayout: "Pilih tata letak keyboard",
   },
 };
+
+import type { LanguageCode } from "../types/keyboard";
+import type { ContentType } from "./url";
+import { LEARNING_LANGUAGE_OPTIONS } from "../config/constants";
+
+// Helper function to get learning language name
+function getLearningLanguageName(code: LanguageCode): string {
+  const lang = LEARNING_LANGUAGE_OPTIONS.find((l) => l.code === code);
+  if (lang) return lang.name;
+  return code;
+}
+
+// Helper function to get content type name in interface language
+function getContentTypeName(
+  contentType: ContentType,
+  interfaceLang: InterfaceLanguage
+): string {
+  const t = translations[interfaceLang];
+  switch (contentType) {
+    case "words":
+      return t.words;
+    case "phrases":
+      return t.phrases;
+    case "custom":
+      return t.custom; // Reuse the existing "custom" field from mode
+    default:
+      return t.words;
+  }
+}
+
+// Generate meta title based on interface language, learning language, and content type
+export function generateMetaTitle(
+  interfaceLang: InterfaceLanguage,
+  learningLang?: LanguageCode,
+  contentType?: ContentType
+): string {
+  const t = translations[interfaceLang];
+
+  // Ensure we have a valid title
+  if (!t || !t.title) {
+    return "Blind Typing Tutor - Master Touch Typing Online";
+  }
+
+  if (learningLang && contentType) {
+    const learningLangName = getLearningLanguageName(learningLang);
+    const contentTypeName = getContentTypeName(contentType, interfaceLang);
+
+    // Ensure we have valid names
+    if (!learningLangName || !contentTypeName) {
+      return t.title;
+    }
+
+    // Generate localized title like "Learn Spanish Words - Blind Typing Tutor"
+    if (interfaceLang === "en") {
+      return `Learn ${learningLangName} ${contentTypeName} - ${t.title}`;
+    }
+    // For other languages, use a simpler pattern
+    return `${t.title} - ${learningLangName} ${contentTypeName}`;
+  }
+
+  return t.title;
+}
+
+// Generate meta description based on interface language, learning language, and content type
+export function generateMetaDescription(
+  interfaceLang: InterfaceLanguage,
+  learningLang?: LanguageCode,
+  contentType?: ContentType
+): string {
+  const t = translations[interfaceLang];
+
+  if (learningLang && contentType) {
+    const learningLangName = getLearningLanguageName(learningLang);
+    const contentTypeName = getContentTypeName(contentType, interfaceLang);
+
+    // Generate localized description
+    if (interfaceLang === "en") {
+      return `Master touch typing by learning ${learningLangName} ${contentTypeName.toLowerCase()} with our free online blind typing tutor. Practice on 28+ keyboard layouts with real-time WPM tracking, accuracy stats, and visual keyboard.`;
+    }
+
+    // For other languages, use base description with learning language info
+    return `${
+      t.metaDescription
+    } ${learningLangName} ${contentTypeName.toLowerCase()}.`;
+  }
+
+  return t.metaDescription;
+}

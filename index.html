@@ -3,13 +3,129 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blind Typing Tutor - Master Touch Typing Online</title>
+    <meta
+      name="description"
+      content="Master touch typing with our free online blind typing tutor. Practice on 28+ keyboard layouts (QWERTY, QWERTZ, AZERTY) in 8 languages. Real-time words/minute tracking, accuracy stats, visual keyboard, and audio feedback."
+    />
+    <meta
+      name="keywords"
+      content="touch typing, blind typing, typing tutor, keyboard trainer, typing practice, WPM, typing speed"
+    />
+    <meta name="author" content="Stanislav Khatko" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://blind-typing-tutor.wordmemo.net/"
+    />
+    <meta
+      property="og:title"
+      content="Blind Typing Tutor - Master Touch Typing Online"
+    />
+    <meta
+      property="og:description"
+      content="Master touch typing with our free online blind typing tutor. Practice on 28+ keyboard layouts in multiple languages."
+    />
+    <meta
+      property="og:image"
+      content="https://blind-typing-tutor.wordmemo.net/og-image.png"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Blind Typing Tutor - Master Touch Typing Online"
+    />
+    <meta
+      name="twitter:description"
+      content="Master touch typing with our free online blind typing tutor. Practice on 28+ keyboard layouts in multiple languages."
+    />
+    <meta
+      name="twitter:image"
+      content="https://blind-typing-tutor.wordmemo.net/og-image.png"
+    />
+
+    <!-- Canonical and Sitemap -->
+    <link rel="canonical" href="https://blind-typing-tutor.wordmemo.net/" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
 
     <!-- Meta tags and dynamic metadata are managed by SEO.tsx component -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Blind Typing Tutor",
+        "url": "https://blind-typing-tutor.wordmemo.net",
+        "description": "Master touch typing with our free online blind typing tutor. Practice on 28+ keyboard layouts in multiple languages.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Stanislav Khatko"
+        }
+      }
+    </script>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Initial content for crawlers and no-JS users -->
+      <noscript>
+        <div
+          style="
+            padding: 2rem;
+            text-align: center;
+            font-family: system-ui, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+          "
+        >
+          <h1>Blind Typing Tutor</h1>
+          <p>
+            Master touch typing with our free online blind typing tutor.
+            Practice on 28+ keyboard layouts in multiple languages.
+          </p>
+          <p>
+            JavaScript is required to use this application. Please enable
+            JavaScript in your browser.
+          </p>
+          <nav style="margin-top: 2rem">
+            <h2>Available Practice Modes:</h2>
+            <ul style="list-style: none; padding: 0">
+              <li>
+                <a href="/en/phrases-en"
+                  >Practice Phrases (English Interface)</a
+                >
+              </li>
+              <li>
+                <a href="/en/words-en">Practice Words (English Interface)</a>
+              </li>
+              <li>
+                <a href="/en/custom-en">Custom Text (English Interface)</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

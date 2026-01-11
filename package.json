@@ -35,7 +35,8 @@
   ],
   "scripts": {
     "dev": "vite --force",
-    "build": "tsc -b && vite build",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "build": "npm run generate-sitemap && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "clean": "rm -rf node_modules/.vite dist",
@@ -47,7 +48,8 @@
   "dependencies": {
     "lucide-react": "^0.554.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.11.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

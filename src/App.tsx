@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useParams,
+  useNavigate,
+} from "react-router-dom";
 import { Game } from "./components/Game";
 import { getAllLayouts } from "./config/layouts";
 import { translations } from "./utils/translations";
+import { generateMetadata } from "./utils/metadata";
 import { useAppSettings } from "./hooks/useAppSettings";
 import { Header } from "./components/layout/Header";
 import { MobileMessage } from "./components/layout/MobileMessage";
@@ -13,9 +21,19 @@ import {
   INTERFACE_LANGUAGE_OPTIONS,
 } from "./config/constants";
 
-function App() {
+function AppContent() {
+  const params = useParams<{
+    interfaceLang?: string;
+    contentTypeAndLang?: string;
+  }>();
   const settings = useAppSettings();
   const t = translations[settings.interfaceLanguage];
+
+  // Generate metadata based on route params (Next.js style)
+  const metadata = generateMetadata({
+    interfaceLang: params.interfaceLang,
+    contentTypeAndLang: params.contentTypeAndLang,
+  });
 
   // Initialize GA
   useEffect(() => {
@@ -81,10 +99,14 @@ function App() {
       }`}
     >
       <SEO
-        title={`${t.title} - ${t[settings.mode]}`}
-        description={t.metaDescription}
+        title={metadata.title}
+        description={metadata.description}
         language={settings.interfaceLanguage}
-        keywords="touch typing, blind typing, typing tutor, keyboard trainer, typing practice"
+        learningLanguage={settings.learningLanguage}
+        contentType={settings.learningContentType}
+        keywords={metadata.keywords}
+        canonical={metadata.canonical}
+        ogImage={metadata.ogImage}
       />
       <Header
         title={t.title}
@@ -134,6 +156,42 @@ function App() {
       </main>
     </div>
   );
+}
+
+function App() {
+  // Initialize GA
+  useEffect(() => {
+    initGA();
+  }, []);
+
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/en/phrases-en" replace />} />
+      <Route path="/:interfaceLang" element={<LegacyRedirect />} />
+      <Route
+        path="/:interfaceLang/:contentTypeAndLang"
+        element={<AppContent />}
+      />
+    </Routes>
+  );
+}
+
+function LegacyRedirect() {
+  const { interfaceLang } = useParams<{ interfaceLang: string }>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const validLang = INTERFACE_LANGUAGE_OPTIONS.find(
+      (opt) => opt.code === interfaceLang
+    );
+    if (validLang) {
+      navigate(`/${interfaceLang}/phrases-${interfaceLang}`, { replace: true });
+    } else {
+      navigate("/en/phrases-en", { replace: true });
+    }
+  }, [interfaceLang, navigate]);
+
+  return null;
 }
 
 export default App;
