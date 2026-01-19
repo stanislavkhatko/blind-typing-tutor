@@ -1,30 +1,43 @@
+"use client";
+
 import { useState, useEffect, startTransition, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter, usePathname } from "next/navigation";
 import type { KeyboardLayoutId, LanguageCode } from "../types/keyboard";
 import { getAllLayouts } from "../config/layouts";
-import type { InterfaceLanguage } from "../utils/translations";
+import type { InterfaceLanguage } from "../translations";
 import {
   detectKeyboardLayout,
   detectLearningLanguage,
   detectInterfaceLanguage,
 } from "../utils/browserDetection";
-import { getStorageItem, setStorageItem } from "../utils/storage";
+import { getStorageItem, setStorageItem, removeStorageItem } from "../utils/storage";
 import { updateDocumentDirection } from "../utils/textDirection";
 import { soundManager } from "../utils/SoundManager";
 import { parseUrlPath, buildUrlPath, type ContentType } from "../utils/url";
 
-export function useAppSettings() {
-  const params = useParams<{
-    interfaceLang?: string;
-    contentTypeAndLang?: string;
-  }>();
-  const navigate = useNavigate();
+interface UseAppSettingsParams {
+  interfaceLang?: string;
+  contentTypeAndLang?: string; // Legacy: for /{interfaceLang}/{contentType}-{lang}
+  studyLang?: string; // New: for /{interfaceLang}/{studyLang}/{learningMode}
+  learningMode?: string; // New: for /{interfaceLang}/{studyLang}/{learningMode}
+}
+
+export function useAppSettings(params: UseAppSettingsParams) {
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Helper to parse contentType-learningLang format (e.g., "words-es" -> { contentType: "words", learningLang: "es" })
+  // Special case: "custom" has no language suffix
   const parseContentAndLang = (
     contentAndLang?: string
   ): { contentType?: ContentType; learningLang?: LanguageCode } => {
     if (!contentAndLang) return {};
+
+    // Custom mode has no language suffix
+    if (contentAndLang === "custom") {
+      return { contentType: "custom" };
+    }
+
     const parts = contentAndLang.split("-");
     if (parts.length < 2) return {};
     const contentType = parts[0] as ContentType;
@@ -32,8 +45,20 @@ export function useAppSettings() {
     return { contentType, learningLang };
   };
 
-  const { contentType: urlContentType, learningLang: urlLearningLang } =
-    parseContentAndLang(params.contentTypeAndLang);
+  // Support both new structure ({studyLang, learningMode}) and legacy ({contentTypeAndLang})
+  let urlContentType: ContentType | undefined;
+  let urlLearningLang: LanguageCode | undefined;
+
+  if (params.studyLang && params.learningMode) {
+    // New structure: /{interfaceLang}/{studyLang}/{learningMode}
+    urlLearningLang = params.studyLang as LanguageCode;
+    urlContentType = params.learningMode as ContentType;
+  } else if (params.contentTypeAndLang) {
+    // Legacy structure: /{interfaceLang}/{contentType}-{lang}
+    const parsed = parseContentAndLang(params.contentTypeAndLang);
+    urlContentType = parsed.contentType;
+    urlLearningLang = parsed.learningLang;
+  }
 
   // Use ref to track if we're updating from URL to prevent circular updates
   const isUpdatingFromUrl = useRef(false);
@@ -230,16 +255,10 @@ export function useAppSettings() {
     return saved === "true";
   });
 
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = getStorageItem("darkMode");
-    if (saved === "true" || saved === "false") {
-      return saved === "true";
-    }
-    if (typeof window !== "undefined" && window.matchMedia) {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    return false;
-  });
+  // Initialize darkMode with false to ensure consistent SSR/client rendering
+  // We'll sync from localStorage after mount to prevent hydration mismatches
+  const [darkMode, setDarkMode] = useState(false);
+  const [darkModeInitialized, setDarkModeInitialized] = useState(false);
 
   const [showKeyboard, setShowKeyboard] = useState(() => {
     const saved = getStorageItem("showKeyboard");
@@ -295,11 +314,46 @@ export function useAppSettings() {
   ];
 
   // Sync with URL params when they change (only update if different to prevent loops)
+  // Use pathname as source of truth to avoid race conditions with router.replace()
   useEffect(() => {
+    if (isUpdatingFromUrl.current) {
+      return;
+    }
+
+    // Parse current pathname to get actual URL state (more reliable than params prop)
+    const urlPath = parseUrlPath();
+    const currentInterfaceLang = urlPath.interfaceLang || params.interfaceLang;
+
+    // Support both new structure ({studyLang, learningMode}) and legacy ({contentTypeAndLang})
+    let newContentType: ContentType | undefined;
+    let newLearningLang: LanguageCode | undefined;
+
+    if (params.studyLang && params.learningMode) {
+      // New structure: /{interfaceLang}/{studyLang}/{learningMode}
+      newLearningLang = params.studyLang as LanguageCode;
+      newContentType = params.learningMode as ContentType;
+    } else {
+      // Legacy structure or parse from URL path
+      let currentContentTypeAndLang: string | undefined;
+      if (urlPath.contentType === "custom") {
+        // Custom mode has no language suffix
+        currentContentTypeAndLang = "custom";
+      } else if (urlPath.contentType && urlPath.learningLang) {
+        currentContentTypeAndLang = `${urlPath.contentType}-${urlPath.learningLang}`;
+      } else {
+        currentContentTypeAndLang = params.contentTypeAndLang;
+      }
+
+      const parsed = parseContentAndLang(currentContentTypeAndLang);
+      newContentType = parsed.contentType;
+      newLearningLang = parsed.learningLang;
+    }
+
     // Check if params actually changed (not just state)
     const paramsChanged =
-      prevParamsRef.current.interfaceLang !== params.interfaceLang ||
-      prevParamsRef.current.contentTypeAndLang !== params.contentTypeAndLang;
+      prevParamsRef.current.interfaceLang !== currentInterfaceLang ||
+      (params.studyLang && params.learningMode) || // New structure
+      (params.contentTypeAndLang && params.contentTypeAndLang !== prevParamsRef.current.contentTypeAndLang); // Legacy structure
 
     if (!paramsChanged) {
       return;
@@ -307,24 +361,21 @@ export function useAppSettings() {
 
     // Update ref to track current params
     prevParamsRef.current = {
-      interfaceLang: params.interfaceLang,
+      interfaceLang: currentInterfaceLang,
       contentTypeAndLang: params.contentTypeAndLang,
     };
-
-    const { contentType: newContentType, learningLang: newLearningLang } =
-      parseContentAndLang(params.contentTypeAndLang);
 
     // Only sync if params are valid - we'll update state regardless of current state
     // to ensure URL is the source of truth
     const needsInterfaceUpdate =
-      params.interfaceLang &&
-      VALID_LANGUAGES.includes(params.interfaceLang as InterfaceLanguage);
+      currentInterfaceLang &&
+      VALID_LANGUAGES.includes(currentInterfaceLang as InterfaceLanguage);
 
     if (needsInterfaceUpdate || newLearningLang || newContentType) {
       isUpdatingFromUrl.current = true;
       startTransition(() => {
         if (needsInterfaceUpdate) {
-          setInterfaceLanguage(params.interfaceLang as InterfaceLanguage);
+          setInterfaceLanguage(currentInterfaceLang as InterfaceLanguage);
         }
         if (newLearningLang) {
           setLearningLanguage(newLearningLang);
@@ -345,7 +396,7 @@ export function useAppSettings() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.interfaceLang, params.contentTypeAndLang]);
+  }, [pathname, params.interfaceLang, params.contentTypeAndLang, params.studyLang, params.learningMode]);
 
   // Sync mode with contentType - when mode changes, update contentType and URL
   useEffect(() => {
@@ -364,6 +415,17 @@ export function useAppSettings() {
   useEffect(() => {
     setStorageItem("mode", mode);
   }, [mode]);
+
+  // Clear custom text from storage when switching away from custom mode
+  const prevModeRef = useRef<"practice" | "beginner" | "custom">(mode);
+  useEffect(() => {
+    // If switching away from custom mode, clear the stored custom text
+    if (prevModeRef.current === "custom" && mode !== "custom") {
+      removeStorageItem("customText");
+    }
+    prevModeRef.current = mode;
+  }, [mode]);
+
   useEffect(() => {
     setStorageItem("learningLanguage", learningLanguage);
   }, [learningLanguage]);
@@ -378,24 +440,26 @@ export function useAppSettings() {
       return;
     }
 
+    // For custom mode, we don't need learningLanguage for URL building
+    // buildUrlPath handles this internally
     const expectedPath = buildUrlPath(
       interfaceLanguage,
       learningContentType,
       learningLanguage
     );
-    const currentPath = window.location.pathname;
+    const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
 
     // Only navigate if the path is actually different
-    if (currentPath !== expectedPath) {
+    if (currentPath && currentPath !== expectedPath) {
       // Set flag before navigating to prevent sync effect from running
       isUpdatingFromUrl.current = true;
-      navigate(expectedPath, { replace: true });
-      // Reset flag after navigation
-      requestAnimationFrame(() => {
+      router.replace(expectedPath);
+      // Reset flag after navigation completes (use setTimeout to ensure router has processed)
+      setTimeout(() => {
         isUpdatingFromUrl.current = false;
-      });
+      }, 0);
     }
-  }, [interfaceLanguage, learningContentType, learningLanguage, navigate]);
+  }, [interfaceLanguage, learningContentType, learningLanguage, router]);
 
   useEffect(() => {
     setStorageItem("interfaceLanguage", interfaceLanguage);
@@ -407,14 +471,34 @@ export function useAppSettings() {
     soundManager.setEnabled(soundEnabled);
   }, [soundEnabled]);
 
+  // Initialize darkMode from localStorage after mount (prevents hydration mismatch)
   useEffect(() => {
-    setStorageItem("darkMode", String(darkMode));
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+    if (!darkModeInitialized) {
+      const saved = getStorageItem("darkMode");
+      let initialDarkMode = false;
+
+      if (saved === "true" || saved === "false") {
+        initialDarkMode = saved === "true";
+      } else if (typeof window !== "undefined" && window.matchMedia) {
+        initialDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      }
+
+      setDarkMode(initialDarkMode);
+      setDarkModeInitialized(true);
     }
-  }, [darkMode]);
+  }, [darkModeInitialized]);
+
+  // Apply darkMode changes after initialization
+  useEffect(() => {
+    if (darkModeInitialized) {
+      setStorageItem("darkMode", String(darkMode));
+      if (darkMode) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
+  }, [darkMode, darkModeInitialized]);
 
   useEffect(() => {
     setStorageItem("showKeyboard", String(showKeyboard));
@@ -450,9 +534,9 @@ export function useAppSettings() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, [interfaceLanguage, learningLanguage, learningContentType]);
 
-  // System theme detection
+  // System theme detection (only after darkMode is initialized)
   useEffect(() => {
-    if (typeof window !== "undefined" && window.matchMedia) {
+    if (darkModeInitialized && typeof window !== "undefined" && window.matchMedia) {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       const handleChange = (e: MediaQueryListEvent) => {
         const saved = getStorageItem("darkMode");
@@ -463,7 +547,7 @@ export function useAppSettings() {
       mediaQuery.addEventListener("change", handleChange);
       return () => mediaQuery.removeEventListener("change", handleChange);
     }
-  }, []);
+  }, [darkModeInitialized]);
 
   return {
     layoutId,

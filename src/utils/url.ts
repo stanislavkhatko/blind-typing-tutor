@@ -1,4 +1,4 @@
-import type { InterfaceLanguage } from "./translations";
+import type { InterfaceLanguage } from "../translations";
 import type { LanguageCode } from "../types/keyboard";
 
 const VALID_LANGUAGES: InterfaceLanguage[] = [
@@ -84,30 +84,60 @@ export function getInterfaceLanguageFromUrl(): InterfaceLanguage | null {
 
 export function getLearningLanguageFromUrl(): LanguageCode | null {
   if (typeof window === "undefined") return null;
-  const pathParts = window.location.pathname.split("/");
-  if (pathParts.length < 3) return null;
+  const pathParts = window.location.pathname.split("/").filter(Boolean);
 
-  const contentAndLang = pathParts[2];
-  const parts = contentAndLang.split("-");
-  if (parts.length < 2) return null;
-
-  const learningLang = parts.slice(1).join("-");
-  if (VALID_LEARNING_LANGUAGES.includes(learningLang as LanguageCode)) {
-    return learningLang as LanguageCode;
+  // New structure: /{interfaceLang}/{studyLang}/{learningMode}
+  if (pathParts.length >= 2) {
+    const studyLang = pathParts[1];
+    if (VALID_LEARNING_LANGUAGES.includes(studyLang as LanguageCode)) {
+      return studyLang as LanguageCode;
+    }
   }
+
+  // Legacy structure: /{interfaceLang}/{contentType}-{learningLang}
+  if (pathParts.length >= 2) {
+    const contentAndLang = pathParts[1];
+    if (contentAndLang === "custom") return null;
+
+    const parts = contentAndLang.split("-");
+    if (parts.length >= 2) {
+      const learningLang = parts.slice(1).join("-");
+      if (VALID_LEARNING_LANGUAGES.includes(learningLang as LanguageCode)) {
+        return learningLang as LanguageCode;
+      }
+    }
+  }
+
   return null;
 }
 
 export function getContentTypeFromUrl(): ContentType | null {
   if (typeof window === "undefined") return null;
-  const pathParts = window.location.pathname.split("/");
-  if (pathParts.length < 3) return null;
+  const pathParts = window.location.pathname.split("/").filter(Boolean);
 
-  const contentAndLang = pathParts[2];
-  const contentType = contentAndLang.split("-")[0];
-  if (VALID_CONTENT_TYPES.includes(contentType as ContentType)) {
-    return contentType as ContentType;
+  // New structure: /{interfaceLang}/{studyLang}/{learningMode}
+  if (pathParts.length >= 3) {
+    const learningMode = pathParts[2];
+    if (learningMode === "custom") {
+      return "custom";
+    }
+    if (VALID_CONTENT_TYPES.includes(learningMode as ContentType)) {
+      return learningMode as ContentType;
+    }
   }
+
+  // Legacy structure: /{interfaceLang}/{contentType}-{learningLang} or /{interfaceLang}/custom
+  if (pathParts.length >= 2) {
+    const contentAndLang = pathParts[1];
+    if (contentAndLang === "custom") {
+      return "custom";
+    }
+    const contentType = contentAndLang.split("-")[0];
+    if (VALID_CONTENT_TYPES.includes(contentType as ContentType)) {
+      return contentType as ContentType;
+    }
+  }
+
   return null;
 }
 
@@ -128,7 +158,8 @@ export function buildUrlPath(
   contentType: ContentType,
   learningLang: LanguageCode
 ): string {
-  return `/${interfaceLang}/${contentType}-${learningLang}`;
+  // New structure: /{interfaceLang}/{studyLang}/{learningMode}
+  return `/${interfaceLang}/${learningLang}/${contentType}`;
 }
 
 export function updateUrlWithSettings(

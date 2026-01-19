@@ -1,3 +1,6 @@
+"use client";
+
+import { TranslationKeys } from "@/translations";
 import React from "react";
 
 interface CustomSetupProps {
@@ -5,7 +8,7 @@ interface CustomSetupProps {
   setCustomText: (text: string) => void;
   handleCustomSubmit: () => void;
   onCancel: () => void;
-  translations: Record<string, string>;
+  translations: TranslationKeys;
 }
 
 export const CustomSetup: React.FC<CustomSetupProps> = ({

@@ -1,7 +1,7 @@
-import type { InterfaceLanguage } from "./translations";
+import type { InterfaceLanguage } from "../translations";
 import type { LanguageCode } from "../types/keyboard";
 import type { ContentType } from "./url";
-import { generateMetaTitle, generateMetaDescription } from "./translations";
+import { translations } from "../translations";
 import { buildUrlPath } from "./url";
 
 export interface RouteMetadata {
@@ -71,21 +71,15 @@ export function generateMetadata(params: RouteParams): RouteMetadata {
 
   const validatedInterfaceLang: InterfaceLanguage =
     interfaceLang &&
-    validInterfaceLangs.includes(interfaceLang as InterfaceLanguage)
+      validInterfaceLangs.includes(interfaceLang as InterfaceLanguage)
       ? (interfaceLang as InterfaceLanguage)
       : "en";
 
-  // Generate title and description
-  const title = generateMetaTitle(
-    validatedInterfaceLang,
-    learningLang,
-    contentType
-  );
-  const description = generateMetaDescription(
-    validatedInterfaceLang,
-    learningLang,
-    contentType
-  );
+  // Use base SEO metadata (no content-type specific variations)
+  const t = translations[validatedInterfaceLang];
+  const title = t.seoTitle || t.title;
+  const description = t.seoDescription || t.metaDescription;
+  const keywords = t.seoKeywords || t.seoDescription || "";
 
   // Build canonical URL
   const baseUrl = "https://blind-typing-tutor.wordmemo.net";
@@ -101,13 +95,6 @@ export function generateMetadata(params: RouteParams): RouteMetadata {
     canonical = `${baseUrl}/${validatedInterfaceLang}`;
   }
 
-  // Generate keywords based on route
-  const keywords = generateKeywords(
-    validatedInterfaceLang,
-    learningLang,
-    contentType
-  );
-
   return {
     title: title || "Blind Typing Tutor - Master Touch Typing Online",
     description:
@@ -119,29 +106,3 @@ export function generateMetadata(params: RouteParams): RouteMetadata {
   };
 }
 
-/**
- * Generate keywords based on route parameters
- */
-function generateKeywords(
-  _interfaceLang: InterfaceLanguage,
-  learningLang?: LanguageCode,
-  contentType?: ContentType
-): string {
-  const baseKeywords =
-    "touch typing, blind typing, typing tutor, keyboard trainer, typing practice";
-
-  if (learningLang && contentType) {
-    const learningLangName = learningLang.toUpperCase();
-    const contentTypeKeywords = {
-      words: "typing words, word practice",
-      phrases: "typing phrases, sentence practice",
-      custom: "custom typing, text practice",
-    };
-
-    return `${baseKeywords}, ${learningLangName} typing, ${
-      contentTypeKeywords[contentType] || ""
-    }`;
-  }
-
-  return baseKeywords;
-}

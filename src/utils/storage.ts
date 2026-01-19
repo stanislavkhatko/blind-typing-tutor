@@ -10,6 +10,11 @@
  * @returns Stored value or default
  */
 export function getStorageItem(key: string, defaultValue: string | null = null): string | null {
+  // Check if we're in a browser environment (not SSR)
+  if (typeof window === "undefined") {
+    return defaultValue;
+  }
+
   try {
     return localStorage.getItem(key);
   } catch (error) {
@@ -26,6 +31,11 @@ export function getStorageItem(key: string, defaultValue: string | null = null):
  * @returns true if successful, false otherwise
  */
 export function setStorageItem(key: string, value: string): boolean {
+  // Check if we're in a browser environment (not SSR)
+  if (typeof window === "undefined") {
+    return false;
+  }
+
   try {
     localStorage.setItem(key, value);
     return true;
@@ -42,6 +52,11 @@ export function setStorageItem(key: string, value: string): boolean {
  * @returns true if successful, false otherwise
  */
 export function removeStorageItem(key: string): boolean {
+  // Check if we're in a browser environment (not SSR)
+  if (typeof window === "undefined") {
+    return false;
+  }
+
   try {
     localStorage.removeItem(key);
     return true;
@@ -56,6 +71,11 @@ export function removeStorageItem(key: string): boolean {
  * @returns true if localStorage is available and working
  */
 export function isStorageAvailable(): boolean {
+  // Check if we're in a browser environment (not SSR)
+  if (typeof window === "undefined") {
+    return false;
+  }
+
   try {
     const test = '__storage_test__';
     localStorage.setItem(test, test);

@@ -40,39 +40,6 @@ const INTERFACE_LANGUAGE_OPTIONS = [
   { code: "ms", name: "Bahasa Melayu", flag: "🇲🇾" },
 ];
 
-const LEARNING_LANGUAGE_OPTIONS = [
-  { code: "en", name: "English", flag: "🇬🇧" },
-  { code: "zh", name: "中文", flag: "🇨🇳" },
-  { code: "es", name: "Español", flag: "🇪🇸" },
-  { code: "ar", name: "العربية", flag: "🇸🇦" },
-  { code: "pt", name: "Português", flag: "🇵🇹" },
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "ja", name: "日本語", flag: "🇯🇵" },
-  { code: "de", name: "Deutsch", flag: "🇩🇪" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "hi", name: "हिन्दी", flag: "🇮🇳" },
-  { code: "ko", name: "한국어", flag: "🇰🇷" },
-  { code: "it", name: "Italiano", flag: "🇮🇹" },
-  { code: "tr", name: "Türkçe", flag: "🇹🇷" },
-  { code: "pl", name: "Polski", flag: "🇵🇱" },
-  { code: "uk", name: "Українська", flag: "🇺🇦" },
-  { code: "nl", name: "Nederlands", flag: "🇳🇱" },
-  { code: "sv", name: "Svenska", flag: "🇸🇪" },
-  { code: "no", name: "Norsk", flag: "🇳🇴" },
-  { code: "da", name: "Dansk", flag: "🇩🇰" },
-  { code: "fi", name: "Suomi", flag: "🇫🇮" },
-  { code: "cs", name: "Čeština", flag: "🇨🇿" },
-  { code: "hu", name: "Magyar", flag: "🇭🇺" },
-  { code: "ro", name: "Română", flag: "🇷🇴" },
-  { code: "el", name: "Ελληνικά", flag: "🇬🇷" },
-  { code: "he", name: "עברית", flag: "🇮🇱" },
-  { code: "th", name: "ไทย", flag: "🇹🇭" },
-  { code: "vi", name: "Tiếng Việt", flag: "🇻🇳" },
-  { code: "id", name: "Bahasa Indonesia", flag: "🇮🇩" },
-  { code: "ms", name: "Bahasa Melayu", flag: "🇲🇾" },
-];
-
-const CONTENT_TYPES = ["words", "phrases", "custom"];
 const BASE_URL = "https://blind-typing-tutor.wordmemo.net";
 const TODAY = new Date().toISOString().split("T")[0];
 
@@ -98,18 +65,12 @@ function escapeXml(unsafe) {
 function generateSitemap() {
   const urls = [];
 
-  // Generate all URL combinations
+  // Only generate homepage URLs per interface language (these are the only indexed pages)
   INTERFACE_LANGUAGE_OPTIONS.forEach((interfaceLang) => {
-    LEARNING_LANGUAGE_OPTIONS.forEach((learningLang) => {
-      CONTENT_TYPES.forEach((contentType) => {
-        const url = `${BASE_URL}/${interfaceLang.code}/${contentType}-${learningLang.code}`;
-        urls.push({
-          loc: url,
-          interfaceLang: interfaceLang.code,
-          learningLang: learningLang.code,
-          contentType,
-        });
-      });
+    const url = `${BASE_URL}/${interfaceLang.code}`;
+    urls.push({
+      loc: url,
+      interfaceLang: interfaceLang.code,
     });
   });
 
@@ -120,33 +81,21 @@ function generateSitemap() {
 
   // Calculate dynamic priorities
   function getPriority(urlData) {
-    // English interface gets higher priority
+    // English interface gets highest priority
     if (urlData.interfaceLang === "en") {
-      // Popular learning languages get higher priority
-      const popularLangs = ["en", "es", "fr", "de", "pt", "ru", "zh", "ja"];
-      if (popularLangs.includes(urlData.learningLang)) {
-        // Phrases mode is most popular
-        if (urlData.contentType === "phrases") return "1.0";
-        if (urlData.contentType === "words") return "0.9";
-        return "0.8"; // custom
-      }
-      return "0.7";
+      return "1.0";
     }
-    // Non-English interfaces
-    const popularLangs = ["en", "es", "fr", "de", "pt", "ru", "zh", "ja"];
-    if (popularLangs.includes(urlData.learningLang)) {
-      if (urlData.contentType === "phrases") return "0.9";
-      if (urlData.contentType === "words") return "0.8";
-      return "0.7";
+    // Popular interface languages get higher priority
+    const popularLangs = ["es", "fr", "de", "pt", "ru", "zh", "ja"];
+    if (popularLangs.includes(urlData.interfaceLang)) {
+      return "0.9";
     }
-    return "0.6";
+    return "0.8";
   }
 
   function getChangeFreq(urlData) {
-    // More popular content types change more frequently
-    if (urlData.contentType === "phrases") return "weekly";
-    if (urlData.contentType === "words") return "monthly";
-    return "monthly"; // custom
+    // Homepage content changes weekly
+    return "weekly";
   }
 
   urls.forEach((urlData) => {
@@ -156,16 +105,16 @@ function generateSitemap() {
     xml += `    <changefreq>${getChangeFreq(urlData)}</changefreq>\n`;
     xml += `    <priority>${getPriority(urlData)}</priority>\n`;
 
-    // Add hreflang alternates for all interface languages with same learning language and content type
-    INTERFACE_LANGUAGE_OPTIONS.forEach((altLang) => {
-      const altUrl = `${BASE_URL}/${altLang.code}/${urlData.contentType}-${urlData.learningLang}`;
-      xml += `    <xhtml:link rel="alternate" hreflang="${
-        altLang.code
-      }" href="${escapeXml(altUrl)}"/>\n`;
-    });
+    // Add hreflang alternates for all interface languages (homepage URLs)
+    // INTERFACE_LANGUAGE_OPTIONS.forEach((altLang) => {
+    //   const altUrl = `${BASE_URL}/${altLang.code}`;
+    //   xml += `    <xhtml:link rel="alternate" hreflang="${
+    //     altLang.code
+    //   }" href="${escapeXml(altUrl)}"/>\n`;
+    // });
 
-    // Add x-default pointing to English version
-    const defaultUrl = `${BASE_URL}/en/${urlData.contentType}-${urlData.learningLang}`;
+    // Add x-default pointing to English homepage
+    const defaultUrl = `${BASE_URL}/en`;
     xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(
       defaultUrl
     )}"/>\n`;

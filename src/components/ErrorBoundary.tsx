@@ -1,3 +1,5 @@
+"use client";
+
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface Props {
@@ -36,7 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error to console in development
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === "development") {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
@@ -70,7 +72,7 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
           <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
             <div className="flex items-center mb-4">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <svg
                   className="h-8 w-8 text-red-500"
                   fill="none"
@@ -96,7 +98,7 @@ export class ErrorBoundary extends Component<Props, State> {
               An unexpected error occurred. Please try refreshing the page or contact support if the problem persists.
             </p>
 
-            {import.meta.env.DEV && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="mb-4">
                 <summary className="cursor-pointer text-sm text-gray-500 dark:text-gray-400 mb-2">
                   Error details (development only)

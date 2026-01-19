@@ -1,4 +1,6 @@
-import { useMemo } from 'react';
+"use client";
+
+import { useMemo, useState, useEffect } from 'react';
 import type { KeyboardLayoutId, KeyDefinition } from '../types/keyboard';
 import { getLayout } from '../config/layouts';
 
@@ -11,16 +13,27 @@ interface KeyboardProps {
   lastPressedKey?: string | null; // Last key that was physically pressed (for highlighting)
 }
 
-export const Keyboard: React.FC<KeyboardProps> = ({ 
-  activeKey, 
-  layoutId, 
-  showHands, 
+export const Keyboard: React.FC<KeyboardProps> = ({
+  activeKey,
+  layoutId,
+  showHands,
   showColors,
   showEnglishHints = false,
   lastPressedKey = null
 }) => {
   const layout = getLayout(layoutId);
   const enLayout = layoutId !== 'en-us' ? getLayout('en-us') : null;
+
+  // Only show English hints after mount to prevent hydration mismatch
+  // Server always renders without hints, client enables after hydration
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setMounted(true);
+    }, 0);
+  }, []);
+
+  const effectiveShowEnglishHints = mounted && showEnglishHints;
 
   // Compute target key and shift state from activeKey using useMemo instead of useEffect
   const { targetKeyId, shiftTarget, spaceHand } = useMemo(() => {
@@ -36,21 +49,21 @@ export const Keyboard: React.FC<KeyboardProps> = ({
     // Normalize the key for comparison (handle case-insensitive matching)
     const normalizedKey = activeKey.toLowerCase();
     const isUpperCase = activeKey !== normalizedKey;
-    
+
     // Find the key in the layout - check primary, shifted, and altGr
     const keyDef = layout.keys.find(k => {
       const primaryMatch = k.primary.toLowerCase() === normalizedKey;
       const shiftedMatch = k.shifted?.toLowerCase() === normalizedKey;
       const altGrMatch = k.altGr?.toLowerCase() === normalizedKey;
-      
+
       // For exact case matching when key is uppercase
       if (isUpperCase) {
         return k.shifted === activeKey || k.primary === activeKey || k.altGr === activeKey;
       }
-      
+
       return primaryMatch || shiftedMatch || altGrMatch;
     });
-    
+
     if (keyDef) {
       // Check if shift is needed
       // Shift is needed ONLY if:
@@ -69,14 +82,14 @@ export const Keyboard: React.FC<KeyboardProps> = ({
         // Only need shift if it matches shifted but NOT primary (e.g., '!' on '1' key)
         isShifted = matchesShifted && !matchesPrimary;
       }
-      
+
       if (isShifted) {
         // Determine shift side based on which hand types the key
         const isLeftHand = layout.leftHandKeys.includes(keyDef.primary.toLowerCase());
-        return { 
-          targetKeyId: keyDef.id, 
-          shiftTarget: (isLeftHand ? 'r' : 'l') as 'l' | 'r', 
-          spaceHand: null 
+        return {
+          targetKeyId: keyDef.id,
+          shiftTarget: (isLeftHand ? 'r' : 'l') as 'l' | 'r',
+          spaceHand: null
         };
       } else {
         return { targetKeyId: keyDef.id, shiftTarget: null, spaceHand: null };
@@ -110,26 +123,26 @@ export const Keyboard: React.FC<KeyboardProps> = ({
     // Find the key in the layout
     const normalizedKey = lastPressedKey.toLowerCase();
     const isUpperCase = lastPressedKey !== normalizedKey;
-    
+
     const keyDef = layout.keys.find(k => {
       const primaryMatch = k.primary.toLowerCase() === normalizedKey;
       const shiftedMatch = k.shifted?.toLowerCase() === normalizedKey;
       const altGrMatch = k.altGr?.toLowerCase() === normalizedKey;
-      
+
       if (isUpperCase) {
         return k.shifted === lastPressedKey || k.primary === lastPressedKey || k.altGr === lastPressedKey;
       }
-      
+
       return primaryMatch || shiftedMatch || altGrMatch;
     });
-    
+
     return keyDef ? keyDef.id : null;
   }, [lastPressedKey, layout.keys]);
 
   // Color mapping based on hands2.png - centralized for easy maintenance
   const getGroupColor = (group: number | null, opacity: number = 1): { backgroundColor: string } | null => {
     if (group === null) return null;
-    
+
     // hands2.png color mapping
     const colors: Record<number, string> = {
       1: '#AD7FA8', // Left pinky - light purple
@@ -141,16 +154,16 @@ export const Keyboard: React.FC<KeyboardProps> = ({
       7: '#729FCF', // Right ring - light blue
       8: '#AD7FA8', // Right pinky - light purple
     };
-    
+
     const color = colors[group];
     if (!color) return null;
-    
+
     // Convert hex to rgba for opacity support
     const hex = color.replace('#', '');
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
-    
+
     return {
       backgroundColor: `rgba(${r}, ${g}, ${b}, ${opacity})`
     };
@@ -159,7 +172,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({
   const getKeyClass = (keyId: string, group?: number): { className: string; style?: React.CSSProperties } => {
     let classes = "key flex justify-center items-center border border-gray-800 rounded m-0.5 text-sm capitalize transition-colors duration-100 relative ";
     let style: React.CSSProperties | undefined;
-    
+
     // Size classes based on width property
     const key = layout.keys.find(k => k.id === keyId);
     if (key?.width === 'tab') classes += "w-[82px] h-[55px] ";
@@ -185,10 +198,10 @@ export const Keyboard: React.FC<KeyboardProps> = ({
 
     // Active state (correct key)
     const isActive = keyId === targetKeyId || (keyId === `shift-${shiftTarget}`);
-    
+
     // Pressed state (any key pressed, even if incorrect)
     const isPressed = keyId === pressedKeyId || (pressedKeyId === 'space' && keyId === 'space');
-    
+
     if (isActive) {
       // Active: full color from hands2.png - always white text on colored background
       if (isSpace) {
@@ -234,8 +247,8 @@ export const Keyboard: React.FC<KeyboardProps> = ({
       return keyDef.primary.replace('-', ' ');
     }
 
-    // Show English hints for non-English layouts
-    if (showEnglishHints && enLayout) {
+    // Show English hints for non-English layouts (only after mount to prevent hydration mismatch)
+    if (effectiveShowEnglishHints && enLayout) {
       const enKey = enLayout.keys.find(k => k.id === keyDef.id);
       if (enKey && enKey.primary !== keyDef.primary) {
         return (
@@ -258,7 +271,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({
     const capsIndex = keys.findIndex(k => k.id === 'caps_lock');
     const shiftLIndex = keys.findIndex(k => k.id === 'shift-l');
     const spaceIndex = keys.findIndex(k => k.id === 'space');
-    
+
     // Determine which row each key belongs to based on its position
     const getKeyRow = (keyIndex: number): number => {
       if (keyIndex < tabIndex || (tabIndex === -1 && keyIndex < capsIndex)) return 1;
@@ -268,7 +281,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({
       if (keyIndex === spaceIndex) return 5;
       return 0; // Unknown
     };
-    
+
     const rows: KeyDefinition[][] = [[], [], [], [], []];
     keys.forEach((key, index) => {
       const row = getKeyRow(index);
@@ -276,10 +289,10 @@ export const Keyboard: React.FC<KeyboardProps> = ({
         rows[row - 1].push(key);
       }
     });
-    
+
     return rows;
   }, [layout.keys]);
-  
+
   const [row1Keys, row2Keys, row3Keys, row4Keys, row5Keys] = rowKeys;
   const spaceKey = row5Keys?.[0];
 

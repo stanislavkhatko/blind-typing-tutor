@@ -1,14 +1,15 @@
+"use client";
+
 import React from "react";
 import {
   Keyboard as KeyboardIcon,
-  Github,
   Coffee,
   Languages,
   ChevronDown,
   Moon,
   Sun,
 } from "lucide-react";
-import type { InterfaceLanguage } from "../../utils/translations";
+import type { InterfaceLanguage } from "../../translations";
 
 interface HeaderProps {
   title: string;
@@ -32,8 +33,6 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   title,
-  reportIssue,
-  reportIssueTitle,
   support,
   supportTitle,
   interfaceLanguageLabel,
@@ -58,40 +57,6 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="flex items-center gap-3">
-        <a
-          data-testid="wordmemo-link"
-          href="https://wordmemo.net"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors group"
-          title="WordMemo - Language Learning Platform"
-          aria-label="WordMemo - Language Learning Platform"
-        >
-          <img
-            src="/wordmemo-logo.svg"
-            alt="WordMemo"
-            className="h-6 w-6 transition-transform group-hover:scale-105"
-            width="24"
-            height="24"
-          />
-          <span className="hidden sm:inline font-medium text-sm text-gray-900 dark:text-white">
-            WordMemo.net
-          </span>
-        </a>
-
-        <a
-          data-testid="github-issue-link"
-          href="https://github.com/stanislavkhatko/blind-typing-tutor/issues/new"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg cursor-pointer transition-colors font-medium text-sm shadow-sm hover:shadow-md"
-          title={reportIssueTitle}
-          aria-label={reportIssueTitle}
-        >
-          <Github size={16} />
-          <span className="hidden sm:inline">{reportIssue}</span>
-        </a>
-
         <a
           data-testid="support-link"
           href="https://buymeacoffee.com/stanislavkhatko"

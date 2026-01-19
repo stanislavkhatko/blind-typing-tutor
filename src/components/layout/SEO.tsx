@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import type { InterfaceLanguage } from "../../utils/translations";
+import type { InterfaceLanguage } from "../../translations";
 import type { LanguageCode } from "../../types/keyboard";
 import type { ContentType } from "../../utils/url";
 import { buildUrlPath } from "../../utils/url";

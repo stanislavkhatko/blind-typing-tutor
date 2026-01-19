@@ -1,10 +1,13 @@
+"use client";
+
+import { TranslationKeys } from "@/translations";
 import React from "react";
 
 interface StatsProps {
   wpm: number;
   accuracy: number;
   errors: number;
-  translations: Record<string, string>;
+  translations: TranslationKeys;
 }
 
 export const Stats: React.FC<StatsProps> = ({

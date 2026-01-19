@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 import { type Language } from "../utils/Generator";
 import type { KeyboardLayoutId } from "../types/keyboard";
@@ -10,6 +12,7 @@ import { GameControls } from "./game/GameControls";
 import { BottomControls } from "./game/BottomControls";
 import { CustomSetup } from "./game/CustomSetup";
 import type { LanguageCode } from "../types/keyboard";
+import type { TranslationKeys } from "../translations";
 
 interface GameProps {
   mode: "practice" | "beginner" | "custom";
@@ -31,7 +34,7 @@ interface GameProps {
   onToggleColors: () => void;
   onToggleCorrection: () => void;
   onToggleSound: () => void;
-  translations: Record<string, string>;
+  translations: TranslationKeys;
   availableLayouts: Array<{ id: KeyboardLayoutId; name: string; flag: string }>;
   learningLanguageOptions: Array<{
     code: LanguageCode;
@@ -97,9 +100,8 @@ export const Game: React.FC<GameProps> = ({
 
   return (
     <div
-      className={`flex flex-col items-center bg-transparent p-4 ${
-        !showKeyboard ? "pb-24" : ""
-      }`}
+      className={`flex flex-col items-center bg-transparent p-4 ${!showKeyboard ? "pb-24" : ""
+        }`}
     >
       <Stats
         wpm={wpm}
@@ -144,14 +146,38 @@ export const Game: React.FC<GameProps> = ({
       />
 
       {showKeyboard && (
-        <Keyboard
-          activeKey={activeKey}
-          layoutId={layoutId}
-          showHands={showHands}
-          showColors={showColors}
-          showEnglishHints={shouldShowHints}
-          lastPressedKey={lastPressedKey}
-        />
+        <>
+          <Keyboard
+            activeKey={activeKey}
+            layoutId={layoutId}
+            showHands={showHands}
+            showColors={showColors}
+            showEnglishHints={shouldShowHints}
+            lastPressedKey={lastPressedKey}
+          />
+          <div className="mt-6 flex justify-center">
+            <a
+              data-testid="wordmemo-link"
+              href="https://wordmemo.net/en/blind-typing-tutor"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors group"
+              title="WordMemo - Language Learning Platform"
+              aria-label="WordMemo - Language Learning Platform"
+            >
+              <img
+                src="/wordmemo-logo.svg"
+                alt="WordMemo"
+                className="h-5 w-5 transition-transform group-hover:scale-105"
+                width="20"
+                height="20"
+              />
+              <span className="font-medium text-sm text-gray-700 dark:text-gray-300">
+                wordmemo.net
+              </span>
+            </a>
+          </div>
+        </>
       )}
     </div>
   );

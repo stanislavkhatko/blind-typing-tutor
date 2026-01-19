@@ -2,7 +2,7 @@
  * Text direction utilities for RTL/LTR language support
  */
 
-import type { InterfaceLanguage } from "./translations";
+import type { InterfaceLanguage } from "../translations";
 
 /**
  * RTL (Right-to-Left) languages
