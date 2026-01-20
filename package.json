@@ -35,8 +35,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "generate-sitemap": "node scripts/generate-sitemap.js",
-    "build": "npm run generate-sitemap && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next node_modules/.vite dist",
