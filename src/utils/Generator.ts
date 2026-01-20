@@ -31,6 +31,42 @@ import type { LanguageCode } from '../types/keyboard';
 
 export type Language = LanguageCode;
 
+/**
+ * Registry mapping language codes to their word lists
+ * This replaces the switch statement pattern for better maintainability
+ */
+const LANGUAGE_WORDS_REGISTRY: Record<LanguageCode, () => string[]> = {
+  'en': () => enWords,
+  'uk': () => ukWords,
+  'tr': () => trWords,
+  'de': () => deWords,
+  'fr': () => frWords,
+  'es': () => esWords,
+  'pt': () => ptWords,
+  'ru': () => ruWords,
+  'it': () => itWords,
+  'pl': () => plWords,
+  'nl': () => nlWords,
+  'sv': () => svWords,
+  'no': () => noWords,
+  'da': () => daWords,
+  'fi': () => fiWords,
+  'cs': () => csWords,
+  'hu': () => huWords,
+  'ro': () => roWords,
+  'el': () => elWords,
+  'he': () => heWords,
+  'ja': () => jaWords,
+  'ko': () => koWords,
+  'zh': () => zhWords,
+  'ar': () => arWords,
+  'hi': () => hiWords,
+  'th': () => thWords,
+  'vi': () => viWords,
+  'id': () => idWords,
+  'ms': () => msWords,
+};
+
 export class Generator {
   private words: string[] = [];
   private allWords: string[];
@@ -53,39 +89,12 @@ export class Generator {
   }
 
   private getWordsForLanguage(lang: Language): string[] {
-    switch (lang) {
-      case 'uk': return ukWords;
-      case 'tr': return trWords;
-      case 'de': return deWords;
-      case 'fr': return frWords;
-      case 'es': return esWords;
-      case 'pt': return ptWords;
-      case 'ru': return ruWords;
-      case 'it': return itWords;
-      case 'pl': return plWords;
-      case 'nl': return nlWords;
-      case 'sv': return svWords;
-      case 'no': return noWords;
-      case 'da': return daWords;
-      case 'fi': return fiWords;
-      case 'cs': return csWords;
-      case 'hu': return huWords;
-      case 'ro': return roWords;
-      case 'el': return elWords;
-      case 'he': return heWords;
-      case 'ja': return jaWords;
-      case 'ko': return koWords;
-      case 'zh': return zhWords;
-      case 'ar': return arWords;
-      case 'hi': return hiWords;
-      case 'th': return thWords;
-      case 'vi': return viWords;
-      case 'id': return idWords;
-      case 'ms': return msWords;
-      case 'en':
-      default:
-        return enWords;
+    const getter = LANGUAGE_WORDS_REGISTRY[lang];
+    if (!getter) {
+      console.error(`No word list registered for language: ${lang}. Falling back to English.`);
+      return LANGUAGE_WORDS_REGISTRY['en']();
     }
+    return getter();
   }
 
   private rand(low: number, high: number) {

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AppContent } from "./AppContent";
-import type { InterfaceLanguage } from "@/translations";
 import type { ContentType } from "@/utils/url";
-import { translations } from "@/translations";
-import { INTERFACE_LANGUAGE_OPTIONS, LEARNING_LANGUAGE_OPTIONS } from "@/config/constants";
+import {
+  INTERFACE_LANGUAGE_OPTIONS,
+  LEARNING_LANGUAGE_OPTIONS,
+} from "@/config/constants";
+import { generatePageMetadata } from "@/utils/metadata";
 
 const CONTENT_TYPES: ContentType[] = ["words", "phrases", "custom"];
 
@@ -15,38 +17,6 @@ interface PageProps {
     learningMode: string;
   }>;
 }
-
-const validInterfaceLangs: InterfaceLanguage[] = [
-  "en",
-  "uk",
-  "tr",
-  "de",
-  "fr",
-  "es",
-  "pt",
-  "ru",
-  "zh",
-  "ja",
-  "ko",
-  "ar",
-  "hi",
-  "it",
-  "pl",
-  "nl",
-  "sv",
-  "no",
-  "da",
-  "fi",
-  "cs",
-  "hu",
-  "ro",
-  "el",
-  "he",
-  "th",
-  "vi",
-  "id",
-  "ms",
-];
 
 // Generate static params for all route combinations at build time
 export async function generateStaticParams() {
@@ -73,55 +43,15 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { interfaceLang, studyLang, learningMode } = await params;
-
-  // Validate interface language
-  const validatedInterfaceLang: InterfaceLanguage =
-    interfaceLang &&
-      validInterfaceLangs.includes(interfaceLang as InterfaceLanguage)
-      ? (interfaceLang as InterfaceLanguage)
-      : "en";
-
-  // Use base SEO metadata (no content-type specific variations)
-  const t = translations[validatedInterfaceLang];
-  const title = t.seoTitle || t.title;
-  const description = t.seoDescription || t.metaDescription;
-  const keywords = t.seoKeywords || t.seoDescription || "";
-
-  // Build canonical URL
-  const baseUrl = "https://blind-typing-tutor.wordmemo.net";
-  const canonical = `${baseUrl}/${interfaceLang}/${studyLang}/${learningMode}`;
-
-  return {
-    title: title || "Blind Typing Tutor - Master Touch Typing Online",
-    description:
-      description ||
-      "Master touch typing with our free online blind typing tutor.",
-    keywords,
+  return generatePageMetadata({
+    interfaceLang,
+    studyLang,
+    learningMode,
     robots: {
       index: false,
       follow: false,
     },
-    alternates: {
-      canonical,
-    },
-    openGraph: {
-      title: title || "Blind Typing Tutor - Master Touch Typing Online",
-      description:
-        description ||
-        "Master touch typing with our free online blind typing tutor.",
-      url: canonical,
-      images: ["/og-image.png"],
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: title || "Blind Typing Tutor - Master Touch Typing Online",
-      description:
-        description ||
-        "Master touch typing with our free online blind typing tutor.",
-      images: ["/og-image.png"],
-    },
-  };
+  });
 }
 
 export default async function LearningModePage({ params }: PageProps) {

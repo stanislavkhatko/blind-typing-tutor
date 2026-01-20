@@ -14,6 +14,8 @@ import { getStorageItem, setStorageItem, removeStorageItem } from "../utils/stor
 import { updateDocumentDirection } from "../utils/textDirection";
 import { soundManager } from "../utils/SoundManager";
 import { parseUrlPath, buildUrlPath, type ContentType } from "../utils/url";
+import { isValidInterfaceLanguage, VALID_LEARNING_LANGUAGES } from "../config/constants";
+import { useDarkMode } from "./useDarkMode";
 
 interface UseAppSettingsParams {
   interfaceLang?: string;
@@ -90,44 +92,13 @@ export function useAppSettings(params: UseAppSettingsParams) {
     if (urlLearningLang) return urlLearningLang;
 
     const saved = getStorageItem("learningLanguage");
-    const validLanguages: LanguageCode[] = [
-      "en",
-      "uk",
-      "tr",
-      "de",
-      "fr",
-      "es",
-      "pt",
-      "ru",
-      "zh",
-      "ja",
-      "ko",
-      "ar",
-      "hi",
-      "it",
-      "pl",
-      "nl",
-      "sv",
-      "no",
-      "da",
-      "fi",
-      "cs",
-      "hu",
-      "ro",
-      "el",
-      "he",
-      "th",
-      "vi",
-      "id",
-      "ms",
-    ];
-    if (saved && validLanguages.includes(saved as LanguageCode)) {
+    if (saved && VALID_LEARNING_LANGUAGES.includes(saved as LanguageCode)) {
       return saved as LanguageCode;
     }
     const savedMode = getStorageItem("mode");
     if (!savedMode || savedMode === "null" || savedMode === "") {
       const randomLang =
-        validLanguages[Math.floor(Math.random() * validLanguages.length)];
+        VALID_LEARNING_LANGUAGES[Math.floor(Math.random() * VALID_LEARNING_LANGUAGES.length)];
       return randomLang;
     }
     return detectLearningLanguage() as LanguageCode;
@@ -172,79 +143,13 @@ export function useAppSettings(params: UseAppSettingsParams) {
 
   const [interfaceLanguage, setInterfaceLanguage] = useState<InterfaceLanguage>(
     () => {
-      if (params.interfaceLang) {
-        const validLanguages: InterfaceLanguage[] = [
-          "en",
-          "uk",
-          "tr",
-          "de",
-          "fr",
-          "es",
-          "pt",
-          "ru",
-          "zh",
-          "ja",
-          "ko",
-          "ar",
-          "hi",
-          "it",
-          "pl",
-          "nl",
-          "sv",
-          "no",
-          "da",
-          "fi",
-          "cs",
-          "hu",
-          "ro",
-          "el",
-          "he",
-          "th",
-          "vi",
-          "id",
-          "ms",
-        ];
-        if (
-          validLanguages.includes(params.interfaceLang as InterfaceLanguage)
-        ) {
-          return params.interfaceLang as InterfaceLanguage;
-        }
+      if (params.interfaceLang && isValidInterfaceLanguage(params.interfaceLang)) {
+        return params.interfaceLang;
       }
 
       const saved = getStorageItem("interfaceLanguage");
-      const validLanguages: InterfaceLanguage[] = [
-        "en",
-        "uk",
-        "tr",
-        "de",
-        "fr",
-        "es",
-        "pt",
-        "ru",
-        "zh",
-        "ja",
-        "ko",
-        "ar",
-        "hi",
-        "it",
-        "pl",
-        "nl",
-        "sv",
-        "no",
-        "da",
-        "fi",
-        "cs",
-        "hu",
-        "ro",
-        "el",
-        "he",
-        "th",
-        "vi",
-        "id",
-        "ms",
-      ];
-      if (saved && validLanguages.includes(saved as InterfaceLanguage)) {
-        return saved as InterfaceLanguage;
+      if (saved && isValidInterfaceLanguage(saved)) {
+        return saved;
       }
       return detectInterfaceLanguage() as InterfaceLanguage;
     }
@@ -255,10 +160,8 @@ export function useAppSettings(params: UseAppSettingsParams) {
     return saved === "true";
   });
 
-  // Initialize darkMode with false to ensure consistent SSR/client rendering
-  // We'll sync from localStorage after mount to prevent hydration mismatches
-  const [darkMode, setDarkMode] = useState(false);
-  const [darkModeInitialized, setDarkModeInitialized] = useState(false);
+  // Use extracted dark mode hook
+  const [darkMode, setDarkMode] = useDarkMode();
 
   const [showKeyboard, setShowKeyboard] = useState(() => {
     const saved = getStorageItem("showKeyboard");
@@ -280,38 +183,6 @@ export function useAppSettings(params: UseAppSettingsParams) {
     if (saved === null || saved === "") return true;
     return saved === "true";
   });
-
-  const VALID_LANGUAGES: InterfaceLanguage[] = [
-    "en",
-    "uk",
-    "tr",
-    "de",
-    "fr",
-    "es",
-    "pt",
-    "ru",
-    "zh",
-    "ja",
-    "ko",
-    "ar",
-    "hi",
-    "it",
-    "pl",
-    "nl",
-    "sv",
-    "no",
-    "da",
-    "fi",
-    "cs",
-    "hu",
-    "ro",
-    "el",
-    "he",
-    "th",
-    "vi",
-    "id",
-    "ms",
-  ];
 
   // Sync with URL params when they change (only update if different to prevent loops)
   // Use pathname as source of truth to avoid race conditions with router.replace()
@@ -368,8 +239,7 @@ export function useAppSettings(params: UseAppSettingsParams) {
     // Only sync if params are valid - we'll update state regardless of current state
     // to ensure URL is the source of truth
     const needsInterfaceUpdate =
-      currentInterfaceLang &&
-      VALID_LANGUAGES.includes(currentInterfaceLang as InterfaceLanguage);
+      currentInterfaceLang && isValidInterfaceLanguage(currentInterfaceLang);
 
     if (needsInterfaceUpdate || newLearningLang || newContentType) {
       isUpdatingFromUrl.current = true;
@@ -395,7 +265,6 @@ export function useAppSettings(params: UseAppSettingsParams) {
         });
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, params.interfaceLang, params.contentTypeAndLang, params.studyLang, params.learningMode]);
 
   // Sync mode with contentType - when mode changes, update contentType and URL
@@ -471,35 +340,6 @@ export function useAppSettings(params: UseAppSettingsParams) {
     soundManager.setEnabled(soundEnabled);
   }, [soundEnabled]);
 
-  // Initialize darkMode from localStorage after mount (prevents hydration mismatch)
-  useEffect(() => {
-    if (!darkModeInitialized) {
-      const saved = getStorageItem("darkMode");
-      let initialDarkMode = false;
-
-      if (saved === "true" || saved === "false") {
-        initialDarkMode = saved === "true";
-      } else if (typeof window !== "undefined" && window.matchMedia) {
-        initialDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      }
-
-      setDarkMode(initialDarkMode);
-      setDarkModeInitialized(true);
-    }
-  }, [darkModeInitialized]);
-
-  // Apply darkMode changes after initialization
-  useEffect(() => {
-    if (darkModeInitialized) {
-      setStorageItem("darkMode", String(darkMode));
-      if (darkMode) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
-  }, [darkMode, darkModeInitialized]);
-
   useEffect(() => {
     setStorageItem("showKeyboard", String(showKeyboard));
   }, [showKeyboard]);
@@ -533,21 +373,6 @@ export function useAppSettings(params: UseAppSettingsParams) {
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, [interfaceLanguage, learningLanguage, learningContentType]);
-
-  // System theme detection (only after darkMode is initialized)
-  useEffect(() => {
-    if (darkModeInitialized && typeof window !== "undefined" && window.matchMedia) {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const handleChange = (e: MediaQueryListEvent) => {
-        const saved = getStorageItem("darkMode");
-        if (saved === null || saved === "") {
-          setDarkMode(e.matches);
-        }
-      };
-      mediaQuery.addEventListener("change", handleChange);
-      return () => mediaQuery.removeEventListener("change", handleChange);
-    }
-  }, [darkModeInitialized]);
 
   return {
     layoutId,

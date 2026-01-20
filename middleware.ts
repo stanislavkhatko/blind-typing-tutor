@@ -1,37 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-const VALID_INTERFACE_LANGS = [
-  "en",
-  "uk",
-  "tr",
-  "de",
-  "fr",
-  "es",
-  "pt",
-  "ru",
-  "zh",
-  "ja",
-  "ko",
-  "ar",
-  "hi",
-  "it",
-  "pl",
-  "nl",
-  "sv",
-  "no",
-  "da",
-  "fi",
-  "cs",
-  "hu",
-  "ro",
-  "el",
-  "he",
-  "th",
-  "vi",
-  "id",
-  "ms",
-];
+import { VALID_INTERFACE_LANGUAGES, isValidInterfaceLanguage } from "@/config/constants";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -43,7 +12,7 @@ export function middleware(request: NextRequest) {
 
   if (legacyMatch) {
     const [, interfaceLang, contentType, learningLang] = legacyMatch;
-    if (VALID_INTERFACE_LANGS.includes(interfaceLang)) {
+    if (isValidInterfaceLanguage(interfaceLang)) {
       return NextResponse.redirect(
         new URL(`/${interfaceLang}/${learningLang}/${contentType}`, request.url)
       );
@@ -56,7 +25,7 @@ export function middleware(request: NextRequest) {
 
   if (customMatch) {
     const [, interfaceLang] = customMatch;
-    if (VALID_INTERFACE_LANGS.includes(interfaceLang)) {
+    if (isValidInterfaceLanguage(interfaceLang)) {
       return NextResponse.redirect(
         new URL(`/${interfaceLang}/${interfaceLang}/custom`, request.url)
       );

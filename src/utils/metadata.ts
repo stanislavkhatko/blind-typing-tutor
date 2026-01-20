@@ -1,9 +1,136 @@
-import type { InterfaceLanguage } from "../translations";
+import type { Metadata } from "next";
 import type { LanguageCode } from "../types/keyboard";
 import type { ContentType } from "./url";
+import type { InterfaceLanguage } from "../translations";
 import { translations } from "../translations";
 import { buildUrlPath } from "./url";
+import {
+  validateInterfaceLanguage,
+  BASE_URL,
+  INTERFACE_LANGUAGE_OPTIONS,
+} from "../config/constants";
 
+const DEFAULT_TITLE = "Blind Typing Tutor - Master Touch Typing Online";
+const DEFAULT_DESCRIPTION = "Master touch typing with our free online blind typing tutor.";
+const OG_IMAGE = "/og-image.png";
+
+interface MetadataOptions {
+  interfaceLang: string;
+  studyLang?: string;
+  learningMode?: string;
+  robots?: {
+    index: boolean;
+    follow: boolean;
+  };
+}
+
+/**
+ * Generate hreflang alternates for all interface languages
+ * This helps SEO scanners understand language versions of the page
+ */
+function generateHreflangAlternates(
+  currentLang: string,
+  studyLang?: string,
+  learningMode?: string
+): Record<string, string> {
+  const alternates: Record<string, string> = {};
+
+  INTERFACE_LANGUAGE_OPTIONS.forEach((lang) => {
+    let url = `${BASE_URL}/${lang.code}`;
+    if (studyLang && learningMode) {
+      // For content pages, maintain the same studyLang and learningMode
+      url = `${BASE_URL}${buildUrlPath(
+        lang.code as InterfaceLanguage,
+        learningMode as ContentType,
+        studyLang as LanguageCode
+      )}`;
+    }
+    alternates[lang.code] = url;
+  });
+
+  // Add x-default pointing to English version
+  let defaultUrl = `${BASE_URL}/en`;
+  if (studyLang && learningMode) {
+    defaultUrl = `${BASE_URL}${buildUrlPath(
+      "en",
+      learningMode as ContentType,
+      studyLang as LanguageCode
+    )}`;
+  }
+  alternates["x-default"] = defaultUrl;
+
+  return alternates;
+}
+
+/**
+ * Generate Next.js Metadata for a route
+ * Consolidates metadata generation logic used across different page types
+ * Includes proper hreflang tags for SEO scanners
+ */
+export function generatePageMetadata(options: MetadataOptions): Metadata {
+  const { interfaceLang, studyLang, learningMode, robots } = options;
+
+  // Validate interface language
+  const validatedInterfaceLang = validateInterfaceLanguage(interfaceLang);
+
+  // Get translations
+  const t = translations[validatedInterfaceLang];
+  const title = t.seoTitle || t.title || DEFAULT_TITLE;
+  const description = t.seoDescription || t.metaDescription || DEFAULT_DESCRIPTION;
+  const keywords = t.seoKeywords || t.seoDescription || "";
+
+  // Build canonical URL
+  let canonical = BASE_URL;
+  if (studyLang && learningMode) {
+    canonical = `${BASE_URL}${buildUrlPath(
+      validatedInterfaceLang,
+      learningMode as ContentType,
+      studyLang as LanguageCode
+    )}`;
+  } else {
+    canonical = `${BASE_URL}/${validatedInterfaceLang}`;
+  }
+
+  // Generate hreflang alternates for SEO
+  const hreflangAlternates = generateHreflangAlternates(
+    validatedInterfaceLang,
+    studyLang,
+    learningMode
+  );
+
+  return {
+    title,
+    description,
+    keywords,
+    robots: robots || {
+      index: true,
+      follow: true,
+    },
+    alternates: {
+      canonical,
+      languages: hreflangAlternates,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      images: [OG_IMAGE],
+      type: "website",
+      locale: validatedInterfaceLang,
+      alternateLocale: Object.keys(hreflangAlternates).filter(
+        (lang) => lang !== validatedInterfaceLang && lang !== "x-default"
+      ),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [OG_IMAGE],
+    },
+  };
+}
+
+// Legacy interface for backward compatibility
 export interface RouteMetadata {
   title: string;
   description: string;
@@ -18,8 +145,8 @@ export interface RouteParams {
 }
 
 /**
- * Generate metadata for a route based on its parameters
- * Similar to Next.js generateMetadata function
+ * Generate metadata for a route based on its parameters (legacy format)
+ * @deprecated Use generatePageMetadata instead
  */
 export function generateMetadata(params: RouteParams): RouteMetadata {
   const { interfaceLang, contentTypeAndLang } = params;
@@ -37,72 +164,32 @@ export function generateMetadata(params: RouteParams): RouteMetadata {
   }
 
   // Validate interface language
-  const validInterfaceLangs: InterfaceLanguage[] = [
-    "en",
-    "uk",
-    "tr",
-    "de",
-    "fr",
-    "es",
-    "pt",
-    "ru",
-    "zh",
-    "ja",
-    "ko",
-    "ar",
-    "hi",
-    "it",
-    "pl",
-    "nl",
-    "sv",
-    "no",
-    "da",
-    "fi",
-    "cs",
-    "hu",
-    "ro",
-    "el",
-    "he",
-    "th",
-    "vi",
-    "id",
-    "ms",
-  ];
-
-  const validatedInterfaceLang: InterfaceLanguage =
-    interfaceLang &&
-      validInterfaceLangs.includes(interfaceLang as InterfaceLanguage)
-      ? (interfaceLang as InterfaceLanguage)
-      : "en";
+  const validatedInterfaceLang = validateInterfaceLanguage(interfaceLang);
 
   // Use base SEO metadata (no content-type specific variations)
   const t = translations[validatedInterfaceLang];
-  const title = t.seoTitle || t.title;
-  const description = t.seoDescription || t.metaDescription;
+  const title = t.seoTitle || t.title || DEFAULT_TITLE;
+  const description = t.seoDescription || t.metaDescription || DEFAULT_DESCRIPTION;
   const keywords = t.seoKeywords || t.seoDescription || "";
 
   // Build canonical URL
-  const baseUrl = "https://blind-typing-tutor.wordmemo.net";
-  let canonical = baseUrl;
+  let canonical = BASE_URL;
 
   if (learningLang && contentType) {
-    canonical = `${baseUrl}${buildUrlPath(
+    canonical = `${BASE_URL}${buildUrlPath(
       validatedInterfaceLang,
       contentType,
       learningLang
     )}`;
   } else if (validatedInterfaceLang !== "en") {
-    canonical = `${baseUrl}/${validatedInterfaceLang}`;
+    canonical = `${BASE_URL}/${validatedInterfaceLang}`;
   }
 
   return {
-    title: title || "Blind Typing Tutor - Master Touch Typing Online",
-    description:
-      description ||
-      "Master touch typing with our free online blind typing tutor.",
+    title,
+    description,
     keywords,
     canonical,
-    ogImage: "/og-image.png",
+    ogImage: OG_IMAGE,
   };
 }
-

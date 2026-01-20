@@ -1,7 +1,5 @@
 import { MetadataRoute } from "next";
-import { INTERFACE_LANGUAGE_OPTIONS } from "@/config/constants";
-
-const BASE_URL = "https://blind-typing-tutor.wordmemo.net";
+import { INTERFACE_LANGUAGE_OPTIONS, BASE_URL } from "@/config/constants";
 
 // Popular interface languages get higher priority
 const POPULAR_LANGS = ["es", "fr", "de", "pt", "ru", "zh", "ja"];

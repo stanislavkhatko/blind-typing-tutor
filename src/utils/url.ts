@@ -1,69 +1,9 @@
 import type { InterfaceLanguage } from "../translations";
 import type { LanguageCode } from "../types/keyboard";
-
-const VALID_LANGUAGES: InterfaceLanguage[] = [
-  "en",
-  "uk",
-  "tr",
-  "de",
-  "fr",
-  "es",
-  "pt",
-  "ru",
-  "zh",
-  "ja",
-  "ko",
-  "ar",
-  "hi",
-  "it",
-  "pl",
-  "nl",
-  "sv",
-  "no",
-  "da",
-  "fi",
-  "cs",
-  "hu",
-  "ro",
-  "el",
-  "he",
-  "th",
-  "vi",
-  "id",
-  "ms",
-];
-
-const VALID_LEARNING_LANGUAGES: LanguageCode[] = [
-  "en",
-  "uk",
-  "tr",
-  "de",
-  "fr",
-  "es",
-  "pt",
-  "ru",
-  "zh",
-  "ja",
-  "ko",
-  "ar",
-  "hi",
-  "it",
-  "pl",
-  "nl",
-  "sv",
-  "no",
-  "da",
-  "fi",
-  "cs",
-  "hu",
-  "ro",
-  "el",
-  "he",
-  "th",
-  "vi",
-  "id",
-  "ms",
-];
+import {
+  isValidInterfaceLanguage,
+  isValidLearningLanguage,
+} from "../config/constants";
 
 const VALID_CONTENT_TYPES = ["words", "phrases", "custom"] as const;
 export type ContentType = (typeof VALID_CONTENT_TYPES)[number];
@@ -76,8 +16,8 @@ export function getLanguageFromUrl(): InterfaceLanguage | null {
 export function getInterfaceLanguageFromUrl(): InterfaceLanguage | null {
   if (typeof window === "undefined") return null;
   const path = window.location.pathname.split("/")[1];
-  if (path && VALID_LANGUAGES.includes(path as InterfaceLanguage)) {
-    return path as InterfaceLanguage;
+  if (path && isValidInterfaceLanguage(path)) {
+    return path;
   }
   return null;
 }
@@ -89,8 +29,8 @@ export function getLearningLanguageFromUrl(): LanguageCode | null {
   // New structure: /{interfaceLang}/{studyLang}/{learningMode}
   if (pathParts.length >= 2) {
     const studyLang = pathParts[1];
-    if (VALID_LEARNING_LANGUAGES.includes(studyLang as LanguageCode)) {
-      return studyLang as LanguageCode;
+    if (isValidLearningLanguage(studyLang)) {
+      return studyLang;
     }
   }
 
@@ -102,8 +42,8 @@ export function getLearningLanguageFromUrl(): LanguageCode | null {
     const parts = contentAndLang.split("-");
     if (parts.length >= 2) {
       const learningLang = parts.slice(1).join("-");
-      if (VALID_LEARNING_LANGUAGES.includes(learningLang as LanguageCode)) {
-        return learningLang as LanguageCode;
+      if (isValidLearningLanguage(learningLang)) {
+        return learningLang;
       }
     }
   }

@@ -1,6 +1,126 @@
 import type { KeyboardLayoutId, LanguageCode } from "../types/keyboard";
 import type { InterfaceLanguage } from "../translations";
 
+// ============================================================================
+// Application Constants
+// ============================================================================
+
+/**
+ * Base URL for the application
+ * Used for canonical URLs, sitemap generation, and metadata
+ */
+export const BASE_URL = "https://blind-typing-tutor.wordmemo.net";
+
+// ============================================================================
+// Language Validation
+// ============================================================================
+
+// Language validation arrays - single source of truth
+export const VALID_INTERFACE_LANGUAGES: readonly InterfaceLanguage[] = [
+  "en",
+  "uk",
+  "tr",
+  "de",
+  "fr",
+  "es",
+  "pt",
+  "ru",
+  "zh",
+  "ja",
+  "ko",
+  "ar",
+  "hi",
+  "it",
+  "pl",
+  "nl",
+  "sv",
+  "no",
+  "da",
+  "fi",
+  "cs",
+  "hu",
+  "ro",
+  "el",
+  "he",
+  "th",
+  "vi",
+  "id",
+  "ms",
+] as const;
+
+export const VALID_LEARNING_LANGUAGES: readonly LanguageCode[] = [
+  "en",
+  "uk",
+  "tr",
+  "de",
+  "fr",
+  "es",
+  "pt",
+  "ru",
+  "zh",
+  "ja",
+  "ko",
+  "ar",
+  "hi",
+  "it",
+  "pl",
+  "nl",
+  "sv",
+  "no",
+  "da",
+  "fi",
+  "cs",
+  "hu",
+  "ro",
+  "el",
+  "he",
+  "th",
+  "vi",
+  "id",
+  "ms",
+] as const;
+
+// Type guard functions for safe type narrowing
+export function isValidInterfaceLanguage(
+  lang: string
+): lang is InterfaceLanguage {
+  return VALID_INTERFACE_LANGUAGES.includes(lang as InterfaceLanguage);
+}
+
+export function isValidLearningLanguage(lang: string): lang is LanguageCode {
+  return VALID_LEARNING_LANGUAGES.includes(lang as LanguageCode);
+}
+
+// Helper function to validate and return interface language with fallback
+export function validateInterfaceLanguage(
+  lang: string | undefined | null,
+  fallback: InterfaceLanguage = "en"
+): InterfaceLanguage {
+  if (lang && isValidInterfaceLanguage(lang)) {
+    return lang;
+  }
+  return fallback;
+}
+
+// Helper function to validate and return learning language with fallback
+export function validateLearningLanguage(
+  lang: string | undefined | null,
+  fallback: LanguageCode = "en"
+): LanguageCode {
+  if (lang && isValidLearningLanguage(lang)) {
+    return lang;
+  }
+  return fallback;
+}
+
+// ============================================================================
+// Keyboard Layouts
+// ============================================================================
+
+/**
+ * Popular keyboard layouts shown first in the layout selector
+ * Ordered by popularity/usage
+ */
 export const POPULAR_LAYOUT_IDS: KeyboardLayoutId[] = [
   "en-us",
   "en-gb",
@@ -30,6 +150,14 @@ export const POPULAR_LAYOUT_IDS: KeyboardLayoutId[] = [
   "hi-in",
 ];
 
+// ============================================================================
+// Language Options for UI
+// ============================================================================
+
+/**
+ * Available learning languages with display names and flags
+ * Used in language selection dropdowns
+ */
 export const LEARNING_LANGUAGE_OPTIONS: {
   code: LanguageCode;
   name: string;
@@ -66,6 +194,10 @@ export const LEARNING_LANGUAGE_OPTIONS: {
     { code: "ms", name: "Bahasa Melayu", flag: "🇲🇾" },
   ];
 
+/**
+ * Available interface languages with display names and flags
+ * Used in interface language selection dropdowns
+ */
 export const INTERFACE_LANGUAGE_OPTIONS: {
   code: InterfaceLanguage;
   name: string;

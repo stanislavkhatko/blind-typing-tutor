@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Game } from "@/components/Game";
 import { getAllLayouts } from "@/config/layouts";
 import { translations } from "@/translations";
 import { useAppSettings } from "@/hooks/useAppSettings";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { Header } from "@/components/layout/Header";
 import { MobileMessage } from "@/components/layout/MobileMessage";
 import { initGA, trackPageView } from "@/utils/analytics";
@@ -54,30 +55,7 @@ export function AppContent({ params }: AppContentProps) {
     });
 
   // Mobile detection
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window !== "undefined") {
-      return (
-        window.innerWidth < 768 ||
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        )
-      );
-    }
-    return false;
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(
-        window.innerWidth < 768 ||
-          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-            navigator.userAgent
-          )
-      );
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isMobile = useIsMobile();
 
   if (isMobile) {
     return (
@@ -93,9 +71,8 @@ export function AppContent({ params }: AppContentProps) {
 
   return (
     <div
-      className={`min-h-screen flex flex-col transition-colors duration-300 ${
-        settings.darkMode ? "dark:bg-gray-900" : "bg-gray-50"
-      }`}
+      className={`min-h-screen flex flex-col transition-colors duration-300 ${settings.darkMode ? "dark:bg-gray-900" : "bg-gray-50"
+        }`}
       suppressHydrationWarning
     >
       <Header
