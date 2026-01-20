@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { VALID_INTERFACE_LANGUAGES, isValidInterfaceLanguage } from "@/config/constants";
+import { isValidInterfaceLanguage } from "@/config/constants";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
