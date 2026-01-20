@@ -71,4 +71,4 @@ logs
 *.log
 
 # Other
-# repomix-output.xml
+repomix-output.xml

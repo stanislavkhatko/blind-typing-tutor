@@ -68,6 +68,8 @@ export function useAppSettings(params: UseAppSettingsParams) {
   const prevParamsRef = useRef({
     interfaceLang: params.interfaceLang,
     contentTypeAndLang: params.contentTypeAndLang,
+    studyLang: params.studyLang,
+    learningMode: params.learningMode,
   });
 
   // Initialize layout from localStorage with fallback defaults
@@ -221,36 +223,45 @@ export function useAppSettings(params: UseAppSettingsParams) {
     }
 
     // Check if params actually changed (not just state)
-    const paramsChanged =
-      prevParamsRef.current.interfaceLang !== currentInterfaceLang ||
-      (params.studyLang && params.learningMode) || // New structure
-      (params.contentTypeAndLang && params.contentTypeAndLang !== prevParamsRef.current.contentTypeAndLang); // Legacy structure
+    // Compare both new and legacy structure params
+    const currentParamsKey = `${currentInterfaceLang || ''}-${params.studyLang || ''}-${params.learningMode || ''}-${params.contentTypeAndLang || ''}`;
+    const prevParamsKey = `${prevParamsRef.current.interfaceLang || ''}-${prevParamsRef.current.studyLang || ''}-${prevParamsRef.current.learningMode || ''}-${prevParamsRef.current.contentTypeAndLang || ''}`;
 
-    if (!paramsChanged) {
+    if (currentParamsKey === prevParamsKey) {
       return;
     }
 
-    // Update ref to track current params
+    // Update ref to track current params BEFORE making changes
     prevParamsRef.current = {
       interfaceLang: currentInterfaceLang,
       contentTypeAndLang: params.contentTypeAndLang,
+      studyLang: params.studyLang,
+      learningMode: params.learningMode,
     };
 
-    // Only sync if params are valid - we'll update state regardless of current state
-    // to ensure URL is the source of truth
+    // Only sync if params are valid and actually different from current state
+    // Check if state already matches URL to avoid unnecessary updates
     const needsInterfaceUpdate =
-      currentInterfaceLang && isValidInterfaceLanguage(currentInterfaceLang);
+      currentInterfaceLang &&
+      isValidInterfaceLanguage(currentInterfaceLang) &&
+      currentInterfaceLang !== interfaceLanguage;
 
-    if (needsInterfaceUpdate || newLearningLang || newContentType) {
+    const needsLearningLangUpdate =
+      newLearningLang && newLearningLang !== learningLanguage;
+
+    const needsContentTypeUpdate =
+      newContentType && newContentType !== learningContentType;
+
+    if (needsInterfaceUpdate || needsLearningLangUpdate || needsContentTypeUpdate) {
       isUpdatingFromUrl.current = true;
       startTransition(() => {
         if (needsInterfaceUpdate) {
           setInterfaceLanguage(currentInterfaceLang as InterfaceLanguage);
         }
-        if (newLearningLang) {
+        if (needsLearningLangUpdate && newLearningLang) {
           setLearningLanguage(newLearningLang);
         }
-        if (newContentType) {
+        if (needsContentTypeUpdate && newContentType) {
           setLearningContentType(newContentType);
           // Update mode based on contentType
           let newMode: "practice" | "beginner" | "custom" = "practice";
@@ -259,23 +270,33 @@ export function useAppSettings(params: UseAppSettingsParams) {
           else if (newContentType === "custom") newMode = "custom";
           setMode(newMode);
         }
-        // Reset flag after state updates complete
-        requestAnimationFrame(() => {
+        // Reset flag after state updates complete - use a longer delay to ensure all effects have run
+        setTimeout(() => {
           isUpdatingFromUrl.current = false;
-        });
+        }, 100);
       });
     }
+    // Dependencies: pathname and params are the source of truth for URL sync
+    // We intentionally don't include state variables to avoid circular updates
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, params.interfaceLang, params.contentTypeAndLang, params.studyLang, params.learningMode]);
 
   // Sync mode with contentType - when mode changes, update contentType and URL
+  // Skip if we're updating from URL to prevent circular updates
+  // Also skip if the contentType already matches the mode to avoid unnecessary updates
   useEffect(() => {
+    if (isUpdatingFromUrl.current) {
+      return;
+    }
     const expectedContentType = getContentTypeFromMode(mode);
+    // Only update if there's an actual mismatch
     if (learningContentType !== expectedContentType) {
       startTransition(() => {
         setLearningContentType(expectedContentType);
       });
     }
-  }, [mode, learningContentType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
 
   // Persist settings
   useEffect(() => {
@@ -316,19 +337,22 @@ export function useAppSettings(params: UseAppSettingsParams) {
       learningContentType,
       learningLanguage
     );
-    const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
+
+    // Use pathname from Next.js router as it's more reliable than window.location
+    const currentPath = pathname;
 
     // Only navigate if the path is actually different
+    // Use a more precise comparison to avoid unnecessary redirects
     if (currentPath && currentPath !== expectedPath) {
       // Set flag before navigating to prevent sync effect from running
       isUpdatingFromUrl.current = true;
       router.replace(expectedPath);
-      // Reset flag after navigation completes (use setTimeout to ensure router has processed)
+      // Reset flag after navigation completes - use longer delay to ensure router has processed
       setTimeout(() => {
         isUpdatingFromUrl.current = false;
-      }, 0);
+      }, 100);
     }
-  }, [interfaceLanguage, learningContentType, learningLanguage, router]);
+  }, [interfaceLanguage, learningContentType, learningLanguage, router, pathname]);
 
   useEffect(() => {
     setStorageItem("interfaceLanguage", interfaceLanguage);
