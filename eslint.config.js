@@ -20,6 +20,8 @@ export default defineConfig([
     rules: {
       // Prevent console.log in production code (allow console.warn and console.error)
       'no-console': ['error', { allow: ['warn', 'error'] }],
+      // Allow triple-slash references (needed for Next.js generated types)
+      '@typescript-eslint/triple-slash-reference': 'off',
     },
   },
 ])
