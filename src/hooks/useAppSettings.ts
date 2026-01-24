@@ -83,6 +83,13 @@ export function useAppSettings(params: UseAppSettingsParams) {
   });
 
   const [mode, setMode] = useState<"practice" | "beginner" | "custom">(() => {
+    // Initialize from URL first if present
+    if (urlContentType) {
+      if (urlContentType === "words") return "beginner";
+      if (urlContentType === "phrases") return "practice";
+      if (urlContentType === "custom") return "custom";
+    }
+
     const saved = getStorageItem("mode");
     if (saved === "novice" || saved === "practice") return "practice";
     if (saved === "beginner" || saved === "custom") return saved;

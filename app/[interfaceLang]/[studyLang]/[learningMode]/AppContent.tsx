@@ -89,6 +89,8 @@ export function AppContent({ params }: AppContentProps) {
         interfaceLanguageOptions={INTERFACE_LANGUAGE_OPTIONS}
         isDarkMode={settings.darkMode}
         setDarkMode={settings.setDarkMode}
+        studyLang={params.studyLang}
+        learningMode={params.learningMode as "words" | "phrases" | "custom"}
       />
 
       <main className="grow pt-20">

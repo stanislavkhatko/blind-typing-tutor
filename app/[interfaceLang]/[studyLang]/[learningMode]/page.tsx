@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { AppContent } from "./AppContent";
+import { SEOContent } from "./SEOContent";
 import type { ContentType } from "@/utils/url";
 import {
   INTERFACE_LANGUAGE_OPTIONS,
@@ -41,15 +42,17 @@ export async function generateStaticParams() {
   return params;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { interfaceLang, studyLang, learningMode } = await params;
   return generatePageMetadata({
     interfaceLang,
     studyLang,
     learningMode,
     robots: {
-      index: false,
-      follow: false,
+      index: true,
+      follow: true,
     },
   });
 }
@@ -57,18 +60,41 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function LearningModePage({ params }: PageProps) {
   const { interfaceLang, studyLang, learningMode } = await params;
 
+  // Validate interfaceLang
+  const validInterfaceLang = INTERFACE_LANGUAGE_OPTIONS.find(
+    (opt) => opt.code === interfaceLang
+  );
+  if (!validInterfaceLang) {
+    notFound();
+  }
+
+  // Validate studyLang
+  const validStudyLang = LEARNING_LANGUAGE_OPTIONS.find(
+    (opt) => opt.code === studyLang
+  );
+  if (!validStudyLang) {
+    notFound();
+  }
+
   // Validate learningMode
   if (!CONTENT_TYPES.includes(learningMode as ContentType)) {
     redirect(`/${interfaceLang}/${studyLang}/phrases`);
   }
 
   return (
-    <AppContent
-      params={{
-        interfaceLang,
-        studyLang,
-        learningMode: learningMode as ContentType,
-      }}
-    />
+    <>
+      <AppContent
+        params={{
+          interfaceLang,
+          studyLang,
+          learningMode: learningMode as ContentType,
+        }}
+      />
+      <SEOContent
+        interfaceLang={interfaceLang}
+        studyLang={studyLang}
+        learningMode={learningMode as ContentType}
+      />
+    </>
   );
 }

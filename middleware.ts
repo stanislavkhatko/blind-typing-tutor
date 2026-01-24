@@ -1,38 +1,18 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { isValidInterfaceLanguage } from "@/config/constants";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Handle legacy URLs: /{interfaceLang}/{contentType}-{lang} -> /{interfaceLang}/{lang}/{contentType}
-  // Example: /en/phrases-es -> /en/es/phrases
-  const legacyPattern = /^\/([a-z]{2}(?:-[a-z]{2})?)\/(words|phrases)-([a-z]{2}(?:-[a-z]{2})?)$/;
-  const legacyMatch = pathname.match(legacyPattern);
+  // Add pathname to headers for RootLayout to access
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
 
-  if (legacyMatch) {
-    const [, interfaceLang, contentType, learningLang] = legacyMatch;
-    if (isValidInterfaceLanguage(interfaceLang)) {
-      return NextResponse.redirect(
-        new URL(`/${interfaceLang}/${learningLang}/${contentType}`, request.url)
-      );
-    }
-  }
-
-  // Handle legacy custom URLs: /{interfaceLang}/custom -> /{interfaceLang}/{interfaceLang}/custom
-  const customPattern = /^\/([a-z]{2}(?:-[a-z]{2})?)\/custom$/;
-  const customMatch = pathname.match(customPattern);
-
-  if (customMatch) {
-    const [, interfaceLang] = customMatch;
-    if (isValidInterfaceLanguage(interfaceLang)) {
-      return NextResponse.redirect(
-        new URL(`/${interfaceLang}/${interfaceLang}/custom`, request.url)
-      );
-    }
-  }
-
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {
