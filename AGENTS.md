@@ -2,158 +2,115 @@
 
 ## Project Overview
 
-Blind Typing Tutor is a modern touch typing tutor application built with **Next.js 15**, **React 19**, and **TypeScript**. It helps users learn touch typing with support for 28+ keyboard layouts, 29 interface languages, and comprehensive real-time feedback.
+Touch typing tutor built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**. Supports 29 interface languages, 28+ keyboard layouts, and 29 learning languages.
 
-**Live Site**: https://blind-typing-tutor.wordmemo.net  
-**Tech Stack**: Next.js, React, TypeScript, Tailwind CSS  
-**Deployment**: Vercel
+**Live**: https://blind-typing-tutor.wordmemo.net  
+**Package manager**: yarn classic 1.22.22
 
-## Project Structure
+## Commands
 
-```
-blind-typing-tutor/
-├── app/                          # Next.js app directory
-│   ├── [interfaceLang]/         # Interface language routes
-│   │   └── [studyLang]/         # Study language routes
-│   │       └── [learningMode]/  # Mode routes (words/phrases/custom)
-│   ├── layout.tsx               # Root layout with metadata
-│   ├── page.tsx                 # Root redirect page
-│   └── globals.css              # Global styles
-├── src/
-│   ├── components/              # React components
-│   │   ├── Game.tsx            # Main typing game component
-│   │   ├── Keyboard.tsx        # Virtual keyboard display
-│   │   ├── Stats.tsx           # Statistics display
-│   │   ├── game/               # Game-related components
-│   │   └── layout/             # Layout components (Header, SEO)
-│   ├── config/
-│   │   ├── constants.ts        # App constants and configs
-│   │   └── layouts/            # Keyboard layout definitions
-│   ├── hooks/                  # Custom React hooks
-│   ├── translations/           # Translation files (29 languages)
-│   ├── types/                  # TypeScript type definitions
-│   ├── utils/                  # Utility functions
-│   └── words/                  # Word lists for each language
-└── public/                     # Static assets
-
+```bash
+yarn dev          # Start Next.js dev server (port 3000)
+yarn build        # Production build (also serves as typecheck)
+yarn lint         # ESLint (flat config, eslint.config.js)
+yarn deploy       # Deploy to Vercel
+yarn test:e2e     # Playwright E2E tests
+yarn test:e2e:ui  # Playwright interactive UI mode
 ```
 
-## Key Features
+**No separate typecheck command** — `yarn build` is the typecheck.
 
-1. **Multi-language Support**: 29 interface languages, 8 learning languages
-2. **Keyboard Layouts**: 28+ layouts (QWERTY, AZERTY, QWERTZ, Dvorak, etc.)
-3. **Practice Modes**: Words, Phrases, Custom text
-4. **Real-time Feedback**: WPM tracking, accuracy, error highlighting
-5. **Visual Keyboard**: Color-coded finger zones, active key highlighting
-6. **SEO Optimized**: Dynamic metadata, sitemap, localized content
-
-## Important Patterns
+## Architecture
 
 ### Routing
 
-- Uses Next.js dynamic routes: `/[interfaceLang]/[studyLang]/[learningMode]`
-- Example: `/en/en/phrases` (English interface, English study, phrases mode)
-- All routes are statically generated at build time
+Dynamic route: `/[interfaceLang]/[studyLang]/[learningMode]`
 
-### State Management
+- `interfaceLang` — UI language (en, de, ar, ...)
+- `studyLang` — language to practice typing (en, de, ar, ...)
+- `learningMode` — `words`, `phrases`, or `custom`
 
-- Local component state with React hooks
-- Settings persisted to localStorage
-- No external state management library
+Root `/` redirects to `/{browser-lang}/{browser-lang}/words`.
+
+### Key files
+
+| Path | Purpose |
+|------|---------|
+| `app/layout.tsx` | Root layout, dark mode flicker prevention, font loading |
+| `app/page.tsx` | Root redirect (detects Accept-Language) |
+| `app/[interfaceLang]/page.tsx` | Interface language homepage |
+| `app/[interfaceLang]/[studyLang]/[learningMode]/page.tsx` | Main app route with `generateStaticParams` |
+| `app/[interfaceLang]/[studyLang]/[learningMode]/AppContent.tsx` | Client component — the actual app |
+| `app/[interfaceLang]/[studyLang]/[learningMode]/SEOContent.tsx` | SEO text per mode |
+| `src/components/Game.tsx` | Core typing game component |
+| `src/components/Keyboard.tsx` | Virtual keyboard display |
+| `src/hooks/useAppSettings.ts` | All app state + localStorage + URL sync |
+| `src/config/constants.ts` | Language/layout options, validation |
+| `src/config/layouts/` | 28 keyboard layout definitions |
+| `src/translations/` | 29 language files + `types.ts` + `index.ts` |
+| `src/words/` | Word lists per language (29 files) |
+| `src/types/keyboard.ts` | `KeyboardLayoutId`, `LanguageCode` types |
+
+### State management
+
+All local component state via React hooks. Settings persisted to `localStorage`. No external state library. The `useAppSettings` hook orchestrates everything, syncing state with URL via `router.replace()`.
 
 ### Styling
 
-- Tailwind CSS for all styling
-- Dark mode support with `dark:` variants
-- Responsive design with mobile detection
+Tailwind CSS v4 via `@tailwindcss/postcss`. Dark mode uses class selector (`.dark`). RTL support built in. Styles live in `app/globals.css` (the canonical source).
 
-### Translations
+## Gotchas
 
-- Centralized in `src/translations/` directory
-- Type-safe with TypeScript `TranslationKeys` interface
-- Each language file exports a complete translation object
+### Stale files — do not use
 
-## Development Commands
+- **`README.md`** is outdated — references Vite, port 5173, `npm` commands. Trust `package.json` scripts.
+- **`src/index.css`**, **`src/App.css`** — legacy Vite artifacts, not used by Next.js. Use `app/globals.css`.
+- **`tailwind.config.js`** — references `./index.html` (Vite convention). Actual Tailwind config is via `@tailwindcss/postcss` in `postcss.config.js`.
+- **`legacy_v1/`** — old webpack-based version, ignore entirely.
 
+### Translation system
+
+- Type-safe: `TranslationKeys` in `src/translations/types.ts` defines required keys.
+- **29 translation files** must all implement every key — TypeScript enforces this at build.
+- Each file in `src/translations/` exports a `translations` object.
+- Also a `languageNames` record mapping every `LanguageCode` to its localized name.
+
+### Adding new translation keys
+
+1. Add key to `TranslationKeys` in `src/translations/types.ts`
+2. Add to **all 29** files in `src/translations/`
+3. Run `yarn build` to verify TypeScript catches missing keys
+
+### Keyboard layouts
+
+- Layout definitions in `src/config/layouts/{id}.ts`
+- Type `KeyboardLayoutId` in `src/types/keyboard.ts` — must be updated for new layouts
+- `POPULAR_LAYOUT_IDS` in `src/config/constants.ts` controls dropdown order
+
+### SEO
+
+- Metadata generated in `src/utils/metadata.ts`
+- Sitemap in `app/sitemap.ts` — generates all language/mode combos
+- `SEOContent.tsx` has mode-specific visible text for search engines
+
+### E2E tests
+
+- Playwright tests in `e2e/app.spec.ts`
+- Tests auto-start dev server via `webServer` config
+- Firefox gets longer timeouts (30s vs 10s)
+- Tests use `[data-testid="..."]` selectors
+- Run specific browser: `npx playwright test --project=chromium`
+
+### ESLint
+
+- Flat config in `eslint.config.js`
+- `no-console` is an error (only `console.warn` and `console.error` allowed)
+- Ignores `dist` and `.next`
+
+## Validation commands
+
+After making changes, run:
 ```bash
-yarn dev          # Start development server
-yarn build        # Build for production
-yarn start        # Start production server
-yarn deploy       # Deploy to Vercel
-yarn test:e2e     # Run Playwright tests
+yarn lint && yarn build
 ```
-
-## When Working on This Project
-
-### Adding New Translations
-
-1. Add new keys to `src/translations/types.ts` in `TranslationKeys` type
-2. Update all translation files in `src/translations/` (29 files)
-3. Verify TypeScript compilation succeeds
-
-### Adding New Keyboard Layouts
-
-1. Create layout definition in `src/config/layouts/`
-2. Add to the appropriate layout category
-3. Update `POPULAR_LAYOUT_IDS` in `src/config/constants.ts` if needed
-
-### Adding SEO Content
-
-1. Update `app/[interfaceLang]/[studyLang]/[learningMode]/SEOContent.tsx`
-2. Add mode-specific content to `seoContent` object
-3. Ensure content is localized per interface language
-4. Keep visible content (not `sr-only`) for search engines
-
-### Modifying Routes
-
-1. All dynamic routes in `app/[interfaceLang]/[studyLang]/[learningMode]/`
-2. Update `generateStaticParams()` if adding/removing route patterns
-3. Update metadata generation in `src/utils/metadata.ts`
-
-### SEO Best Practices
-
-- Keep text-to-HTML ratio above 10% (aim for 200+ words per page)
-- Use proper heading hierarchy (h1 → h2 → h3)
-- Include unique, descriptive content per route
-- Enable indexing with `robots: { index: true, follow: true }`
-
-## Common Tasks
-
-### Fix TypeScript Errors
-
-- Check `src/translations/types.ts` for missing keys
-- Ensure all translation files are complete
-- Verify type imports match actual file structure
-
-### Improve SEO
-
-- Add more localized content to SEOContent.tsx
-- Update meta descriptions in translation files
-- Ensure proper canonical URLs and hreflang tags
-
-### Add New Features
-
-- Follow existing component patterns in `src/components/`
-- Use custom hooks for reusable logic
-- Keep components small and focused
-- Prefer composition over inheritance
-
-## Testing
-
-- E2E tests with Playwright in `e2e/` directory
-- Test critical user flows: typing practice, mode switching, language changes
-- Run tests before deployment
-
-## Deployment
-
-- Automatic deployment via Vercel on push to main
-- Manual deployment: `yarn deploy`
-- Environment: Vercel serverless functions
-- Static export with ISR (Incremental Static Regeneration)
-
-## Notes
-
-- Mobile users see a desktop-only message (typing requires keyboard)
-- Settings persist across sessions via localStorage
-- All routes are pre-rendered at build time for performance
-- Dark mode preference is saved per user
+This covers both lint and typecheck. No unit test suite exists.
