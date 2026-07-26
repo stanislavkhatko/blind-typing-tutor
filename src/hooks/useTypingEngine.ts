@@ -57,42 +57,38 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
   }, [mode, generator]);
 
   // Initialize text when mode or language changes
+  /* eslint-disable react-hooks/set-state-in-effect -- intentional mode/language initialization */
   useEffect(() => {
-    queueMicrotask(() => {
-      if (mode === "custom") {
-        const saved = getStorageItem("customText");
-        const isSwitchingToCustom = !isInitialMountRef.current && prevModeRef.current !== "custom";
+    if (mode === "custom") {
+      const saved = getStorageItem("customText");
+      const isSwitchingToCustom = !isInitialMountRef.current && prevModeRef.current !== "custom";
 
-        if (isSwitchingToCustom) {
-          // Switching to custom mode - always show setup
-          setIsCustomSetup(true);
-          setText("");
-          setCustomText(saved || "");
-        } else if (isInitialMountRef.current && saved && saved.trim()) {
-          // Initial mount with saved text - continue typing (page reload scenario)
-          setText(saved.trim());
-          setIsCustomSetup(false);
-        } else if (saved && saved.trim()) {
-          // Already in custom mode, text exists - continue
-          setText(saved.trim());
-          setIsCustomSetup(false);
-        } else {
-          // No saved text - show setup
-          setIsCustomSetup(true);
-          setText("");
-        }
-      } else {
+      if (isSwitchingToCustom) {
+        setIsCustomSetup(true);
+        setText("");
+        setCustomText(saved || "");
+      } else if (isInitialMountRef.current && saved && saved.trim()) {
+        setText(saved.trim());
         setIsCustomSetup(false);
-        generateText();
+      } else if (saved && saved.trim()) {
+        setText(saved.trim());
+        setIsCustomSetup(false);
+      } else {
+        setIsCustomSetup(true);
+        setText("");
       }
+    } else {
+      setIsCustomSetup(false);
+      generateText();
+    }
 
-      // Update previous mode and mark initial mount as complete
-      prevModeRef.current = mode;
-      if (isInitialMountRef.current) {
-        isInitialMountRef.current = false;
-      }
-    });
+    // Update previous mode and mark initial mount as complete
+    prevModeRef.current = mode;
+    if (isInitialMountRef.current) {
+      isInitialMountRef.current = false;
+    }
   }, [mode, language, generateText]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Timer for WPM updates
   useEffect(() => {

@@ -64,6 +64,9 @@ export function useAppSettings(params: UseAppSettingsParams) {
 
   // Use ref to track if we're updating from URL to prevent circular updates
   const isUpdatingFromUrl = useRef(false);
+  // Track the target pathname of the most recent router.replace() call we made.
+  // Used to ignore URL sync events that fire with stale pathnames while a navigation is in flight.
+  const pendingTargetPathRef = useRef<string | null>(null);
   // Track previous params to detect actual changes
   const prevParamsRef = useRef({
     interfaceLang: params.interfaceLang,
@@ -200,7 +203,23 @@ export function useAppSettings(params: UseAppSettingsParams) {
       return;
     }
 
-    // Parse current pathname to get actual URL state (more reliable than params prop)
+    // If we have a pending navigation whose target pathname hasn't been reached yet,
+    // ignore this sync pass. Otherwise we'd overwrite user-driven state with the
+    // stale URL that Next.js hasn't finished transitioning away from (observed on webkit).
+    if (
+      pendingTargetPathRef.current &&
+      pathname &&
+      pathname !== pendingTargetPathRef.current
+    ) {
+      return;
+    }
+    // If the pathname has caught up to the pending target, clear it.
+    if (pendingTargetPathRef.current && pathname === pendingTargetPathRef.current) {
+      pendingTargetPathRef.current = null;
+    }
+
+    // Parse current pathname to get actual URL state (more reliable than params prop
+    // because usePathname() and params can be transiently out of sync after router.replace())
     const urlPath = parseUrlPath();
     const currentInterfaceLang = urlPath.interfaceLang || params.interfaceLang;
 
@@ -210,8 +229,9 @@ export function useAppSettings(params: UseAppSettingsParams) {
 
     if (params.studyLang && params.learningMode) {
       // New structure: /{interfaceLang}/{studyLang}/{learningMode}
-      newLearningLang = params.studyLang as LanguageCode;
-      newContentType = params.learningMode as ContentType;
+      // Prefer live URL over params props to avoid using stale values right after router.replace()
+      newLearningLang = (urlPath.learningLang || params.studyLang) as LanguageCode;
+      newContentType = (urlPath.contentType || params.learningMode) as ContentType;
     } else {
       // Legacy structure or parse from URL path
       let currentContentTypeAndLang: string | undefined;
@@ -353,6 +373,9 @@ export function useAppSettings(params: UseAppSettingsParams) {
     if (currentPath && currentPath !== expectedPath) {
       // Set flag before navigating to prevent sync effect from running
       isUpdatingFromUrl.current = true;
+      // Record the target so the URL sync effect can distinguish an in-flight
+      // navigation from a legitimate external URL change.
+      pendingTargetPathRef.current = expectedPath;
       router.replace(expectedPath);
       // Reset flag after navigation completes - use longer delay to ensure router has processed
       setTimeout(() => {

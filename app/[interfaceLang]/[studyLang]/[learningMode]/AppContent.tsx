@@ -109,15 +109,11 @@ export function AppContent({ params }: AppContentProps) {
           showColors={settings.showColors}
           correctionMode={settings.correctionMode}
           soundEnabled={settings.soundEnabled}
-          onToggleKeyboard={() =>
-            settings.setShowKeyboard(!settings.showKeyboard)
-          }
-          onToggleHands={() => settings.setShowHands(!settings.showHands)}
-          onToggleColors={() => settings.setShowColors(!settings.showColors)}
-          onToggleCorrection={() =>
-            settings.setCorrectionMode(!settings.correctionMode)
-          }
-          onToggleSound={() => settings.setSoundEnabled(!settings.soundEnabled)}
+          onToggleKeyboard={() => settings.setShowKeyboard((v) => !v)}
+          onToggleHands={() => settings.setShowHands((v) => !v)}
+          onToggleColors={() => settings.setShowColors((v) => !v)}
+          onToggleCorrection={() => settings.setCorrectionMode((v) => !v)}
+          onToggleSound={() => settings.setSoundEnabled((v) => !v)}
           translations={t}
           availableLayouts={availableLayouts}
           learningLanguageOptions={LEARNING_LANGUAGE_OPTIONS}

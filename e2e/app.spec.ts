@@ -131,13 +131,29 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
     const themeButton = page.locator('[data-testid="theme-toggle-button"]');
     await expect(themeButton).toBeVisible();
 
+    // Wait for dark mode initialization to complete.
+    // useDarkMode's apply effect writes to localStorage once darkModeInitialized becomes true,
+    // so a non-null darkMode key is a reliable signal that React state and DOM class are in sync.
+    await page.waitForFunction(() => {
+      return localStorage.getItem("darkMode") !== null;
+    }, { timeout: 5000 });
+
     // Get initial theme state
     const initialClass = await page.locator("html").getAttribute("class");
     const isInitiallyDark = initialClass?.includes("dark") ?? false;
 
     // Click theme toggle
     await themeButton.click();
-    await page.waitForTimeout(500);
+
+    // Wait for the dark class to actually change (instead of fixed timeout)
+    await page.waitForFunction(
+      (initialDark) => {
+        const isDark = document.documentElement.classList.contains("dark");
+        return isDark !== initialDark;
+      },
+      isInitiallyDark,
+      { timeout: 5000 }
+    );
 
     // Check that theme changed
     const newClass = await page.locator("html").getAttribute("class");
@@ -147,7 +163,16 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
 
     // Toggle back
     await themeButton.click();
-    await page.waitForTimeout(500);
+
+    // Wait for the dark class to change back
+    await page.waitForFunction(
+      (wasDark) => {
+        const isDark = document.documentElement.classList.contains("dark");
+        return isDark === wasDark;
+      },
+      isInitiallyDark,
+      { timeout: 5000 }
+    );
 
     const finalClass = await page.locator("html").getAttribute("class");
     const isFinallyDark = finalClass?.includes("dark") ?? false;
@@ -155,6 +180,11 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
   });
 
   test("should toggle keyboard visibility", async ({ page }) => {
+    // Wait for initial hydration to complete (persist effect writes layoutId to localStorage on mount)
+    await page.waitForFunction(() => localStorage.getItem("layoutId") !== null, {
+      timeout: 5000,
+    });
+
     // Find keyboard toggle button
     const keyboardToggle = page.locator(
       '[data-testid="keyboard-toggle-button"]'
@@ -167,7 +197,17 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
 
     // Toggle keyboard
     await keyboardToggle.click();
-    await page.waitForTimeout(1000);
+
+    // Poll the DOM until visibility flips instead of a fixed wait
+    await page.waitForFunction(
+      (wasVisible) => {
+        const el = document.querySelector(".key") as HTMLElement | null;
+        const isVisible = el !== null && el.offsetParent !== null;
+        return isVisible !== wasVisible;
+      },
+      initiallyVisible,
+      { timeout: 5000 }
+    );
 
     // Check visibility changed
     const afterToggleVisible = await keyElements.isVisible().catch(() => false);
@@ -205,6 +245,11 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
   });
 
   test("should change keyboard layout", async ({ page }) => {
+    // Wait for initial hydration to complete (persist effect writes layoutId to localStorage on mount)
+    await page.waitForFunction(() => localStorage.getItem("layoutId") !== null, {
+      timeout: 5000,
+    });
+
     // Find keyboard layout dropdown using the test ID
     const layoutDropdown = page.locator(
       '[data-testid="keyboard-layout-selector"]'
@@ -220,12 +265,30 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
 
     if ((await ukOption.count()) > 0 && currentValue !== "en-gb") {
       await layoutDropdown.selectOption("en-gb");
-      await page.waitForTimeout(1000);
+      await page.waitForFunction(
+        () => {
+          const el = document.querySelector(
+            '[data-testid="keyboard-layout-selector"]'
+          ) as HTMLSelectElement | null;
+          return el?.value === "en-gb";
+        },
+        undefined,
+        { timeout: 5000 }
+      );
       const newValue = await layoutDropdown.inputValue();
       expect(newValue).toBe("en-gb");
     } else if ((await deOption.count()) > 0 && currentValue !== "de-de") {
       await layoutDropdown.selectOption("de-de");
-      await page.waitForTimeout(1000);
+      await page.waitForFunction(
+        () => {
+          const el = document.querySelector(
+            '[data-testid="keyboard-layout-selector"]'
+          ) as HTMLSelectElement | null;
+          return el?.value === "de-de";
+        },
+        undefined,
+        { timeout: 5000 }
+      );
       const newValue = await layoutDropdown.inputValue();
       expect(newValue).toBe("de-de");
     }
@@ -238,7 +301,12 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
 
     // Change to Beginner mode
     await modeDropdown.selectOption("beginner");
-    await page.waitForTimeout(1000);
+
+    // Wait for the dropdown value to actually be "beginner"
+    await page.waitForFunction(() => {
+      const select = document.querySelector('[data-testid="learning-mode-selector"]') as HTMLSelectElement;
+      return select && select.value === "beginner";
+    }, { timeout: 5000 });
 
     // Verify mode changed
     const selectedValue = await modeDropdown.inputValue();
@@ -246,7 +314,12 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
 
     // Change back to Practice
     await modeDropdown.selectOption("practice");
-    await page.waitForTimeout(1000);
+
+    // Wait for the dropdown value to actually be "practice"
+    await page.waitForFunction(() => {
+      const select = document.querySelector('[data-testid="learning-mode-selector"]') as HTMLSelectElement;
+      return select && select.value === "practice";
+    }, { timeout: 5000 });
 
     const finalValue = await modeDropdown.inputValue();
     expect(finalValue).toBe("practice");
@@ -353,24 +426,45 @@ test.describe("Blind Typing Tutor E2E Tests", () => {
     }
   });
   test("should allow canceling custom setup", async ({ page }) => {
+    // Wait for initial hydration to complete before interacting with dropdowns
+    await page.waitForFunction(() => localStorage.getItem("layoutId") !== null, {
+      timeout: 5000,
+    });
+
     // Find learning mode dropdown
     const modeDropdown = page.locator('[data-testid="learning-mode-selector"]');
     await expect(modeDropdown).toBeVisible();
 
     // Change to Custom mode
     await modeDropdown.selectOption("custom");
-    await page.waitForTimeout(1000);
+
+    // Wait for the custom text input to appear in the DOM
+    await page.waitForFunction(
+      () => {
+        const el = document.querySelector(
+          '[data-testid="custom-text-input"]'
+        ) as HTMLElement | null;
+        return el !== null && el.offsetParent !== null;
+      },
+      undefined,
+      { timeout: 15000 }
+    );
 
     // Verify Custom Setup is displayed (check for textarea)
     const textarea = page.locator('[data-testid="custom-text-input"]');
     await expect(textarea).toBeVisible();
 
     // Find and click Cancel button
-    // The cancel button doesn't have a testid yet, but it's the first button in the div.flex.justify-end.gap-3
     const cancelButton = page.locator('button:has-text("Cancel")');
     await expect(cancelButton).toBeVisible();
     await cancelButton.click();
-    await page.waitForTimeout(1000);
+
+    // Wait for the textarea to disappear and dropdown to revert
+    await page.waitForFunction(() => {
+      const el = document.querySelector('[data-testid="custom-text-input"]');
+      const select = document.querySelector('[data-testid="learning-mode-selector"]') as HTMLSelectElement;
+      return (!el || !el.offsetParent) && select && select.value === "practice";
+    }, { timeout: 5000 });
 
     // Verify we are back in Practice mode
     const selectedValue = await modeDropdown.inputValue();
