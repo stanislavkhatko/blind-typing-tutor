@@ -38,6 +38,12 @@ export const translations = {
     "أتقن الكتابة باللمس من خلال مدرب الكتابة العمياء المجاني عبر الإنترنت. تدرب على أكثر من 28 تخطيطاً للوحة المفاتيح مع تتبع السرعة (كلمة/دقيقة) في الوقت الفعلي وإحصاءات الدقة ولوحة مفاتيح مرئية. تعلم الكتابة دون النظر إلى لوحة المفاتيح.",
   seoKeywords:
     "الكتابة باللمس, الكتابة العمياء, مدرب الكتابة, مدرب لوحة المفاتيح, ممارسة الكتابة, سرعة الكتابة, كلمات في الدقيقة, دقة الكتابة, مدرب الكتابة عبر الإنترنت, تعلم الكتابة باللمس, الكتابة دون النظر, تدريب لوحة المفاتيح, دروس الكتابة, تمارين الكتابة",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "لوحة مفاتيح سطح المكتب مطلوبة",
   mobileDescription:
     "تم تصميم هذا التطبيق للاستخدام على سطح المكتب بلوحة مفاتيح فعلية. يرجى زيارة هذا الموقع على كمبيوتر سطح المكتب أو الكمبيوتر المحمول لممارسة الكتابة باللمس.",

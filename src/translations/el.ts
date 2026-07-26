@@ -38,6 +38,12 @@ export const translations = {
     "Μάθετε τυφλό σύστημα πληκτρολόγησης με τον δωρεάν διαδικτυακό μας εκπαιδευτή. Εξασκηθείτε σε περισσότερες από 28 διατάξεις πληκτρολογίου σε 8 γλώσσες με παρακολούθηση λέξεις/λεπτό σε πραγματικό χρόνο, στατιστικά ακρίβειας και οπτικό πληκτρολόγιο. Μάθετε να πληκτρολογείτε χωρίς να κοιτάτε το πληκτρολόγιο.",
   seoKeywords:
     "τυφλή πληκτρολόγηση, πληκτρολόγηση, εκπαιδευτής πληκτρολόγησης, εκπαιδευτής πληκτρολογίου, πρακτική πληκτρολόγησης, ταχύτητα πληκτρολόγησης, λέξεις ανά λεπτό, ακρίβεια πληκτρολόγησης, online εκπαιδευτής πληκτρολόγησης, μάθετε τυφλή πληκτρολόγηση, πληκτρολογήστε χωρίς να κοιτάτε, εκπαίδευση πληκτρολογίου, μαθήματα πληκτρολόγησης, ασκήσεις πληκτρολόγησης",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Απαιτείται πληκτρολόγιο επιτραπέζιου υπολογιστή",
   mobileDescription:
     "Αυτή η εφαρμογή έχει σχεδιαστεί για χρήση σε επιτραπέζιο υπολογιστή με φυσικό πληκτρολόγιο. Παρακαλώ επισκεφτείτε αυτόν τον ιστότοπο σε επιτραπέζιο υπολογιστή ή φορητό υπολογιστή για να εξασκηθείτε στην τυφλή πληκτρολόγηση.",

@@ -38,6 +38,12 @@ export const translations = {
     "Învață dactilografia cu ajutorul antrenorului nostru online gratuit. Exersează pe peste 28 de aspecte de tastatură în 8 limbi cu monitorizare cuvinte/minut în timp real, statistici de precizie și tastatură vizuală. Învață să scrii fără să te uiți la tastatură.",
   seoKeywords:
     "dactilografie, scriere la orb, tutor dactilografie, antrenor tastatură, practică scriere, viteză scriere, cuvinte pe minut, precizie scriere, tutor dactilografie online, învăța dactilografie, scrie fără să te uiți, antrenament tastatură, lecții dactilografie, exerciții scriere",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Tastatură desktop necesară",
   mobileDescription:
     "Această aplicație este proiectată pentru utilizare pe desktop cu o tastatură fizică. Vă rugăm să vizitați acest site pe un computer desktop sau laptop pentru a practica dactilografia.",

@@ -38,6 +38,12 @@ export const translations = {
     "Tanuljon meg vakon gépelni ingyenes online oktatónkkal. Gyakoroljon több mint 28 billentyűzetkiosztáson 8 nyelven valós idejű szó/perc-követéssel, pontossági statisztikákkal és vizuális billentyűzettel. Tanuljon meg gépelni a billentyűzetre nézés nélkül.",
   seoKeywords:
     "vak gépelés, gépelés, gépelés oktató, billentyűzet oktató, gépelés gyakorlás, gépelési sebesség, szó per perc, gépelési pontosság, online gépelés oktató, megtanulni vak gépelést, gépelés nézés nélkül, billentyűzet képzés, gépelés leckék, gépelés gyakorlatok",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Asztali billentyűzet szükséges",
   mobileDescription:
     "Ez az alkalmazás asztali használatra készült fizikai billentyűzettel. Kérjük, látogassa meg ezt a webhelyet asztali számítógépen vagy laptopon a vak gépelés gyakorlásához.",

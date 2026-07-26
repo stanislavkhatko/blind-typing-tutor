@@ -79,7 +79,8 @@ Tailwind CSS v4 via `@tailwindcss/postcss`. Dark mode uses class selector (`.dar
 
 1. Add key to `TranslationKeys` in `src/translations/types.ts`
 2. Add to **all 29** files in `src/translations/`
-3. Run `yarn build` to verify TypeScript catches missing keys
+3. Page-specific SEO titles/descriptions use `{lang}` placeholder (replaced with study language name at runtime)
+4. Run `yarn build` to verify TypeScript catches missing keys
 
 ### Keyboard layouts
 

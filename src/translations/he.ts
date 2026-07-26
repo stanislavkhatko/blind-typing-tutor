@@ -38,6 +38,12 @@ export const translations = {
     "למד הקלדה עיוורת עם המורה המקוון החינמי שלנו. תרגל ביותר מ-28 פריסות מקלדת ב-8 שפות עם מעקב אחר מילים/דקה בזמן אמת, סטטיסטיקת דיוק ומקלדת ויזואלית. למד להקליד מבלי להסתכל על המקלדת.",
   seoKeywords:
     "הקלדה עיוורת, הקלדה, מורה להקלדה, מאמן מקלדת, תרגול הקלדה, מהירות הקלדה, מילים לדקה, דיוק הקלדה, מורה להקלדה אונליין, ללמוד הקלדה עיוורת, להקליד בלי להסתכל, אימון מקלדת, שיעורי הקלדה, תרגילי הקלדה",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "נדרשת מקלדת שולחנית",
   mobileDescription:
     "יישום זה מיועד לשימוש במחשב שולחני עם מקלדת פיזית. אנא בקר באתר זה במחשב שולחני או מחשב נייד כדי לתרגל הקלדה עיוורת.",

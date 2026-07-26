@@ -38,6 +38,12 @@ export const translations = {
     "Opi sokkakirjoitus ilmaisella verkkovalmentajallamme. Harjoittele yli 28 näppäimistöasettelulla 8 kielellä reaaliaikaisella sanaa/minuutti-seurannalla, tarkkuustilastoilla ja visuaalisella näppäimistöllä. Opi kirjoittamaan katsomatta näppäimistöä.",
   seoKeywords:
     "sokkakirjoitus, kirjoittaminen, kirjoitustreeneri, näppäimistötreeneri, kirjoitusharjoitukset, kirjoitusnopeus, sanaa minuutissa, kirjoitustarkkuus, online kirjoitustreeneri, oppia sokkakirjoitus, kirjoittaa katsomatta, näppäimistökoulutus, kirjoitustunnit, kirjoitusharjoitukset",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Työpöytänäppäimistö vaaditaan",
   mobileDescription:
     "Tämä sovellus on suunniteltu käytettäväksi työpöydällä fyysisellä näppäimistöllä. Vieraile tällä sivustolla työpöytätietokoneella tai kannettavalla tietokoneella harjoitellaksesi sokkakirjoitusta.",

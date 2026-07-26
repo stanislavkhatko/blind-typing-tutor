@@ -38,6 +38,12 @@ export const translations = {
     "Maîtrisez la dactylographie avec notre entraîneur en ligne gratuit. Entraînez-vous sur plus de 28 dispositions de clavier avec suivi du MPM en temps réel, statistiques de précision et clavier visuel. Apprenez à taper sans regarder le clavier.",
   seoKeywords:
     "dactylographie, frappe à l'aveugle, tuteur de frappe, entraîneur de clavier, pratique de frappe, vitesse de frappe, MPM, précision de frappe, entraîneur de frappe en ligne, apprendre la dactylographie, taper sans regarder, formation au clavier, cours de frappe, exercices de frappe",
+  seoTitleWords: "Pratiquer la Dactylographie avec des Mots | Tuteur {lang}",
+  seoTitlePhrases: "Améliorer la Vitesse de Frappe avec des Phrases | Tuteur {lang}",
+  seoTitleCustom: "Pratique Personnalisée de Dactylographie | Tuteur {lang}",
+  seoDescriptionWords: "Pratiquez la dactylographie au toucher avec des mots individuels en {lang}. Développez la mémoire musculaire pour les combinaisons de lettres courantes et améliorez le placement des doigts avec notre tuteur en ligne gratuit.",
+  seoDescriptionPhrases: "Améliorez votre vitesse de frappe avec des phrases courantes en {lang}. Pratiquez des phrases complètes pour développer le rythme et la fluidité avec notre tuteur en ligne gratuit.",
+  seoDescriptionCustom: "Pratiquez la dactylographie de texte personnalisé en {lang}. Collez votre propre texte et améliorez vos compétences de frappe avec notre tuteur en ligne gratuit.",
   mobileDesktopRequired: "Clavier de bureau requis",
   mobileDescription:
     "Cette application est conçue pour une utilisation sur bureau avec un clavier physique. Veuillez visiter ce site sur un ordinateur de bureau ou portable pour pratiquer la dactylographie.",

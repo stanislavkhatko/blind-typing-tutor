@@ -38,6 +38,12 @@ export const translations = {
     "通过我们的免费在线盲打训练器掌握触摸打字。在28多种键盘布局上进行练习，实时词/分钟跟踪、准确度统计和视觉键盘。学习不看键盘打字。",
   seoKeywords:
     "盲打, 触摸打字, 打字训练, 键盘训练, 打字练习, 打字速度, 每分钟字数, 打字准确度, 在线打字训练, 学习盲打, 不看键盘打字, 键盘训练, 打字课程, 打字练习",
+  seoTitleWords: "用单词练习打字 | {lang}打字教练",
+  seoTitlePhrases: "用短语提高打字速度 | {lang}打字教练",
+  seoTitleCustom: "自定义打字练习 | {lang}打字教练",
+  seoDescriptionWords: "用单个单词练习{lang}触摸打字。建立常见字母组合的肌肉记忆，使用免费在线打字教练提高手指放置准确性。",
+  seoDescriptionPhrases: "用常用短语提高{lang}打字速度。练习完整句子以培养节奏和流畅性。免费在线打字教练。",
+  seoDescriptionCustom: "练习{lang}自定义文本打字。粘贴您自己的文本，使用免费在线打字教练提高触摸打字技能。",
   mobileDesktopRequired: "需要桌面键盘",
   mobileDescription:
     "此应用程序专为使用物理键盘的桌面使用而设计。请在台式机或笔记本电脑上访问此网站以练习打字。",

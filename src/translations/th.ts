@@ -38,6 +38,12 @@ export const translations = {
     "เรียนรู้การพิมพ์สัมผัสด้วยครูสอนพิมพ์สัมผัสออนไลน์ฟรีของเรา ฝึกฝนบนรูปแบบแป้นพิมพ์กว่า 28 รูปแบบใน 8 ภาษา ติดตาม คำ/นาที แบบเรียลไทม์ สถิติความแม่นยำ และแป้นพิมพ์เสมือนจริง เรียนรู้การพิมพ์โดยไม่ต้องมองแป้นพิมพ์",
   seoKeywords:
     "พิมพ์สัมผัส, พิมพ์โดยไม่มอง, ครูสอนพิมพ์, ฝึกพิมพ์, การพิมพ์, ความเร็วในการพิมพ์, คำต่อนาที, ความแม่นยำในการพิมพ์, ครูสอนพิมพ์ออนไลน์, เรียนรู้การพิมพ์สัมผัส, พิมพ์โดยไม่ต้องมอง, การฝึกพิมพ์, บทเรียนการพิมพ์, แบบฝึกหัดการพิมพ์",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "ต้องการแป้นพิมพ์สำหรับเดสก์ท็อป",
   mobileDescription:
     "แอปพลิเคชันนี้ออกแบบมาสำหรับใช้กับเดสก์ท็อปพร้อมแป้นพิมพ์จริง กรุณาเข้าเยี่ยมชมเว็บไซต์นี้บนคอมพิวเตอร์เดสก์ท็อปหรือแล็ปท็อปเพื่อฝึกพิมพ์สัมผัส",

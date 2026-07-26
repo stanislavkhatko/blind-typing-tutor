@@ -38,6 +38,12 @@ export const translations = {
     "हमारे मुफ़्त ऑनलाइन ब्लाइंड टाइपिंग ट्यूटर के साथ टच टाइपिंग में महारत हासिल करें। रीयल-टाइम शब्द/मिनट ट्रैकिंग, सटीकता आँकड़े और विज़ुअल कीबोर्ड के साथ 28+ कीबोर्ड लेआउट पर अभ्यास करें। कीबोर्ड देखे बिना टाइप करना सीखें।",
   seoKeywords:
     "टच टाइपिंग, ब्लाइंड टाइपिंग, टाइपिंग ट्यूटर, कीबोर्ड ट्रेनर, टाइपिंग अभ्यास, टाइपिंग गति, शब्द प्रति मिनट, टाइपिंग सटीकता, ऑनलाइन टाइपिंग ट्यूटर, टच टाइपिंग सीखें, बिना देखे टाइप करना, कीबोर्ड प्रशिक्षण, टाइपिंग पाठ, टाइपिंग अभ्यास",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "डेस्कटॉप कीबोर्ड आवश्यक",
   mobileDescription:
     "यह एप्लिकेशन भौतिक कीबोर्ड के साथ डेस्कटॉप उपयोग के लिए डिज़ाइन किया गया है। कृपया टच टाइपिंग का अभ्यास करने के लिए डेस्कटॉप या लैपटॉप कंप्यूटर पर इस साइट पर जाएं।",

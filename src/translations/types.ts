@@ -66,6 +66,12 @@ export type TranslationKeys = {
   seoTitle: string; // SEO-optimized title with primary keywords
   seoDescription: string; // SEO-optimized description with primary keywords
   seoKeywords: string; // SEO-optimized keywords with primary keywords
+  seoTitleWords: string; // Page-specific title for Words mode (includes {lang} placeholder)
+  seoTitlePhrases: string; // Page-specific title for Phrases mode (includes {lang} placeholder)
+  seoTitleCustom: string; // Page-specific title for Custom mode (includes {lang} placeholder)
+  seoDescriptionWords: string; // Page-specific description for Words mode (includes {lang} placeholder)
+  seoDescriptionPhrases: string; // Page-specific description for Phrases mode (includes {lang} placeholder)
+  seoDescriptionCustom: string; // Page-specific description for Custom mode (includes {lang} placeholder)
   mobileDesktopRequired: string;
   mobileDescription: string;
   mobileFooter: string;

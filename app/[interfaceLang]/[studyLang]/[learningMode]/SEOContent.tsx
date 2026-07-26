@@ -200,9 +200,9 @@ export function SEOContent({
 
   return (
     <article className="sr-only">
-      <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+      <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">
         {studyLangName} {modeName} - {t.title}
-      </h1>
+      </h2>
 
       <p className="text-lg mb-6 text-gray-700 dark:text-gray-300">
         {t.seoDescription}

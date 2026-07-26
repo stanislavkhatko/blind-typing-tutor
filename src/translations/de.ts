@@ -38,6 +38,12 @@ export const translations = {
     "Meistern Sie das Blindschreiben mit unserem kostenlosen Online-Trainer. Üben Sie auf über 28 Tastaturlayouts mit Echtzeit-Wörter/Minute-Tracking, Genauigkeitsstatistiken und virtueller Tastatur. Lernen Sie, ohne auf die Tastatur zu schauen.",
   seoKeywords:
     "Blindschreiben, Tippen, Tipptrainer, Tastaturtrainer, Tippübungen, Tippgeschwindigkeit, Wörter pro Minute, Tippgenauigkeit, Online-Tipptrainer, Blindschreiben lernen, Tippen ohne zu schauen, Tastaturtraining, Tippkurse, Tippübungen",
+  seoTitleWords: "Tippen mit Einzelwörtern üben | {lang} Tipp-Trainer",
+  seoTitlePhrases: "Tippgeschwindigkeit mit Sätzen verbessern | {lang} Tipp-Trainer",
+  seoTitleCustom: "Benutzerdefiniertes Tipp-Training | {lang} Tipp-Trainer",
+  seoDescriptionWords: "Üben Sie das Fingertippen mit einzelnen Wörtern auf {lang}. Entwickeln Sie Muskelgedächtnis für häufige Buchstabenkombinationen und verbessern Sie die Fingerplatzierung mit unserem kostenlosen Online-Tipp-Trainer.",
+  seoDescriptionPhrases: "Verbessern Sie Ihre Tippgeschwindigkeit mit häufigen Sätzen auf {lang}. Üben Sie vollständige Sätze, um Rhythmus und Fluss zu entwickeln mit unserem kostenlosen Online-Tipp-Trainer.",
+  seoDescriptionCustom: "Üben Sie benutzerdefiniertes Texttippen auf {lang}. Fügen Sie Ihren eigenen Text ein und verbessern Sie Ihre Fingertipp-Fähigkeiten mit unserem kostenlosen Online-Tipp-Trainer.",
   mobileDesktopRequired: "Desktop-Tastatur erforderlich",
   mobileDescription:
     "Diese Anwendung ist für die Verwendung auf einem Desktop mit einer physischen Tastatur konzipiert. Bitte besuchen Sie diese Website auf einem Desktop-Computer oder Laptop, um das Blindschreiben zu üben.",

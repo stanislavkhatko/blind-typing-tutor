@@ -38,6 +38,12 @@ export const translations = {
     "Kuasai teknik mengetik sepuluh jari dengan tutor mengetik buta online gratis kami. Berlatihlah di lebih dari 28 tata letak keyboard dalam 8 bahasa dengan pelacakan kata/menit real-time, statistik akurasi, dan keyboard visual. Belajar mengetik tanpa melihat keyboard.",
   seoKeywords:
     "mengetik sepuluh jari, mengetik buta, tutor mengetik, pelatih keyboard, latihan mengetik, kecepatan mengetik, kata per menit, akurasi mengetik, tutor mengetik online, belajar mengetik sepuluh jari, mengetik tanpa melihat, pelatihan keyboard, pelajaran mengetik, latihan mengetik",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Keyboard desktop diperlukan",
   mobileDescription:
     "Aplikasi ini dirancang untuk penggunaan desktop dengan keyboard fisik. Silakan kunjungi situs ini di komputer desktop atau laptop untuk berlatih mengetik.",

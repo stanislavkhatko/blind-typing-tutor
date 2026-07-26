@@ -6,6 +6,7 @@ import { translations } from "../translations";
 import { buildUrlPath } from "./url";
 import {
   validateInterfaceLanguage,
+  validateLearningLanguage,
   BASE_URL,
   INTERFACE_LANGUAGE_OPTIONS,
 } from "../config/constants";
@@ -75,8 +76,34 @@ export function generatePageMetadata(options: MetadataOptions): Metadata {
 
   // Get translations
   const t = translations[validatedInterfaceLang];
-  const title = t.seoTitle || t.title || DEFAULT_TITLE;
-  const description = t.seoDescription || t.metaDescription || DEFAULT_DESCRIPTION;
+
+  // Build page-specific title and description using templates with {lang} placeholder
+  let title: string;
+  let description: string;
+
+  if (studyLang && learningMode) {
+    const validatedStudyLang = validateLearningLanguage(studyLang);
+    const studyLangName =
+      t.languageNames && validatedStudyLang in t.languageNames
+        ? t.languageNames[validatedStudyLang]
+        : validatedStudyLang.toUpperCase();
+
+    const modeKey = learningMode as ContentType;
+    if (modeKey === "words") {
+      title = (t.seoTitleWords || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
+      description = (t.seoDescriptionWords || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
+    } else if (modeKey === "phrases") {
+      title = (t.seoTitlePhrases || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
+      description = (t.seoDescriptionPhrases || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
+    } else {
+      title = (t.seoTitleCustom || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
+      description = (t.seoDescriptionCustom || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
+    }
+  } else {
+    title = t.seoTitle || t.title || DEFAULT_TITLE;
+    description = t.seoDescription || t.metaDescription || DEFAULT_DESCRIPTION;
+  }
+
   const keywords = t.seoKeywords || t.seoDescription || "";
 
   // Build canonical URL

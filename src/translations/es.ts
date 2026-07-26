@@ -38,6 +38,12 @@ export const translations = {
     "Domine la mecanografía con nuestro entrenador en línea gratuito. Practique en más de 28 diseños de teclado con seguimiento de PPM en tiempo real, estadísticas de precisión y teclado visual. Aprenda a escribir sin mirar el teclado.",
   seoKeywords:
     "mecanografía, escritura a ciegas, tutor de mecanografía, entrenador de teclado, práctica de mecanografía, velocidad de escritura, PPM, precisión de escritura, entrenador de mecanografía en línea, aprender mecanografía, escribir sin mirar, entrenamiento de teclado, lecciones de mecanografía, ejercicios de mecanografía",
+  seoTitleWords: "Practicar Mecanografía con Palabras | Tutor {lang}",
+  seoTitlePhrases: "Mejorar Velocidad de Escritura con Frases | Tutor {lang}",
+  seoTitleCustom: "Práctica Personalizada de Mecanografía | Tutor {lang}",
+  seoDescriptionWords: "Practica la mecanografía al tacto con palabras individuales en {lang}. Desarrolla la memoria muscular para combinaciones de letras comunes y mejora la precisión con nuestro tutor de mecanografía en línea gratuito.",
+  seoDescriptionPhrases: "Mejora tu velocidad de escritura con frases comunes en {lang}. Practica oraciones completas para desarrollar ritmo y fluidez con nuestro tutor de mecanografía en línea gratuito.",
+  seoDescriptionCustom: "Practica la escritura de texto personalizado en {lang}. Pega tu propio texto y mejora tus habilidades de mecanografía con nuestro tutor de mecanografía en línea gratuito.",
   mobileDesktopRequired: "Teclado de escritorio requerido",
   mobileDescription:
     "Esta aplicación está diseñada para uso en escritorio con un teclado físico. Por favor, visite este sitio en una computadora de escritorio o portátil para practicar mecanografía.",

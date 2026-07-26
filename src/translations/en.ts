@@ -38,6 +38,12 @@ export const translations = {
     "Master touch typing with our free online blind typing tutor. Practice on 28+ keyboard layouts with real-time WPM tracking, accuracy stats, and visual keyboard. Learn typing without looking at the keyboard.",
   seoKeywords:
     "touch typing, blind typing, typing tutor, keyboard trainer, typing practice, typing speed, WPM, typing accuracy, typing trainer, online typing practice, learn touch typing, typing without looking, keyboard training, typing lessons, typing exercises",
+  seoTitleWords: "Practice English Typing with Words | {lang} Typing Tutor",
+  seoTitlePhrases: "Improve English Typing Speed with Phrases | {lang} Typing Tutor",
+  seoTitleCustom: "Custom English Typing Practice | {lang} Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Desktop Keyboard Required",
   mobileDescription:
     "This application is designed for desktop use with a physical keyboard. Please visit this site on a desktop or laptop computer to practice touch typing.",

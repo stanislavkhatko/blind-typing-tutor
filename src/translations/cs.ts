@@ -38,6 +38,12 @@ export const translations = {
     "Naučte se psát všemi deseti s naším bezplatným online trenérem. Cvičte na více než 28 rozloženích klávesnice v 8 jazycích se sledováním slov/minutu v reálném čase, statistikami přesnosti a vizuální klávesnicí. Naučte se psát bez pohledu na klávesnici.",
   seoKeywords:
     "slepé psaní, psaní, trenér psaní, trenér klávesnice, cvičení psaní, rychlost psaní, slov za minutu, přesnost psaní, online trenér psaní, naučit se slepé psaní, psát bez pohledu, trénink klávesnice, lekce psaní, cvičení psaní",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Vyžaduje se stolní klávesnice",
   mobileDescription:
     "Tato aplikace je navržena pro použití na stolním počítači s fyzickou klávesnicí. Navštivte prosím tento web na stolním počítači nebo notebooku, abyste mohli cvičit slepé psaní.",

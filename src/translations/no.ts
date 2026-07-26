@@ -38,6 +38,12 @@ export const translations = {
     "Lær blindskrift med vår gratis online trener. Øv på over 28 tastaturoppsett på 8 språk med real-time ord/minutt-sporing, nøyaktighetsstatistikk og visuelt tastatur. Lær å skrive uten å se på tastaturet.",
   seoKeywords:
     "blindskriving, skriving, skrivetrener, tastaturtrener, skriveøvelser, skrivehastighet, ord per minutt, skrivenøyaktighet, online skrivetrener, lære blindskriving, skrive uten å se, tastaturtrening, skriveleksjoner, skriveøvelser",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Skrivebordstastatur kreves",
   mobileDescription:
     "Denne applikasjonen er designet for bruk på skrivebord med et fysisk tastatur. Vennligst besøk denne nettstedet på en skrivebordsdatamaskin eller bærbar datamaskin for å øve blindskriving.",

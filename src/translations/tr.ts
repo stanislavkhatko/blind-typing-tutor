@@ -38,6 +38,12 @@ export const translations = {
     "Ücretsiz online kör yazma eğitmenimizle dokunmatik yazmayı öğrenin. Gerçek zamanlı DPD takibi, doğruluk istatistikleri ve görsel klavye ile 28'den fazla klavye düzeninde pratik yapın. Klavyeye bakmadan yazmayı öğrenin.",
   seoKeywords:
     "dokunmatik yazma, kör yazma, yazma eğitmeni, klavye eğitmeni, yazma pratiği, yazma hızı, DPD, yazma doğruluğu, online yazma eğitmeni, dokunmatik yazma öğren, bakmadan yazma, klavye eğitimi, yazma dersleri, yazma egzersizleri",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Masaüstü Klavyesi Gerekli",
   mobileDescription:
     "Bu uygulama fiziksel bir klavye ile masaüstü kullanımı için tasarlanmıştır. Dokunmatik yazma pratiği yapmak için lütfen bu siteyi bir masaüstü veya dizüstü bilgisayarda ziyaret edin.",

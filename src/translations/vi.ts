@@ -38,6 +38,12 @@ export const translations = {
     "Làm chủ kỹ năng đánh máy bằng phương pháp cảm ứng với gia sư đánh máy mù trực tuyến miễn phí của chúng tôi. Luyện tập trên hơn 28 bố cục bàn phím ở 8 ngôn ngữ với theo dõi từ/phút thời gian thực, độ chính xác và bàn phím trực quan. Học đánh máy mà không cần nhìn bàn phím.",
   seoKeywords:
     "đánh máy cảm ứng, đánh máy mù, gia sư đánh máy, huấn luyện viên bàn phím, luyện tập đánh máy, tốc độ đánh máy, từ mỗi phút, độ chính xác đánh máy, gia sư đánh máy trực tuyến, học đánh máy cảm ứng, đánh máy không nhìn, đào tạo bàn phím, bài học đánh máy, bài tập đánh máy",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Cần bàn phím máy tính để bàn",
   mobileDescription:
     "Ứng dụng này được thiết kế để sử dụng trên máy tính để bàn với bàn phím vật lý. Vui lòng truy cập trang web này trên máy tính để bàn hoặc máy tính xách tay để luyện tập đánh máy.",

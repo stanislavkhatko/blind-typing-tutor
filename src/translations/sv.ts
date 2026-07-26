@@ -38,6 +38,12 @@ export const translations = {
     "Lär dig blindskrift med vår gratis onlinetränare. Öva på över 28 tangentbordslayouter på 8 språk med ord/minut-spårning i realtid, noggrannhetsstatistik och visuellt tangentbord. Lär dig skriva utan att titta på tangentbordet.",
   seoKeywords:
     "blindskrivning, skrivning, skrivtränare, tangentbordstränare, skrivövningar, skrivhastighet, ord per minut, skrivnoggrannhet, online skrivtränare, lära sig blindskrivning, skriva utan att titta, tangentbordsträning, skrivlektioner, skrivövningar",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Skrivbordstangentbord krävs",
   mobileDescription:
     "Denna applikation är designad för användning på skrivbord med ett fysiskt tangentbord. Vänligen besök denna webbplats på en skrivbordsdator eller bärbar dator för att öva blindskrivning.",

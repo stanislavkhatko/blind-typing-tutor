@@ -38,6 +38,12 @@ export const translations = {
     "Domine a digitação com nosso treinador online gratuito. Pratique em mais de 28 layouts de teclado com acompanhamento de PPM em tempo real, estatísticas de precisão e teclado visual. Aprenda a digitar sem olhar para o teclado.",
   seoKeywords:
     "digitação, digitação às cegas, tutor de digitação, treinador de teclado, prática de digitação, velocidade de digitação, PPM, precisão de digitação, treinador de digitação online, aprender digitação, digitar sem olhar, treinamento de teclado, lições de digitação, exercícios de digitação",
+  seoTitleWords: "Praticar Digitação com Palavras | Tutor {lang}",
+  seoTitlePhrases: "Melhorar Velocidade de Digitação com Frases | Tutor {lang}",
+  seoTitleCustom: "Prática Personalizada de Digitação | Tutor {lang}",
+  seoDescriptionWords: "Pratique a digitação ao toque com palavras individuais em {lang}. Desenvolva memória muscular para combinações de letras comuns e melhore a precisão com nosso tutor de digitação online gratuito.",
+  seoDescriptionPhrases: "Melhore sua velocidade de digitação com frases comuns em {lang}. Pratique frases completas para desenvolver ritmo e fluidez com nosso tutor de digitação online gratuito.",
+  seoDescriptionCustom: "Pratique digitação de texto personalizado em {lang}. Cole seu próprio texto e melhore suas habilidades de digitação com nosso tutor de digitação online gratuito.",
   mobileDesktopRequired: "Teclado de desktop necessário",
   mobileDescription:
     "Este aplicativo é projetado para uso em desktop com um teclado físico. Por favor, visite este site em um computador desktop ou laptop para praticar digitação.",

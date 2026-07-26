@@ -38,6 +38,12 @@ export const translations = {
     "Impara la dattilografia con il nostro tutor online gratuito. Esercitati su oltre 28 layout di tastiera con monitoraggio parole/minuto in tempo reale, statistiche di precisione e tastiera visiva. Impara a digitare senza guardare la tastiera.",
   seoKeywords:
     "dattilografia, scrittura alla cieca, tutor di dattilografia, trainer di tastiera, pratica di dattilografia, velocità di scrittura, parole al minuto, precisione di scrittura, tutor di dattilografia online, imparare dattilografia, digitare senza guardare, formazione tastiera, lezioni di dattilografia, esercizi di dattilografia",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Tastiera desktop richiesta",
   mobileDescription:
     "Questa applicazione è progettata per l'uso su desktop con una tastiera fisica. Si prega di visitare questo sito su un computer desktop o laptop per praticare la dattilografia.",

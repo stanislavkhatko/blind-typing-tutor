@@ -38,6 +38,12 @@ export const translations = {
     "Leer blind typen met onze gratis online trainer. Oefen op meer dan 28 toetsenbordindelingen in 8 talen met realtime woorden/minuut-tracking, nauwkeurigheidsstatistieken en visueel toetsenbord. Leer typen zonder naar het toetsenbord te kijken.",
   seoKeywords:
     "blind typen, typen, typtrainer, toetsenbordtrainer, typeoefeningen, typesnelheid, woorden per minuut, typeprecisie, online typtrainer, blind typen leren, typen zonder te kijken, toetsenbordtraining, typlessen, typeoefeningen",
+  seoTitleWords: "Practice Typing with Words in {lang} | Typing Tutor",
+  seoTitlePhrases: "Improve Typing Speed with Phrases in {lang} | Typing Tutor",
+  seoTitleCustom: "Custom Typing Practice in {lang} | Typing Tutor",
+  seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
+  seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
+  seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
   mobileDesktopRequired: "Desktop toetsenbord vereist",
   mobileDescription:
     "Deze applicatie is ontworpen voor gebruik op een desktop met een fysiek toetsenbord. Bezoek deze site op een desktop of laptop computer om blind typen te oefenen.",
