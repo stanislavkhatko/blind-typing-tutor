@@ -93,6 +93,7 @@ Tailwind CSS v4 via `@tailwindcss/postcss`. Dark mode uses class selector (`.dar
 - Metadata generated in `src/utils/metadata.ts`
 - Sitemap in `app/sitemap.ts` — generates all language/mode combos
 - `SEOContent.tsx` has mode-specific visible text for search engines
+- **Keyword targeting**: Same-language pages (`/en/en/*`, `/ru/ru/*`) use `seoBlindTypingTitle`/`seoBlindTypingDescription` which contain high-value "blind typing" keywords. Cross-language pages use `seoTitleWords`/`seoTitlePhrases`/`seoTitleCustom` templates with `{lang}` placeholder.
 
 ### E2E tests
 

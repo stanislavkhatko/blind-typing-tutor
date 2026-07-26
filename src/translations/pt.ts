@@ -44,6 +44,8 @@ export const translations = {
   seoDescriptionWords: "Pratique a digitação ao toque com palavras individuais em {lang}. Desenvolva memória muscular para combinações de letras comuns e melhore a precisão com nosso tutor de digitação online gratuito.",
   seoDescriptionPhrases: "Melhore sua velocidade de digitação com frases comuns em {lang}. Pratique frases completas para desenvolver ritmo e fluidez com nosso tutor de digitação online gratuito.",
   seoDescriptionCustom: "Pratique digitação de texto personalizado em {lang}. Cole seu próprio texto e melhore suas habilidades de digitação com nosso tutor de digitação online gratuito.",
+  seoBlindTypingTitle: "Digitação às Cegas em {lang} | Aprender Digitação às Cegas",
+  seoBlindTypingDescription: "Pratique digitação às cegas em {lang} com nosso tutor online gratuito. Aprenda a digitar sem olhar para o teclado com 28+ layouts. Acompanhamento de WPM e precisão em tempo real.",
   mobileDesktopRequired: "Teclado de desktop necessário",
   mobileDescription:
     "Este aplicativo é projetado para uso em desktop com um teclado físico. Por favor, visite este site em um computador desktop ou laptop para praticar digitação.",

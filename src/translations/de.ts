@@ -44,6 +44,8 @@ export const translations = {
   seoDescriptionWords: "Üben Sie das Fingertippen mit einzelnen Wörtern auf {lang}. Entwickeln Sie Muskelgedächtnis für häufige Buchstabenkombinationen und verbessern Sie die Fingerplatzierung mit unserem kostenlosen Online-Tipp-Trainer.",
   seoDescriptionPhrases: "Verbessern Sie Ihre Tippgeschwindigkeit mit häufigen Sätzen auf {lang}. Üben Sie vollständige Sätze, um Rhythmus und Fluss zu entwickeln mit unserem kostenlosen Online-Tipp-Trainer.",
   seoDescriptionCustom: "Üben Sie benutzerdefiniertes Texttippen auf {lang}. Fügen Sie Ihren eigenen Text ein und verbessern Sie Ihre Fingertipp-Fähigkeiten mit unserem kostenlosen Online-Tipp-Trainer.",
+  seoBlindTypingTitle: "Blindschreiben auf {lang} Üben | Lernen Sie Blindschreiben",
+  seoBlindTypingDescription: "Üben Sie Blindschreiben auf {lang} mit unserem kostenlosen Online-Trainer. Lernen Sie, ohne auf die Tastatur zu schauen, mit 28+ Layouts. Echtzeit-WPM-Tracking und Genauigkeitsstatistiken.",
   mobileDesktopRequired: "Desktop-Tastatur erforderlich",
   mobileDescription:
     "Diese Anwendung ist für die Verwendung auf einem Desktop mit einer physischen Tastatur konzipiert. Bitte besuchen Sie diese Website auf einem Desktop-Computer oder Laptop, um das Blindschreiben zu üben.",

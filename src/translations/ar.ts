@@ -44,6 +44,8 @@ export const translations = {
   seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
   seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
   seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
+  seoBlindTypingTitle: "Blind Typing Practice in {lang} | Learn Blind Typing",
+  seoBlindTypingDescription: "Practice blind typing in {lang} with our free online tutor. Learn to type without looking at the keyboard using 28+ layouts. Real-time WPM tracking and accuracy stats.",
   mobileDesktopRequired: "لوحة مفاتيح سطح المكتب مطلوبة",
   mobileDescription:
     "تم تصميم هذا التطبيق للاستخدام على سطح المكتب بلوحة مفاتيح فعلية. يرجى زيارة هذا الموقع على كمبيوتر سطح المكتب أو الكمبيوتر المحمول لممارسة الكتابة باللمس.",

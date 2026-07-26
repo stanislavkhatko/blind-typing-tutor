@@ -88,16 +88,25 @@ export function generatePageMetadata(options: MetadataOptions): Metadata {
         ? t.languageNames[validatedStudyLang]
         : validatedStudyLang.toUpperCase();
 
-    const modeKey = learningMode as ContentType;
-    if (modeKey === "words") {
-      title = (t.seoTitleWords || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
-      description = (t.seoDescriptionWords || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
-    } else if (modeKey === "phrases") {
-      title = (t.seoTitlePhrases || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
-      description = (t.seoDescriptionPhrases || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
+    // Use high-value "blind typing" keyword titles for same-language pages
+    // (e.g., /en/en/words, /ru/ru/phrases) — these are the primary SEO targets
+    const isSameLanguage = validatedInterfaceLang === validatedStudyLang;
+
+    if (isSameLanguage) {
+      title = (t.seoBlindTypingTitle || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
+      description = (t.seoBlindTypingDescription || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
     } else {
-      title = (t.seoTitleCustom || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
-      description = (t.seoDescriptionCustom || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
+      const modeKey = learningMode as ContentType;
+      if (modeKey === "words") {
+        title = (t.seoTitleWords || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
+        description = (t.seoDescriptionWords || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
+      } else if (modeKey === "phrases") {
+        title = (t.seoTitlePhrases || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
+        description = (t.seoDescriptionPhrases || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
+      } else {
+        title = (t.seoTitleCustom || t.seoTitle || DEFAULT_TITLE).replace("{lang}", studyLangName);
+        description = (t.seoDescriptionCustom || t.seoDescription || DEFAULT_DESCRIPTION).replace("{lang}", studyLangName);
+      }
     }
   } else {
     title = t.seoTitle || t.title || DEFAULT_TITLE;

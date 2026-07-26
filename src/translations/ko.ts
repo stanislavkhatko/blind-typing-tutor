@@ -44,6 +44,8 @@ export const translations = {
   seoDescriptionWords: "{lang} 개별 단어로 터치 타이핑을 연습하세요. 일반적인 문자 조합에 대한 근육 기억을 구축하고 무료 온라인 타이핑 튜터로 손가락 배치 정확도를 향상시키세요.",
   seoDescriptionPhrases: "{lang} 일반적인 구문으로 타이핑 속도를 향상시키세요. 완전한 문장을 연습하여 리듬과 흐름을 개발하세요. 무료 온라인 타이핑 튜터입니다.",
   seoDescriptionCustom: "{lang} 사용자 지정 텍스트 타이핑을 연습하세요. 자신의 텍스트를 붙여넣고 무료 온라인 타이핑 튜터로 타이핑 기술을 향상시키세요.",
+  seoBlindTypingTitle: "{lang} 블라인드 타이핑 연습 | 블라인드 타이핑 배우기",
+  seoBlindTypingDescription: "무료 온라인 튜터로 {lang} 블라인드 타이핑을 연습하세요. 28개 이상의 레이아웃으로 키보드를 보지 않고 타이핑하는 법을 배우세요. 실시간 WPM 추적 및 정확도 통계.",
   mobileDesktopRequired: "데스크톱 키보드 필요",
   mobileDescription:
     "이 애플리케이션은 물리적 키보드가 있는 데스크톱 사용을 위해 설계되었습니다. 터치 타이핑을 연습하려면 데스크톱 또는 노트북 컴퓨터에서 이 사이트를 방문하세요.",

@@ -44,6 +44,8 @@ export const translations = {
   seoDescriptionWords: "Pratiquez la dactylographie au toucher avec des mots individuels en {lang}. Développez la mémoire musculaire pour les combinaisons de lettres courantes et améliorez le placement des doigts avec notre tuteur en ligne gratuit.",
   seoDescriptionPhrases: "Améliorez votre vitesse de frappe avec des phrases courantes en {lang}. Pratiquez des phrases complètes pour développer le rythme et la fluidité avec notre tuteur en ligne gratuit.",
   seoDescriptionCustom: "Pratiquez la dactylographie de texte personnalisé en {lang}. Collez votre propre texte et améliorez vos compétences de frappe avec notre tuteur en ligne gratuit.",
+  seoBlindTypingTitle: "Dactylographie Aveugle en {lang} | Apprendre la Dactylographie Aveugle",
+  seoBlindTypingDescription: "Pratiquez la dactylographie aveugle en {lang} avec notre tuteur en ligne gratuit. Apprenez à taper sans regarder le clavier avec 28+ dispositionset. Suivi WPM et précision en temps réel.",
   mobileDesktopRequired: "Clavier de bureau requis",
   mobileDescription:
     "Cette application est conçue pour une utilisation sur bureau avec un clavier physique. Veuillez visiter ce site sur un ordinateur de bureau ou portable pour pratiquer la dactylographie.",

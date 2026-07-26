@@ -44,6 +44,8 @@ export const translations = {
   seoDescriptionWords: "Practice touch typing with individual words in {lang}. Build muscle memory for common letter combinations and improve finger placement accuracy with our free online typing tutor.",
   seoDescriptionPhrases: "Improve your typing speed with common phrases in {lang}. Practice complete sentences to develop rhythm, flow, and continuous typing ability with our free online typing tutor.",
   seoDescriptionCustom: "Practice custom text typing in {lang}. Paste your own text and improve your touch typing skills with our free online typing tutor.",
+  seoBlindTypingTitle: "Blind Typing Practice in {lang} | Learn Blind Typing",
+  seoBlindTypingDescription: "Practice blind typing in {lang} with our free online tutor. Learn to type without looking at the keyboard using 28+ layouts. Real-time WPM tracking and accuracy stats.",
   mobileDesktopRequired: "डेस्कटॉप कीबोर्ड आवश्यक",
   mobileDescription:
     "यह एप्लिकेशन भौतिक कीबोर्ड के साथ डेस्कटॉप उपयोग के लिए डिज़ाइन किया गया है। कृपया टच टाइपिंग का अभ्यास करने के लिए डेस्कटॉप या लैपटॉप कंप्यूटर पर इस साइट पर जाएं।",

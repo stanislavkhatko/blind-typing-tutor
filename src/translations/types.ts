@@ -72,6 +72,8 @@ export type TranslationKeys = {
   seoDescriptionWords: string; // Page-specific description for Words mode (includes {lang} placeholder)
   seoDescriptionPhrases: string; // Page-specific description for Phrases mode (includes {lang} placeholder)
   seoDescriptionCustom: string; // Page-specific description for Custom mode (includes {lang} placeholder)
+  seoBlindTypingTitle: string; // High-value keyword title with "blind typing" (includes {lang} placeholder)
+  seoBlindTypingDescription: string; // High-value keyword description with "blind typing" (includes {lang} placeholder)
   mobileDesktopRequired: string;
   mobileDescription: string;
   mobileFooter: string;
