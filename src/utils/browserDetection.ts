@@ -17,6 +17,7 @@ interface LanguageMapping {
  * @returns The matched value or default
  */
 export function detectFromBrowserLanguage(mappings: LanguageMapping): string {
+  if (typeof navigator === 'undefined') return mappings.default || '';
   const browserLang = navigator.language.toLowerCase();
   
   // Sort keys by length (longest first) to match more specific prefixes first
