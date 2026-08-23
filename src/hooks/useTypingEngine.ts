@@ -185,6 +185,15 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
     const timeoutRefs: ReturnType<typeof setTimeout>[] = [];
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isCustomSetup) return;
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.tagName === "SELECT" ||
+        target.isContentEditable
+      ) {
+        return;
+      }
       timeoutRefs.forEach(clearTimeout);
       timeoutRefs.length = 0;
 

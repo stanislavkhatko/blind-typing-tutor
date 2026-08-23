@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { User, X } from "lucide-react";
 
-type AuthMode = "login" | "register" | "change-password";
+type AuthMode = "change-password";
 
 interface ApiResponse {
   ok: boolean;
@@ -16,14 +17,13 @@ interface SessionResponse {
 }
 
 export function AuthMenu() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeMode, setActiveMode] = useState<AuthMode | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -62,8 +62,6 @@ export function AuthMenu() {
     setActiveMode(null);
     setMessage(null);
     setIsLoading(false);
-    setUsername("");
-    setPassword("");
     setCurrentPassword("");
     setNewPassword("");
   };
@@ -80,11 +78,9 @@ export function AuthMenu() {
       const data = (await response.json()) as ApiResponse;
       setMessage(data.message);
       if (data.ok) {
-        setUsername("");
-        setPassword("");
         setCurrentPassword("");
         setNewPassword("");
-        if (endpoint === "/api/auth/login" || endpoint === "/api/auth/change-password") {
+        if (endpoint === "/api/auth/change-password") {
           await refreshSession();
         }
       }
@@ -93,12 +89,6 @@ export function AuthMenu() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const getTitle = () => {
-    if (activeMode === "login") return "Login";
-    if (activeMode === "register") return "Registrieren";
-    return "Passwort ändern";
   };
 
   return (
@@ -120,26 +110,17 @@ export function AuthMenu() {
 
         {isMenuOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-2 z-50">
-            <button
-              onClick={() => {
-                setActiveMode("login");
-                setIsMenuOpen(false);
-                setMessage(null);
-              }}
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => {
-                setActiveMode("register");
-                setIsMenuOpen(false);
-                setMessage(null);
-              }}
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              Registrieren
-            </button>
+            {!isAuthenticated && (
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  router.push("/login");
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                Anmelden / Registrieren
+              </button>
+            )}
             {isAuthenticated && (
               <button
                 onClick={() => {
@@ -167,7 +148,7 @@ export function AuthMenu() {
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {getTitle()}
+                Passwort ändern
               </h2>
               <button
                 onClick={closeDialog}
@@ -182,69 +163,35 @@ export function AuthMenu() {
               className="space-y-3"
               onSubmit={(event) => {
                 event.preventDefault();
-                if (activeMode === "login") {
-                  void callAuthApi("/api/auth/login", { username, password });
-                  return;
-                }
-                if (activeMode === "register") {
-                  void callAuthApi("/api/auth/register", { username, password });
-                  return;
-                }
                 void callAuthApi("/api/auth/change-password", {
                   currentPassword,
                   newPassword,
                 });
               }}
             >
-              {activeMode !== "change-password" && (
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                  placeholder="Benutzername"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                  required
-                />
-              )}
-
-              {activeMode !== "change-password" && (
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  placeholder="Passwort"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                  required
-                />
-              )}
-
-              {activeMode === "change-password" && (
-                <>
-                  <input
-                    type="password"
-                    value={currentPassword}
-                    onChange={(event) => setCurrentPassword(event.target.value)}
-                    placeholder="Aktuelles Passwort"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                    required
-                  />
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(event) => setNewPassword(event.target.value)}
-                    placeholder="Neues Passwort"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                    required
-                  />
-                </>
-              )}
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(event) => setCurrentPassword(event.target.value)}
+                placeholder="Aktuelles Passwort"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                required
+              />
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                placeholder="Neues Passwort"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                required
+              />
 
               <button
                 type="submit"
                 disabled={isLoading}
                 className="w-full py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60"
               >
-                {isLoading ? "Bitte warten..." : getTitle()}
+                {isLoading ? "Bitte warten..." : "Passwort ändern"}
               </button>
             </form>
 
