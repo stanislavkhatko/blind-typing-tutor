@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { SESSION_TTL_SECONDS } from "@/config/auth";
 import { createSession, loginUser } from "@/server/authService";
 
 export const runtime = "nodejs";
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       path: "/",
-      maxAge: 60 * 15,
+      maxAge: SESSION_TTL_SECONDS,
     });
 
     return response;

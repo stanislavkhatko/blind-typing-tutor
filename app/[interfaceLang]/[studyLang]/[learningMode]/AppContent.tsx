@@ -46,10 +46,10 @@ export function AppContent({ params }: AppContentProps) {
     void fetch("/api/auth/session", { cache: "no-store" })
       .then((res) => res.json() as Promise<SessionData>)
       .then((data) => {
-        if (!data.authenticated) {
+        if (!data.authenticated || typeof data.expiresAt !== "number") {
           router.replace("/login");
         } else {
-          setSessionExpiresAt(data.expiresAt ?? null);
+          setSessionExpiresAt(data.expiresAt);
           setSessionChecked(true);
         }
       })

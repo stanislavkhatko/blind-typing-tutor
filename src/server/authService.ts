@@ -7,6 +7,7 @@ import {
   timingSafeEqual,
 } from "node:crypto";
 import Database from "better-sqlite3";
+import { SESSION_TTL_MS } from "@/config/auth";
 
 interface UserRow {
   id: number;
@@ -19,6 +20,12 @@ interface SessionUser {
   id: number;
   username: string;
   expiresAt: number;
+}
+
+interface SessionRecord {
+  sessionId: number;
+  expiresAt: number;
+  issuedAt: number | null;
 }
 
 declare global {
@@ -45,11 +52,17 @@ function getDb() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         token_hash TEXT UNIQUE NOT NULL,
+        issued_at INTEGER,
         expires_at INTEGER NOT NULL,
         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )`
     ).run();
+    const columns = db.prepare("PRAGMA table_info(sessions)").all() as Array<{ name: string }>;
+    const hasIssuedAt = columns.some((column) => column.name === "issued_at");
+    if (!hasIssuedAt) {
+      db.prepare("ALTER TABLE sessions ADD COLUMN issued_at INTEGER").run();
+    }
     db.prepare("CREATE INDEX IF NOT EXISTS idx_sessions_token_hash ON sessions(token_hash)").run();
     global.__authDatabase = db;
   }
@@ -159,11 +172,12 @@ export function loginUser(username: string, password: string) {
 export function createSession(userId: number) {
   const token = randomBytes(32).toString("base64url");
   const tokenHash = hashSessionToken(token);
-  const expiresAt = Date.now() + 1000 * 60 * 15;
+  const issuedAt = Date.now();
+  const expiresAt = issuedAt + SESSION_TTL_MS;
   const db = getDb();
   db.prepare(
-    "INSERT INTO sessions (user_id, token_hash, expires_at) VALUES (?, ?, ?)"
-  ).run(userId, tokenHash, expiresAt);
+    "INSERT INTO sessions (user_id, token_hash, issued_at, expires_at) VALUES (?, ?, ?, ?)"
+  ).run(userId, tokenHash, issuedAt, expiresAt);
   return token;
 }
 
@@ -176,34 +190,24 @@ export function getSessionUser(sessionToken: string): SessionUser | null {
   const db = getDb();
   const row = db
     .prepare(
-      `SELECT users.id, users.username, sessions.expires_at AS expiresAt
+      `SELECT users.id AS userId, users.username, sessions.id AS sessionId,
+              sessions.expires_at AS expiresAt, sessions.issued_at AS issuedAt
        FROM sessions
        INNER JOIN users ON users.id = sessions.user_id
-       WHERE sessions.token_hash = ? AND sessions.expires_at > ?`
+       WHERE sessions.token_hash = ?`
     )
-    .get(tokenHash, Date.now()) as SessionUser | undefined;
+    .get(tokenHash) as (SessionRecord & { userId: number; username: string }) | undefined;
 
-  return row ?? null;
-}
-
-interface SessionRow {
-  expires_at: number;
-}
-
-export function getSessionExpiry(sessionToken: string): number | null {
-  if (!sessionToken) {
+  if (!row) {
     return null;
   }
 
-  const tokenHash = hashSessionToken(sessionToken);
-  const db = getDb();
-  const row = db
-    .prepare(
-      `SELECT expires_at FROM sessions WHERE token_hash = ? AND expires_at > ?`
-    )
-    .get(tokenHash, Date.now()) as SessionRow | undefined;
+  if (!isSessionRecordValid(row)) {
+    db.prepare("DELETE FROM sessions WHERE id = ?").run(row.sessionId);
+    return null;
+  }
 
-  return row?.expires_at ?? null;
+  return { id: row.userId, username: row.username, expiresAt: row.expiresAt };
 }
 
 export function deleteSession(sessionToken: string): void {
@@ -211,6 +215,17 @@ export function deleteSession(sessionToken: string): void {
   const tokenHash = hashSessionToken(sessionToken);
   const db = getDb();
   db.prepare("DELETE FROM sessions WHERE token_hash = ?").run(tokenHash);
+}
+
+function isSessionRecordValid(session: SessionRecord) {
+  const now = Date.now();
+  if (!session.issuedAt) {
+    return false;
+  }
+  if (session.expiresAt - session.issuedAt !== SESSION_TTL_MS) {
+    return false;
+  }
+  return session.expiresAt > now;
 }
 
 export function changePasswordByUserId(

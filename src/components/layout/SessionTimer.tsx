@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { SESSION_TTL_MS } from "@/config/auth";
 
 interface SessionTimerProps {
   expiresAt: number;
 }
 
 function formatTime(ms: number): string {
-  if (ms <= 0) return "00:00";
-  const totalSeconds = Math.ceil(ms / 1000);
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
@@ -17,19 +17,25 @@ function formatTime(ms: number): string {
 
 export function SessionTimer({ expiresAt }: SessionTimerProps) {
   const router = useRouter();
-  const [remaining, setRemaining] = useState(() => expiresAt - Date.now());
+  const [remaining, setRemaining] = useState(() => {
+    const remainingMs = new Date(expiresAt).getTime() - Date.now();
+    return Math.min(Math.max(remainingMs, 0), SESSION_TTL_MS);
+  });
   const loggedOutRef = useRef(false);
 
   useEffect(() => {
     const tick = () => {
-      const ms = expiresAt - Date.now();
+      const remainingMs = new Date(expiresAt).getTime() - Date.now();
+      const ms = Math.min(Math.max(remainingMs, 0), SESSION_TTL_MS);
       setRemaining(ms);
 
       if (ms <= 0 && !loggedOutRef.current) {
         loggedOutRef.current = true;
-        void fetch("/api/auth/logout", { method: "POST" }).then(() => {
-          router.push("/login");
-        });
+        void fetch("/api/auth/logout", { method: "POST" })
+          .catch(() => undefined)
+          .finally(() => {
+            router.replace("/login");
+          });
       }
     };
 

@@ -8,7 +8,11 @@ export async function GET(request: NextRequest) {
   const user = getSessionUser(sessionToken);
 
   if (!user) {
-    return NextResponse.json({ authenticated: false });
+    const response = NextResponse.json({ authenticated: false });
+    if (sessionToken) {
+      response.cookies.set("auth_session", "", { maxAge: 0, path: "/" });
+    }
+    return response;
   }
 
   return NextResponse.json({ authenticated: true, username: user.username, expiresAt: user.expiresAt });

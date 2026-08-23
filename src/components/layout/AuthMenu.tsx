@@ -66,6 +66,17 @@ export function AuthMenu() {
     setNewPassword("");
   };
 
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } finally {
+      setIsLoading(false);
+      setIsMenuOpen(false);
+      router.replace("/login");
+    }
+  };
+
   const callAuthApi = async (endpoint: string, payload: Record<string, string>) => {
     setIsLoading(true);
     setMessage(null);
@@ -122,16 +133,27 @@ export function AuthMenu() {
               </button>
             )}
             {isAuthenticated && (
-              <button
-                onClick={() => {
-                  setActiveMode("change-password");
-                  setIsMenuOpen(false);
-                  setMessage(null);
-                }}
-                className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
-              >
-                Passwort ändern
-              </button>
+              <>
+                <button
+                  onClick={() => {
+                    void logout();
+                  }}
+                  disabled={isLoading}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-60"
+                >
+                  Abmelden
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveMode("change-password");
+                    setIsMenuOpen(false);
+                    setMessage(null);
+                  }}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                >
+                  Passwort ändern
+                </button>
+              </>
             )}
           </div>
         )}
