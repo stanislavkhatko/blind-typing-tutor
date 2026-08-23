@@ -18,11 +18,7 @@ interface GameProps {
   mode: "practice" | "beginner" | "custom";
   setMode: (mode: "practice" | "beginner" | "custom") => void;
   layoutId: KeyboardLayoutId;
-  setLayoutId: (layoutId: KeyboardLayoutId) => void;
   learningLanguage: LanguageCode;
-  setLearningLanguage: (lang: LanguageCode) => void;
-  learningContentType: "words" | "phrases" | "custom";
-  setLearningContentType: (type: "words" | "phrases" | "custom") => void;
   language: Language;
   showKeyboard: boolean;
   showHands: boolean;
@@ -35,23 +31,13 @@ interface GameProps {
   onToggleCorrection: () => void;
   onToggleSound: () => void;
   translations: TranslationKeys;
-  availableLayouts: Array<{ id: KeyboardLayoutId; name: string; flag: string }>;
-  learningLanguageOptions: Array<{
-    code: LanguageCode;
-    name: string;
-    flag: string;
-  }>;
 }
 
 export const Game: React.FC<GameProps> = ({
   mode,
   setMode,
   layoutId,
-  setLayoutId,
   learningLanguage,
-  setLearningLanguage,
-  learningContentType,
-  setLearningContentType,
   language,
   showKeyboard,
   showHands,
@@ -64,8 +50,6 @@ export const Game: React.FC<GameProps> = ({
   onToggleCorrection,
   onToggleSound,
   translations: gameTranslations,
-  availableLayouts,
-  learningLanguageOptions,
 }) => {
   const {
     text,
@@ -113,11 +97,6 @@ export const Game: React.FC<GameProps> = ({
       <GameControls
         mode={mode}
         setMode={setMode}
-        learningContentType={learningContentType}
-        setLearningContentType={setLearningContentType}
-        learningLanguage={learningLanguage}
-        setLearningLanguage={setLearningLanguage}
-        learningLanguageOptions={learningLanguageOptions}
         translations={gameTranslations}
       />
 
@@ -139,9 +118,6 @@ export const Game: React.FC<GameProps> = ({
         onToggleCorrection={onToggleCorrection}
         soundEnabled={soundEnabled}
         onToggleSound={onToggleSound}
-        layoutId={layoutId}
-        setLayoutId={setLayoutId}
-        availableLayouts={availableLayouts}
         translations={gameTranslations}
       />
 

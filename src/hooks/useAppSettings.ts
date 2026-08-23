@@ -3,18 +3,11 @@
 import { useState, useEffect, startTransition, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import type { KeyboardLayoutId, LanguageCode } from "../types/keyboard";
-import { getAllLayouts } from "../config/layouts";
 import type { InterfaceLanguage } from "../translations";
-import {
-  detectKeyboardLayout,
-  detectLearningLanguage,
-  detectInterfaceLanguage,
-} from "../utils/browserDetection";
 import { getStorageItem, setStorageItem, removeStorageItem } from "../utils/storage";
 import { updateDocumentDirection } from "../utils/textDirection";
 import { soundManager } from "../utils/SoundManager";
 import { parseUrlPath, buildUrlPath, type ContentType } from "../utils/url";
-import { isValidInterfaceLanguage, VALID_LEARNING_LANGUAGES } from "../config/constants";
 import { useDarkMode } from "./useDarkMode";
 
 interface UseAppSettingsParams {
@@ -49,17 +42,14 @@ export function useAppSettings(params: UseAppSettingsParams) {
 
   // Support both new structure ({studyLang, learningMode}) and legacy ({contentTypeAndLang})
   let urlContentType: ContentType | undefined;
-  let urlLearningLang: LanguageCode | undefined;
 
   if (params.studyLang && params.learningMode) {
     // New structure: /{interfaceLang}/{studyLang}/{learningMode}
-    urlLearningLang = params.studyLang as LanguageCode;
     urlContentType = params.learningMode as ContentType;
   } else if (params.contentTypeAndLang) {
     // Legacy structure: /{interfaceLang}/{contentType}-{lang}
     const parsed = parseContentAndLang(params.contentTypeAndLang);
     urlContentType = parsed.contentType;
-    urlLearningLang = parsed.learningLang;
   }
 
   // Use ref to track if we're updating from URL to prevent circular updates
@@ -75,15 +65,8 @@ export function useAppSettings(params: UseAppSettingsParams) {
     learningMode: params.learningMode,
   });
 
-  // Initialize layout from localStorage with fallback defaults
-  const [layoutId, setLayoutId] = useState<KeyboardLayoutId>(() => {
-    const saved = getStorageItem("layoutId");
-    const allValidLayouts = getAllLayouts().map((l) => l.id);
-    if (saved && allValidLayouts.includes(saved as KeyboardLayoutId)) {
-      return saved as KeyboardLayoutId;
-    }
-    return detectKeyboardLayout() as KeyboardLayoutId;
-  });
+  // Layout is always German QWERTZ
+  const [layoutId, setLayoutId] = useState<KeyboardLayoutId>(() => "de-de" as KeyboardLayoutId);
 
   const [mode, setMode] = useState<"practice" | "beginner" | "custom">(() => {
     // Initialize from URL first if present
@@ -99,22 +82,8 @@ export function useAppSettings(params: UseAppSettingsParams) {
     return "practice";
   });
 
-  // Initialize from URL first, then localStorage, then defaults
-  const [learningLanguage, setLearningLanguage] = useState<LanguageCode>(() => {
-    if (urlLearningLang) return urlLearningLang;
-
-    const saved = getStorageItem("learningLanguage");
-    if (saved && VALID_LEARNING_LANGUAGES.includes(saved as LanguageCode)) {
-      return saved as LanguageCode;
-    }
-    const savedMode = getStorageItem("mode");
-    if (!savedMode || savedMode === "null" || savedMode === "") {
-      const randomLang =
-        VALID_LEARNING_LANGUAGES[Math.floor(Math.random() * VALID_LEARNING_LANGUAGES.length)];
-      return randomLang;
-    }
-    return detectLearningLanguage() as LanguageCode;
-  });
+  // Learning language is always German
+  const [learningLanguage, setLearningLanguage] = useState<LanguageCode>(() => "de" as LanguageCode);
 
   // Map mode to content type: beginner→words, practice→phrases, custom→custom
   const getContentTypeFromMode = (
@@ -153,19 +122,8 @@ export function useAppSettings(params: UseAppSettingsParams) {
     }
   );
 
-  const [interfaceLanguage, setInterfaceLanguage] = useState<InterfaceLanguage>(
-    () => {
-      if (params.interfaceLang && isValidInterfaceLanguage(params.interfaceLang)) {
-        return params.interfaceLang;
-      }
-
-      const saved = getStorageItem("interfaceLanguage");
-      if (saved && isValidInterfaceLanguage(saved)) {
-        return saved;
-      }
-      return detectInterfaceLanguage() as InterfaceLanguage;
-    }
-  );
+  // Interface language is always German
+  const [interfaceLanguage, setInterfaceLanguage] = useState<InterfaceLanguage>(() => "de" as InterfaceLanguage);
 
   const [soundEnabled, setSoundEnabled] = useState(() => {
     const saved = getStorageItem("soundEnabled");
@@ -225,18 +183,14 @@ export function useAppSettings(params: UseAppSettingsParams) {
 
     // Support both new structure ({studyLang, learningMode}) and legacy ({contentTypeAndLang})
     let newContentType: ContentType | undefined;
-    let newLearningLang: LanguageCode | undefined;
 
     if (params.studyLang && params.learningMode) {
       // New structure: /{interfaceLang}/{studyLang}/{learningMode}
-      // Prefer live URL over params props to avoid using stale values right after router.replace()
-      newLearningLang = (urlPath.learningLang || params.studyLang) as LanguageCode;
       newContentType = (urlPath.contentType || params.learningMode) as ContentType;
     } else {
       // Legacy structure or parse from URL path
       let currentContentTypeAndLang: string | undefined;
       if (urlPath.contentType === "custom") {
-        // Custom mode has no language suffix
         currentContentTypeAndLang = "custom";
       } else if (urlPath.contentType && urlPath.learningLang) {
         currentContentTypeAndLang = `${urlPath.contentType}-${urlPath.learningLang}`;
@@ -246,7 +200,6 @@ export function useAppSettings(params: UseAppSettingsParams) {
 
       const parsed = parseContentAndLang(currentContentTypeAndLang);
       newContentType = parsed.contentType;
-      newLearningLang = parsed.learningLang;
     }
 
     // Check if params actually changed (not just state)
@@ -266,28 +219,13 @@ export function useAppSettings(params: UseAppSettingsParams) {
       learningMode: params.learningMode,
     };
 
-    // Only sync if params are valid and actually different from current state
-    // Check if state already matches URL to avoid unnecessary updates
-    const needsInterfaceUpdate =
-      currentInterfaceLang &&
-      isValidInterfaceLanguage(currentInterfaceLang) &&
-      currentInterfaceLang !== interfaceLanguage;
-
-    const needsLearningLangUpdate =
-      newLearningLang && newLearningLang !== learningLanguage;
-
+    // Only sync content type from URL (language is always locked to German)
     const needsContentTypeUpdate =
       newContentType && newContentType !== learningContentType;
 
-    if (needsInterfaceUpdate || needsLearningLangUpdate || needsContentTypeUpdate) {
+    if (needsContentTypeUpdate) {
       isUpdatingFromUrl.current = true;
       startTransition(() => {
-        if (needsInterfaceUpdate) {
-          setInterfaceLanguage(currentInterfaceLang as InterfaceLanguage);
-        }
-        if (needsLearningLangUpdate && newLearningLang) {
-          setLearningLanguage(newLearningLang);
-        }
         if (needsContentTypeUpdate && newContentType) {
           setLearningContentType(newContentType);
           // Update mode based on contentType
@@ -411,15 +349,6 @@ export function useAppSettings(params: UseAppSettingsParams) {
   useEffect(() => {
     const handlePopState = () => {
       const urlPath = parseUrlPath();
-      if (
-        urlPath.interfaceLang &&
-        urlPath.interfaceLang !== interfaceLanguage
-      ) {
-        setInterfaceLanguage(urlPath.interfaceLang);
-      }
-      if (urlPath.learningLang && urlPath.learningLang !== learningLanguage) {
-        setLearningLanguage(urlPath.learningLang);
-      }
       if (urlPath.contentType && urlPath.contentType !== learningContentType) {
         setLearningContentType(urlPath.contentType);
       }
