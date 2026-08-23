@@ -79,8 +79,6 @@ export function AppContent({ params }: AppContentProps) {
         title={t.title}
         reportIssue={t.reportIssue}
         reportIssueTitle={t.reportIssueTitle}
-        support={t.support}
-        supportTitle={t.supportTitle}
         interfaceLanguageLabel={t.interfaceLanguage}
         lightMode={t.lightMode}
         darkMode={t.darkMode}

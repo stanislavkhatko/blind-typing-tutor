@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import {
   Keyboard as KeyboardIcon,
-  Coffee,
   Languages,
   ChevronDown,
   Moon,
@@ -18,8 +17,6 @@ interface HeaderProps {
   title: string;
   reportIssue: string;
   reportIssueTitle: string;
-  support: string;
-  supportTitle: string;
   interfaceLanguageLabel: string;
   lightMode: string;
   darkMode: string;
@@ -38,8 +35,6 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   title,
-  support,
-  supportTitle,
   interfaceLanguageLabel,
   lightMode,
   darkMode: darkModeLabel,
@@ -75,19 +70,6 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
-          <a
-            data-testid="support-link"
-            href="https://buymeacoffee.com/stanislavkhatko"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg cursor-pointer transition-colors font-medium text-sm shadow-sm hover:shadow-md"
-            title={supportTitle}
-            aria-label={supportTitle}
-          >
-            <Coffee size={16} />
-            <span className="hidden sm:inline">{support}</span>
-          </a>
-
           <div className="relative group">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-700 dark:text-gray-300">
               <Languages size={18} />
