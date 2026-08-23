@@ -84,7 +84,7 @@ export function AuthMenu() {
         setPassword("");
         setCurrentPassword("");
         setNewPassword("");
-        if (endpoint === "/api/auth/login") {
+        if (endpoint === "/api/auth/login" || endpoint === "/api/auth/change-password") {
           await refreshSession();
         }
       }

@@ -14,6 +14,9 @@ const nextConfig = {
 
   // Output directory
   distDir: '.next',
+
+  // Keep native Node.js modules out of the webpack bundle
+  serverExternalPackages: ['better-sqlite3'],
 };
 
 export default nextConfig;

@@ -23,7 +23,11 @@ export async function POST(request: NextRequest) {
       body.currentPassword ?? "",
       body.newPassword ?? ""
     );
-    return NextResponse.json(result, { status: result.ok ? 200 : 400 });
+    const response = NextResponse.json(result, { status: result.ok ? 200 : 400 });
+    if (result.ok) {
+      response.cookies.set("auth_session", "", { maxAge: 0, path: "/" });
+    }
+    return response;
   } catch {
     return NextResponse.json(
       { ok: false, message: "Ungültige Anfrage." },
