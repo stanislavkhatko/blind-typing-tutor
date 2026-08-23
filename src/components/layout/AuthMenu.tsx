@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User, X } from "lucide-react";
 
 type AuthMode = "login" | "register" | "change-password";
@@ -10,21 +10,62 @@ interface ApiResponse {
   message: string;
 }
 
+interface SessionResponse {
+  authenticated: boolean;
+  username?: string;
+}
+
 export function AuthMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeMode, setActiveMode] = useState<AuthMode | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!isMenuOpen) {
+      return;
+    }
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isMenuOpen]);
+
+  const refreshSession = async () => {
+    try {
+      const response = await fetch("/api/auth/session", {
+        method: "GET",
+        cache: "no-store",
+      });
+      const data = (await response.json()) as SessionResponse;
+      setIsAuthenticated(data.authenticated);
+    } catch {
+      setIsAuthenticated(false);
+    }
+  };
 
   const closeDialog = () => {
     setActiveMode(null);
     setMessage(null);
     setIsLoading(false);
+    setUsername("");
+    setPassword("");
+    setCurrentPassword("");
+    setNewPassword("");
   };
 
   const callAuthApi = async (endpoint: string, payload: Record<string, string>) => {
@@ -39,9 +80,13 @@ export function AuthMenu() {
       const data = (await response.json()) as ApiResponse;
       setMessage(data.message);
       if (data.ok) {
+        setUsername("");
         setPassword("");
         setCurrentPassword("");
         setNewPassword("");
+        if (endpoint === "/api/auth/login") {
+          await refreshSession();
+        }
       }
     } catch {
       setMessage("Fehler bei der Anfrage.");
@@ -58,9 +103,14 @@ export function AuthMenu() {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative" ref={menuRef}>
         <button
-          onClick={() => setIsMenuOpen((prev) => !prev)}
+          onClick={() => {
+            if (!isMenuOpen) {
+              void refreshSession();
+            }
+            setIsMenuOpen((prev) => !prev);
+          }}
           className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-gray-900 dark:text-white transition-colors"
           aria-label="Benutzermenü öffnen"
           title="Benutzerkonto"
@@ -90,16 +140,18 @@ export function AuthMenu() {
             >
               Registrieren
             </button>
-            <button
-              onClick={() => {
-                setActiveMode("change-password");
-                setIsMenuOpen(false);
-                setMessage(null);
-              }}
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              Passwort ändern
-            </button>
+            {isAuthenticated && (
+              <button
+                onClick={() => {
+                  setActiveMode("change-password");
+                  setIsMenuOpen(false);
+                  setMessage(null);
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                Passwort ändern
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -139,20 +191,21 @@ export function AuthMenu() {
                   return;
                 }
                 void callAuthApi("/api/auth/change-password", {
-                  username,
                   currentPassword,
                   newPassword,
                 });
               }}
             >
-              <input
-                type="text"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                placeholder="Benutzername"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                required
-              />
+              {activeMode !== "change-password" && (
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  placeholder="Benutzername"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                  required
+                />
+              )}
 
               {activeMode !== "change-password" && (
                 <input
