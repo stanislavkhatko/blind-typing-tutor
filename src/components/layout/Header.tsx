@@ -10,6 +10,7 @@ import {
 import type { InterfaceLanguage } from "../../translations";
 import type { ContentType } from "../../utils/url";
 import { LandingOverlay } from "./LandingOverlay";
+import { AuthMenu } from "./AuthMenu";
 
 interface HeaderProps {
   title: string;
@@ -56,6 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
+          <AuthMenu />
           <button
             data-testid="theme-toggle-button"
             onClick={() => setDarkMode(!isDarkMode)}
