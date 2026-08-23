@@ -11,5 +11,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ authenticated: false });
   }
 
-  return NextResponse.json({ authenticated: true, username: user.username });
+  return NextResponse.json({ authenticated: true, username: user.username, expiresAt: user.expiresAt });
 }

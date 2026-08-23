@@ -18,6 +18,7 @@ interface UserRow {
 interface SessionUser {
   id: number;
   username: string;
+  expiresAt: number;
 }
 
 declare global {
@@ -158,7 +159,7 @@ export function loginUser(username: string, password: string) {
 export function createSession(userId: number) {
   const token = randomBytes(32).toString("base64url");
   const tokenHash = hashSessionToken(token);
-  const expiresAt = Date.now() + 1000 * 60 * 60 * 24 * 7;
+  const expiresAt = Date.now() + 1000 * 60 * 15;
   const db = getDb();
   db.prepare(
     "INSERT INTO sessions (user_id, token_hash, expires_at) VALUES (?, ?, ?)"
@@ -175,7 +176,7 @@ export function getSessionUser(sessionToken: string): SessionUser | null {
   const db = getDb();
   const row = db
     .prepare(
-      `SELECT users.id, users.username
+      `SELECT users.id, users.username, sessions.expires_at AS expiresAt
        FROM sessions
        INNER JOIN users ON users.id = sessions.user_id
        WHERE sessions.token_hash = ? AND sessions.expires_at > ?`
@@ -183,6 +184,33 @@ export function getSessionUser(sessionToken: string): SessionUser | null {
     .get(tokenHash, Date.now()) as SessionUser | undefined;
 
   return row ?? null;
+}
+
+interface SessionRow {
+  expires_at: number;
+}
+
+export function getSessionExpiry(sessionToken: string): number | null {
+  if (!sessionToken) {
+    return null;
+  }
+
+  const tokenHash = hashSessionToken(sessionToken);
+  const db = getDb();
+  const row = db
+    .prepare(
+      `SELECT expires_at FROM sessions WHERE token_hash = ? AND expires_at > ?`
+    )
+    .get(tokenHash, Date.now()) as SessionRow | undefined;
+
+  return row?.expires_at ?? null;
+}
+
+export function deleteSession(sessionToken: string): void {
+  if (!sessionToken) return;
+  const tokenHash = hashSessionToken(sessionToken);
+  const db = getDb();
+  db.prepare("DELETE FROM sessions WHERE token_hash = ?").run(tokenHash);
 }
 
 export function changePasswordByUserId(

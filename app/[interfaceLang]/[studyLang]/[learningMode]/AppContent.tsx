@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Game } from "@/components/Game";
 import { translations } from "@/translations";
 import { useAppSettings } from "@/hooks/useAppSettings";
@@ -17,9 +18,18 @@ interface AppContentProps {
   };
 }
 
+interface SessionData {
+  authenticated: boolean;
+  username?: string;
+  expiresAt?: number;
+}
+
 export function AppContent({ params }: AppContentProps) {
+  const router = useRouter();
   const settings = useAppSettings(params);
   const t = translations[settings.interfaceLanguage];
+  const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
+  const [sessionChecked, setSessionChecked] = useState(false);
 
   // Initialize GA
   useEffect(() => {
@@ -31,8 +41,30 @@ export function AppContent({ params }: AppContentProps) {
     trackPageView(window.location.pathname, `${t.title} - ${settings.mode}`);
   }, [settings.interfaceLanguage, settings.mode, t.title]);
 
+  // Check session on mount; redirect if not authenticated or expired
+  useEffect(() => {
+    void fetch("/api/auth/session", { cache: "no-store" })
+      .then((res) => res.json() as Promise<SessionData>)
+      .then((data) => {
+        if (!data.authenticated) {
+          router.replace("/login");
+        } else {
+          setSessionExpiresAt(data.expiresAt ?? null);
+          setSessionChecked(true);
+        }
+      })
+      .catch(() => {
+        router.replace("/login");
+      });
+  }, [router]);
+
   // Mobile detection
   const isMobile = useIsMobile();
+
+  // Don't render until session is verified to prevent flash of trainer for expired sessions
+  if (!sessionChecked) {
+    return null;
+  }
 
   if (isMobile) {
     return (
@@ -61,6 +93,7 @@ export function AppContent({ params }: AppContentProps) {
         setDarkMode={settings.setDarkMode}
         studyLang={params.studyLang}
         learningMode={params.learningMode as "words" | "phrases" | "custom"}
+        sessionExpiresAt={sessionExpiresAt}
       />
 
       <main className="grow pt-20">

@@ -11,6 +11,7 @@ import type { InterfaceLanguage } from "../../translations";
 import type { ContentType } from "../../utils/url";
 import { LandingOverlay } from "./LandingOverlay";
 import { AuthMenu } from "./AuthMenu";
+import { SessionTimer } from "./SessionTimer";
 
 interface HeaderProps {
   title: string;
@@ -21,6 +22,7 @@ interface HeaderProps {
   setDarkMode: (dark: boolean) => void;
   studyLang: string;
   learningMode: ContentType;
+  sessionExpiresAt?: number | null;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -32,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   setDarkMode,
   studyLang,
   learningMode,
+  sessionExpiresAt,
 }) => {
   const [showLanding, setShowLanding] = useState(false);
   return (
@@ -57,6 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
+          {sessionExpiresAt != null && <SessionTimer expiresAt={sessionExpiresAt} />}
           <AuthMenu />
           <button
             data-testid="theme-toggle-button"
