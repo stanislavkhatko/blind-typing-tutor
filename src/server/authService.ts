@@ -8,6 +8,7 @@ import {
 } from "node:crypto";
 import Database from "better-sqlite3";
 import { SESSION_TTL_MS } from "@/config/auth";
+import { medicalTerms as defaultMedicalTerms } from "@/data/medicalTerms";
 import type { UserRole } from "@/types/auth";
 
 interface UserRow {
@@ -22,6 +23,11 @@ interface AdminUserListRow {
   id: number;
   username: string;
   role: UserRole;
+}
+
+interface MedicalTermRow {
+  id: number;
+  term: string;
 }
 
 interface SessionUser {
@@ -47,6 +53,7 @@ function getDb() {
     mkdirSync(dirname(dbPath), { recursive: true });
     const db = new Database(dbPath);
     db.pragma("journal_mode = WAL");
+    db.pragma("foreign_keys = ON");
     db.prepare(
       `CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,6 +73,23 @@ function getDb() {
       "UPDATE users SET role = 'user' WHERE role IS NULL OR role NOT IN ('admin', 'user')"
     ).run();
     db.prepare("UPDATE users SET role = 'admin' WHERE username = 'toffel73'").run();
+
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS medical_terms (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        term TEXT NOT NULL UNIQUE,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      )`
+    ).run();
+    const insertMedicalTerm = db.prepare(
+      "INSERT OR IGNORE INTO medical_terms (term) VALUES (?)"
+    );
+    const medicalInsertTransaction = db.transaction((terms: string[]) => {
+      for (const term of terms) {
+        insertMedicalTerm.run(term.trim());
+      }
+    });
+    medicalInsertTransaction(defaultMedicalTerms);
 
     db.prepare(
       `CREATE TABLE IF NOT EXISTS sessions (
@@ -181,6 +205,88 @@ export function listUsersForAdmin(): AdminUserListRow[] {
   return db
     .prepare("SELECT id, username, role FROM users ORDER BY username COLLATE NOCASE ASC")
     .all() as AdminUserListRow[];
+}
+
+export function deleteUserByAdmin(
+  currentAdminUserId: number,
+  targetUserId: number
+): { ok: true; username: string } | { ok: false; message: string } {
+  const db = getDb();
+  const targetUser = db
+    .prepare("SELECT id, username, role FROM users WHERE id = ?")
+    .get(targetUserId) as AdminUserListRow | undefined;
+
+  if (!targetUser) {
+    return { ok: false, message: "Benutzer wurde nicht gefunden." };
+  }
+  if (targetUser.id === currentAdminUserId) {
+    return { ok: false, message: "Das eigene Benutzerkonto kann nicht gelöscht werden." };
+  }
+  if (targetUser.role === "admin") {
+    const adminCount = db
+      .prepare("SELECT COUNT(*) AS count FROM users WHERE role = 'admin'")
+      .get() as { count: number };
+    if (adminCount.count <= 1) {
+      return { ok: false, message: "Der letzte Admin kann nicht gelöscht werden." };
+    }
+  }
+
+  const tx = db.transaction((userId: number) => {
+    db.prepare("DELETE FROM sessions WHERE user_id = ?").run(userId);
+    db.prepare("DELETE FROM users WHERE id = ?").run(userId);
+  });
+  tx(targetUser.id);
+
+  return { ok: true, username: targetUser.username };
+}
+
+export function listMedicalTermsForAdmin(): MedicalTermRow[] {
+  const db = getDb();
+  return db
+    .prepare("SELECT id, term FROM medical_terms ORDER BY term COLLATE NOCASE ASC")
+    .all() as MedicalTermRow[];
+}
+
+export function listMedicalTermsForTraining(): string[] {
+  const terms = listMedicalTermsForAdmin().map((row) => row.term);
+  return terms.length > 0 ? terms : defaultMedicalTerms;
+}
+
+export function addMedicalTermByAdmin(
+  term: string
+): { ok: true; term: string } | { ok: false; message: string } {
+  const normalizedTerm = term.trim();
+  if (!normalizedTerm) {
+    return { ok: false, message: "Fachbegriff darf nicht leer sein." };
+  }
+  if (normalizedTerm.length > 120) {
+    return { ok: false, message: "Fachbegriff darf maximal 120 Zeichen haben." };
+  }
+
+  const db = getDb();
+  const existing = db
+    .prepare("SELECT id FROM medical_terms WHERE lower(term) = lower(?)")
+    .get(normalizedTerm) as { id: number } | undefined;
+  if (existing) {
+    return { ok: false, message: "Fachbegriff existiert bereits." };
+  }
+
+  db.prepare("INSERT INTO medical_terms (term) VALUES (?)").run(normalizedTerm);
+  return { ok: true, term: normalizedTerm };
+}
+
+export function deleteMedicalTermByAdmin(
+  id: number
+): { ok: true; term: string } | { ok: false; message: string } {
+  const db = getDb();
+  const row = db.prepare("SELECT term FROM medical_terms WHERE id = ?").get(id) as
+    | { term: string }
+    | undefined;
+  if (!row) {
+    return { ok: false, message: "Fachbegriff wurde nicht gefunden." };
+  }
+  db.prepare("DELETE FROM medical_terms WHERE id = ?").run(id);
+  return { ok: true, term: row.term };
 }
 
 export function loginUser(username: string, password: string) {

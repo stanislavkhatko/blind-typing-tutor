@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionUser, listUsersForAdmin } from "@/server/authService";
+import { getSessionUser, listMedicalTermsForTraining } from "@/server/authService";
 
 export const runtime = "nodejs";
 
@@ -14,13 +14,6 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  if (sessionUser.role !== "admin") {
-    return NextResponse.json(
-      { ok: false, message: "Keine Berechtigung." },
-      { status: 403 }
-    );
-  }
-
-  const users = listUsersForAdmin();
-  return NextResponse.json({ users, currentUserId: sessionUser.id });
+  return NextResponse.json({ terms: listMedicalTermsForTraining() });
 }
+

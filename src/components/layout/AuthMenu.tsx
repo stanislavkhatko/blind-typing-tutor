@@ -142,15 +142,26 @@ export function AuthMenu() {
             {isAuthenticated && (
               <>
                 {isAdmin && (
-                  <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      router.push("/admin/users");
-                    }}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
-                  >
-                    Benutzerverwaltung
-                  </button>
+                  <>
+                    <button
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        router.push("/admin/users");
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                    >
+                      Benutzerverwaltung
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        router.push("/admin/medical-terms");
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                    >
+                      Fachbegriffe verwalten
+                    </button>
+                  </>
                 )}
                 <button
                   onClick={() => {

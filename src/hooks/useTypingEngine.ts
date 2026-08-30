@@ -23,10 +23,6 @@ function generateKeyboardTrainingText() {
   return Array.from({ length: 3 }, () => pickRandomItem(lesson.patterns)).join(" ");
 }
 
-function generateMedicalTrainingText() {
-  return Array.from({ length: 8 }, () => pickRandomItem(medicalTerms)).join(" ");
-}
-
 export function useTypingEngine({
   mode,
   language,
@@ -47,6 +43,7 @@ export function useTypingEngine({
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
   const [keyFeedbackEvent, setKeyFeedbackEvent] = useState<KeyFeedbackEvent | null>(null);
   const feedbackEventCounterRef = useRef(0);
+  const [medicalTrainingTerms, setMedicalTrainingTerms] = useState<string[]>(medicalTerms);
 
   // Generator
   const generator = useMemo(() => new Generator(language), [language]);
@@ -70,7 +67,8 @@ export function useTypingEngine({
       setText(germanGenerator.getWords());
       setInput("");
     } else if (sessionTrainingPhase === "phase3") {
-      setText(generateMedicalTrainingText());
+      const sourceTerms = medicalTrainingTerms.length > 0 ? medicalTrainingTerms : medicalTerms;
+      setText(Array.from({ length: 8 }, () => pickRandomItem(sourceTerms)).join(" "));
       setInput("");
     } else if (mode === "custom") {
       setInput("");
@@ -90,7 +88,7 @@ export function useTypingEngine({
     setAccuracy(100);
     // Defer focus to ensure DOM is ready
     setTimeout(() => inputRef.current?.focus(), 0);
-  }, [mode, generator, germanGenerator, sessionTrainingPhase]);
+  }, [mode, generator, germanGenerator, sessionTrainingPhase, medicalTrainingTerms]);
 
   // Initialize text when mode or language changes
   /* eslint-disable react-hooks/set-state-in-effect -- intentional mode/language initialization */
@@ -128,6 +126,37 @@ export function useTypingEngine({
     }
   }, [mode, language, generateText, sessionTrainingPhase]);
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  useEffect(() => {
+    if (sessionTrainingPhase !== "phase3") {
+      return;
+    }
+    let cancelled = false;
+    void fetch("/api/training/medical-terms", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) {
+          return null;
+        }
+        return response.json() as Promise<{ terms?: string[] }>;
+      })
+      .then((data) => {
+        if (cancelled || !data || !Array.isArray(data.terms)) {
+          return;
+        }
+        const nextTerms = data.terms
+          .map((term) => term.trim())
+          .filter((term) => term.length > 0);
+        if (nextTerms.length === 0) {
+          return;
+        }
+        setMedicalTrainingTerms(nextTerms);
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionTrainingPhase]);
 
   // Timer for WPM updates
   useEffect(() => {
