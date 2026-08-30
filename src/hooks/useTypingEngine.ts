@@ -2,14 +2,36 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Generator, type Language } from "../utils/Generator";
 import { soundManager } from "../utils/SoundManager";
 import { getStorageItem, setStorageItem } from "../utils/storage";
+import { medicalTerms } from "@/data/medicalTerms";
+import { keyboardTrainingLessons } from "@/data/keyboardTraining";
+import type { SessionTrainingPhase } from "@/utils/sessionTraining";
 
 interface TypingEngineProps {
   mode: "practice" | "beginner" | "custom";
   language: Language;
   correctionMode: boolean;
+  sessionTrainingPhase?: SessionTrainingPhase;
 }
 
-export function useTypingEngine({ mode, language, correctionMode }: TypingEngineProps) {
+function pickRandomItem<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function generateKeyboardTrainingText() {
+  const lesson = pickRandomItem(keyboardTrainingLessons);
+  return Array.from({ length: 3 }, () => pickRandomItem(lesson.patterns)).join(" ");
+}
+
+function generateMedicalTrainingText() {
+  return Array.from({ length: 8 }, () => pickRandomItem(medicalTerms)).join(" ");
+}
+
+export function useTypingEngine({
+  mode,
+  language,
+  correctionMode,
+  sessionTrainingPhase,
+}: TypingEngineProps) {
   const [text, setText] = useState("");
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,6 +47,7 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
 
   // Generator
   const generator = useMemo(() => new Generator(language), [language]);
+  const germanGenerator = useMemo(() => new Generator("de"), []);
 
   // Custom Mode State
   const [customText, setCustomText] = useState(() => getStorageItem("customText") || "");
@@ -36,7 +59,17 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
   const isInitialMountRef = useRef(true);
 
   const generateText = useCallback(() => {
-    if (mode === "custom") {
+    if (sessionTrainingPhase === "phase1") {
+      setText(generateKeyboardTrainingText());
+      setInput("");
+    } else if (sessionTrainingPhase === "phase2") {
+      germanGenerator.update();
+      setText(germanGenerator.getWords());
+      setInput("");
+    } else if (sessionTrainingPhase === "phase3") {
+      setText(generateMedicalTrainingText());
+      setInput("");
+    } else if (mode === "custom") {
       setInput("");
     } else if (mode === "beginner") {
       setText(generator.getOne());
@@ -54,12 +87,15 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
     setAccuracy(100);
     // Defer focus to ensure DOM is ready
     setTimeout(() => inputRef.current?.focus(), 0);
-  }, [mode, generator]);
+  }, [mode, generator, germanGenerator, sessionTrainingPhase]);
 
   // Initialize text when mode or language changes
   /* eslint-disable react-hooks/set-state-in-effect -- intentional mode/language initialization */
   useEffect(() => {
-    if (mode === "custom") {
+    if (sessionTrainingPhase) {
+      setIsCustomSetup(false);
+      generateText();
+    } else if (mode === "custom") {
       const saved = getStorageItem("customText");
       const isSwitchingToCustom = !isInitialMountRef.current && prevModeRef.current !== "custom";
 
@@ -87,7 +123,7 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
     if (isInitialMountRef.current) {
       isInitialMountRef.current = false;
     }
-  }, [mode, language, generateText]);
+  }, [mode, language, generateText, sessionTrainingPhase]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   // Timer for WPM updates

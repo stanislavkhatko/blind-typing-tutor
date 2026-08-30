@@ -23,6 +23,7 @@ interface HeaderProps {
   studyLang: string;
   learningMode: ContentType;
   sessionExpiresAt?: number | null;
+  onSessionRemainingChange?: (remainingMs: number) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -35,6 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
   studyLang,
   learningMode,
   sessionExpiresAt,
+  onSessionRemainingChange,
 }) => {
   const [showLanding, setShowLanding] = useState(false);
   return (
@@ -60,7 +62,12 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
-          {sessionExpiresAt != null && <SessionTimer expiresAt={sessionExpiresAt} />}
+          {sessionExpiresAt != null && (
+            <SessionTimer
+              expiresAt={sessionExpiresAt}
+              onRemainingChange={onSessionRemainingChange}
+            />
+          )}
           <AuthMenu />
           <button
             data-testid="theme-toggle-button"

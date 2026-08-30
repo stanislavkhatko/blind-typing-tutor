@@ -13,6 +13,7 @@ import { BottomControls } from "./game/BottomControls";
 import { CustomSetup } from "./game/CustomSetup";
 import type { LanguageCode } from "../types/keyboard";
 import type { TranslationKeys } from "../translations";
+import type { SessionTrainingPhase } from "@/utils/sessionTraining";
 
 interface GameProps {
   mode: "practice" | "beginner" | "custom";
@@ -31,6 +32,8 @@ interface GameProps {
   onToggleCorrection: () => void;
   onToggleSound: () => void;
   translations: TranslationKeys;
+  sessionTrainingPhase?: SessionTrainingPhase;
+  sessionTrainingPhaseLabel?: string;
 }
 
 export const Game: React.FC<GameProps> = ({
@@ -50,6 +53,8 @@ export const Game: React.FC<GameProps> = ({
   onToggleCorrection,
   onToggleSound,
   translations: gameTranslations,
+  sessionTrainingPhase,
+  sessionTrainingPhaseLabel,
 }) => {
   const {
     text,
@@ -65,7 +70,7 @@ export const Game: React.FC<GameProps> = ({
     isCustomSetup,
     handleInput,
     handleCustomSubmit,
-  } = useTypingEngine({ mode, language, correctionMode });
+  } = useTypingEngine({ mode, language, correctionMode, sessionTrainingPhase });
 
   const currentLayout = useMemo(() => getLayout(layoutId), [layoutId]);
   const shouldShowHints = currentLayout.language !== learningLanguage;
@@ -94,11 +99,19 @@ export const Game: React.FC<GameProps> = ({
         translations={gameTranslations}
       />
 
-      <GameControls
-        mode={mode}
-        setMode={setMode}
-        translations={gameTranslations}
-      />
+      {!sessionTrainingPhase && (
+        <GameControls
+          mode={mode}
+          setMode={setMode}
+          translations={gameTranslations}
+        />
+      )}
+
+      {sessionTrainingPhaseLabel && (
+        <div className="w-full max-w-4xl mb-3 text-sm text-gray-600 dark:text-gray-300">
+          {sessionTrainingPhaseLabel}
+        </div>
+      )}
 
       <TypingDisplay
         text={text}

@@ -6,6 +6,7 @@ import { SESSION_TTL_MS } from "@/config/auth";
 
 interface SessionTimerProps {
   expiresAt: number;
+  onRemainingChange?: (remainingMs: number) => void;
 }
 
 function formatTime(ms: number): string {
@@ -15,7 +16,7 @@ function formatTime(ms: number): string {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-export function SessionTimer({ expiresAt }: SessionTimerProps) {
+export function SessionTimer({ expiresAt, onRemainingChange }: SessionTimerProps) {
   const router = useRouter();
   const [remaining, setRemaining] = useState(() => {
     const remainingMs = new Date(expiresAt).getTime() - Date.now();
@@ -28,6 +29,7 @@ export function SessionTimer({ expiresAt }: SessionTimerProps) {
       const remainingMs = new Date(expiresAt).getTime() - Date.now();
       const ms = Math.min(Math.max(remainingMs, 0), SESSION_TTL_MS);
       setRemaining(ms);
+      onRemainingChange?.(ms);
 
       if (ms <= 0 && !loggedOutRef.current) {
         loggedOutRef.current = true;
@@ -42,7 +44,7 @@ export function SessionTimer({ expiresAt }: SessionTimerProps) {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [expiresAt, router]);
+  }, [expiresAt, onRemainingChange, router]);
 
   const isExpired = remaining <= 0;
 

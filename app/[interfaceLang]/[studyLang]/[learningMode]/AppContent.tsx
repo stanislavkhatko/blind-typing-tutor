@@ -9,6 +9,10 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 import { Header } from "@/components/layout/Header";
 import { MobileMessage } from "@/components/layout/MobileMessage";
 import { initGA, trackPageView } from "@/utils/analytics";
+import {
+  getSessionRemainingMs,
+  getSessionTrainingPhaseMeta,
+} from "@/utils/sessionTraining";
 
 interface AppContentProps {
   params: {
@@ -29,6 +33,7 @@ export function AppContent({ params }: AppContentProps) {
   const settings = useAppSettings(params);
   const t = translations[settings.interfaceLanguage];
   const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
+  const [sessionRemainingMs, setSessionRemainingMs] = useState<number | null>(null);
   const [sessionChecked, setSessionChecked] = useState(false);
 
   // Initialize GA
@@ -50,6 +55,7 @@ export function AppContent({ params }: AppContentProps) {
           router.replace("/login");
         } else {
           setSessionExpiresAt(data.expiresAt);
+          setSessionRemainingMs(getSessionRemainingMs(data.expiresAt));
           setSessionChecked(true);
         }
       })
@@ -57,6 +63,9 @@ export function AppContent({ params }: AppContentProps) {
         router.replace("/login");
       });
   }, [router]);
+
+  const sessionPhaseMeta =
+    sessionRemainingMs != null ? getSessionTrainingPhaseMeta(sessionRemainingMs) : null;
 
   // Mobile detection
   const isMobile = useIsMobile();
@@ -94,6 +103,7 @@ export function AppContent({ params }: AppContentProps) {
         studyLang={params.studyLang}
         learningMode={params.learningMode as "words" | "phrases" | "custom"}
         sessionExpiresAt={sessionExpiresAt}
+        onSessionRemainingChange={setSessionRemainingMs}
       />
 
       <main className="grow pt-20">
@@ -114,6 +124,8 @@ export function AppContent({ params }: AppContentProps) {
           onToggleCorrection={() => settings.setCorrectionMode((v) => !v)}
           onToggleSound={() => settings.setSoundEnabled((v) => !v)}
           translations={t}
+          sessionTrainingPhase={sessionPhaseMeta?.phase}
+          sessionTrainingPhaseLabel={sessionPhaseMeta?.display}
         />
       </main>
     </div>
