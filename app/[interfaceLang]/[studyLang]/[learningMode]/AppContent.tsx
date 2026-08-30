@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Game } from "@/components/Game";
-import { getAllLayouts } from "@/config/layouts";
 import { translations } from "@/translations";
 import { useAppSettings } from "@/hooks/useAppSettings";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Header } from "@/components/layout/Header";
 import { MobileMessage } from "@/components/layout/MobileMessage";
+import type { UserRole } from "@/types/auth";
 import { initGA, trackPageView } from "@/utils/analytics";
 import {
-  POPULAR_LAYOUT_IDS,
-  LEARNING_LANGUAGE_OPTIONS,
-  INTERFACE_LANGUAGE_OPTIONS,
-} from "@/config/constants";
+  getSessionRemainingMs,
+  getSessionTrainingPhaseMeta,
+} from "@/utils/sessionTraining";
 
 interface AppContentProps {
   params: {
@@ -23,9 +23,24 @@ interface AppContentProps {
   };
 }
 
+interface SessionData {
+  authenticated: boolean;
+  user?: {
+    id: number;
+    username: string;
+    role: UserRole;
+  };
+  expiresAt?: number;
+}
+
 export function AppContent({ params }: AppContentProps) {
+  const router = useRouter();
   const settings = useAppSettings(params);
   const t = translations[settings.interfaceLanguage];
+  const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
+  const [sessionRemainingMs, setSessionRemainingMs] = useState<number | null>(null);
+  const [sessionUsername, setSessionUsername] = useState<string | null>(null);
+  const [sessionChecked, setSessionChecked] = useState(false);
 
   // Initialize GA
   useEffect(() => {
@@ -37,25 +52,54 @@ export function AppContent({ params }: AppContentProps) {
     trackPageView(window.location.pathname, `${t.title} - ${settings.mode}`);
   }, [settings.interfaceLanguage, settings.mode, t.title]);
 
-  // Layout filtering and sorting
-  const allLayouts = getAllLayouts();
-  const availableLayouts = allLayouts
-    .filter(
-      (layout) =>
-        POPULAR_LAYOUT_IDS.includes(layout.id) ||
-        layout.id === settings.layoutId
-    )
-    .sort((a, b) => {
-      const aIndex = POPULAR_LAYOUT_IDS.indexOf(a.id);
-      const bIndex = POPULAR_LAYOUT_IDS.indexOf(b.id);
-      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-      if (aIndex !== -1) return -1;
-      if (bIndex !== -1) return 1;
-      return 0;
-    });
+  // Check session on mount; redirect if not authenticated or expired
+  useEffect(() => {
+    void fetch("/api/auth/session", { cache: "no-store" })
+      .then((res) => res.json() as Promise<SessionData>)
+      .then((data) => {
+        if (!data.authenticated || typeof data.expiresAt !== "number") {
+          router.replace("/login");
+        } else {
+          setSessionExpiresAt(data.expiresAt);
+          setSessionRemainingMs(getSessionRemainingMs(data.expiresAt));
+          setSessionUsername(typeof data.user?.username === "string" ? data.user.username : null);
+          setSessionChecked(true);
+        }
+      })
+      .catch(() => {
+        router.replace("/login");
+      });
+  }, [router]);
+
+  const sessionPhaseMeta =
+    sessionRemainingMs != null ? getSessionTrainingPhaseMeta(sessionRemainingMs) : null;
+  const phaseCompletionSessionRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!sessionExpiresAt || !sessionPhaseMeta) {
+      return;
+    }
+    if (sessionPhaseMeta.phase === "phase1") {
+      return;
+    }
+    if (phaseCompletionSessionRef.current === sessionExpiresAt) {
+      return;
+    }
+
+    phaseCompletionSessionRef.current = sessionExpiresAt;
+    void fetch("/api/training/progress/complete-keyboard-phase", {
+      method: "POST",
+      cache: "no-store",
+    }).catch(() => undefined);
+  }, [sessionExpiresAt, sessionPhaseMeta]);
 
   // Mobile detection
   const isMobile = useIsMobile();
+
+  // Don't render until session is verified to prevent flash of trainer for expired sessions
+  if (!sessionChecked) {
+    return null;
+  }
 
   if (isMobile) {
     return (
@@ -77,20 +121,16 @@ export function AppContent({ params }: AppContentProps) {
     >
       <Header
         title={t.title}
-        reportIssue={t.reportIssue}
-        reportIssueTitle={t.reportIssueTitle}
-        support={t.support}
-        supportTitle={t.supportTitle}
-        interfaceLanguageLabel={t.interfaceLanguage}
         lightMode={t.lightMode}
         darkMode={t.darkMode}
         interfaceLanguage={settings.interfaceLanguage}
-        setInterfaceLanguage={settings.setInterfaceLanguage}
-        interfaceLanguageOptions={INTERFACE_LANGUAGE_OPTIONS}
         isDarkMode={settings.darkMode}
         setDarkMode={settings.setDarkMode}
         studyLang={params.studyLang}
         learningMode={params.learningMode as "words" | "phrases" | "custom"}
+        sessionExpiresAt={sessionExpiresAt}
+        onSessionRemainingChange={setSessionRemainingMs}
+        sessionUsername={sessionUsername}
       />
 
       <main className="grow pt-20">
@@ -98,11 +138,7 @@ export function AppContent({ params }: AppContentProps) {
           mode={settings.mode}
           setMode={settings.setMode}
           layoutId={settings.layoutId}
-          setLayoutId={settings.setLayoutId}
           learningLanguage={settings.learningLanguage}
-          setLearningLanguage={settings.setLearningLanguage}
-          learningContentType={settings.learningContentType}
-          setLearningContentType={settings.setLearningContentType}
           language={settings.learningLanguage}
           showKeyboard={settings.showKeyboard}
           showHands={settings.showHands}
@@ -115,8 +151,8 @@ export function AppContent({ params }: AppContentProps) {
           onToggleCorrection={() => settings.setCorrectionMode((v) => !v)}
           onToggleSound={() => settings.setSoundEnabled((v) => !v)}
           translations={t}
-          availableLayouts={availableLayouts}
-          learningLanguageOptions={LEARNING_LANGUAGE_OPTIONS}
+          sessionTrainingPhase={sessionPhaseMeta?.phase}
+          sessionTrainingPhaseLabel={sessionPhaseMeta?.display}
         />
       </main>
     </div>

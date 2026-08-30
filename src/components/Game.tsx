@@ -11,18 +11,16 @@ import { TypingDisplay } from "./game/TypingDisplay";
 import { GameControls } from "./game/GameControls";
 import { BottomControls } from "./game/BottomControls";
 import { CustomSetup } from "./game/CustomSetup";
+import { KeyFeedbackIndicator } from "./game/KeyFeedbackIndicator";
 import type { LanguageCode } from "../types/keyboard";
 import type { TranslationKeys } from "../translations";
+import type { SessionTrainingPhase } from "@/utils/sessionTraining";
 
 interface GameProps {
   mode: "practice" | "beginner" | "custom";
   setMode: (mode: "practice" | "beginner" | "custom") => void;
   layoutId: KeyboardLayoutId;
-  setLayoutId: (layoutId: KeyboardLayoutId) => void;
   learningLanguage: LanguageCode;
-  setLearningLanguage: (lang: LanguageCode) => void;
-  learningContentType: "words" | "phrases" | "custom";
-  setLearningContentType: (type: "words" | "phrases" | "custom") => void;
   language: Language;
   showKeyboard: boolean;
   showHands: boolean;
@@ -35,23 +33,15 @@ interface GameProps {
   onToggleCorrection: () => void;
   onToggleSound: () => void;
   translations: TranslationKeys;
-  availableLayouts: Array<{ id: KeyboardLayoutId; name: string; flag: string }>;
-  learningLanguageOptions: Array<{
-    code: LanguageCode;
-    name: string;
-    flag: string;
-  }>;
+  sessionTrainingPhase?: SessionTrainingPhase;
+  sessionTrainingPhaseLabel?: string;
 }
 
 export const Game: React.FC<GameProps> = ({
   mode,
   setMode,
   layoutId,
-  setLayoutId,
   learningLanguage,
-  setLearningLanguage,
-  learningContentType,
-  setLearningContentType,
   language,
   showKeyboard,
   showHands,
@@ -64,8 +54,8 @@ export const Game: React.FC<GameProps> = ({
   onToggleCorrection,
   onToggleSound,
   translations: gameTranslations,
-  availableLayouts,
-  learningLanguageOptions,
+  sessionTrainingPhase,
+  sessionTrainingPhaseLabel,
 }) => {
   const {
     text,
@@ -76,12 +66,14 @@ export const Game: React.FC<GameProps> = ({
     errors,
     lastPressedKey,
     activeKey,
+    currentKeyboardLesson,
+    keyFeedbackEvent,
     customText,
     setCustomText,
     isCustomSetup,
     handleInput,
     handleCustomSubmit,
-  } = useTypingEngine({ mode, language, correctionMode });
+  } = useTypingEngine({ mode, language, correctionMode, sessionTrainingPhase });
 
   const currentLayout = useMemo(() => getLayout(layoutId), [layoutId]);
   const shouldShowHints = currentLayout.language !== learningLanguage;
@@ -110,16 +102,24 @@ export const Game: React.FC<GameProps> = ({
         translations={gameTranslations}
       />
 
-      <GameControls
-        mode={mode}
-        setMode={setMode}
-        learningContentType={learningContentType}
-        setLearningContentType={setLearningContentType}
-        learningLanguage={learningLanguage}
-        setLearningLanguage={setLearningLanguage}
-        learningLanguageOptions={learningLanguageOptions}
-        translations={gameTranslations}
-      />
+      {!sessionTrainingPhase && (
+        <GameControls
+          mode={mode}
+          setMode={setMode}
+          translations={gameTranslations}
+        />
+      )}
+
+      {sessionTrainingPhaseLabel && (
+        <div className="w-full max-w-4xl mb-3 text-sm text-gray-600 dark:text-gray-300">
+          {sessionTrainingPhaseLabel}
+        </div>
+      )}
+      {sessionTrainingPhase === "phase1" && (
+        <div className="w-full max-w-4xl mb-3 text-sm text-gray-600 dark:text-gray-300">
+          Lektion {currentKeyboardLesson.id} · {currentKeyboardLesson.title}
+        </div>
+      )}
 
       <TypingDisplay
         text={text}
@@ -127,6 +127,8 @@ export const Game: React.FC<GameProps> = ({
         handleInput={handleInput}
         inputRef={inputRef}
       />
+
+      <KeyFeedbackIndicator feedbackEvent={keyFeedbackEvent} />
 
       <BottomControls
         showKeyboard={showKeyboard}
@@ -139,9 +141,6 @@ export const Game: React.FC<GameProps> = ({
         onToggleCorrection={onToggleCorrection}
         soundEnabled={soundEnabled}
         onToggleSound={onToggleSound}
-        layoutId={layoutId}
-        setLayoutId={setLayoutId}
-        availableLayouts={availableLayouts}
         translations={gameTranslations}
       />
 

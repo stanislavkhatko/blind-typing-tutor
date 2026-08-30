@@ -41,6 +41,29 @@ pre,
   }
 }
 
+@keyframes key-feedback-bar-pulse {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.98);
+  }
+  8% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  68% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+
+.key-feedback-bar-pulse {
+  animation: key-feedback-bar-pulse 220ms linear forwards;
+}
+
 /* Keyboard Hand Styles */
 .key.key-target:after {
   content: "";

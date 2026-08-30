@@ -2,14 +2,28 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Generator, type Language } from "../utils/Generator";
 import { soundManager } from "../utils/SoundManager";
 import { getStorageItem, setStorageItem } from "../utils/storage";
+import { medicalTerms } from "@/data/medicalTerms";
+import { getKeyboardLessonById } from "@/data/keyboardTraining";
+import type { SessionTrainingPhase } from "@/utils/sessionTraining";
+import type { KeyFeedbackEvent, KeyFeedbackStatus } from "@/components/game/KeyFeedbackIndicator";
 
 interface TypingEngineProps {
   mode: "practice" | "beginner" | "custom";
   language: Language;
   correctionMode: boolean;
+  sessionTrainingPhase?: SessionTrainingPhase;
 }
 
-export function useTypingEngine({ mode, language, correctionMode }: TypingEngineProps) {
+function pickRandomItem<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+export function useTypingEngine({
+  mode,
+  language,
+  correctionMode,
+  sessionTrainingPhase,
+}: TypingEngineProps) {
   const [text, setText] = useState("");
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -22,9 +36,15 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
   const [wpm, setWpm] = useState(0);
   const [accuracy, setAccuracy] = useState(100);
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
+  const [keyFeedbackEvent, setKeyFeedbackEvent] = useState<KeyFeedbackEvent | null>(null);
+  const feedbackEventCounterRef = useRef(0);
+  const [medicalTrainingTerms, setMedicalTrainingTerms] = useState<string[]>(medicalTerms);
+  const [currentKeyboardLessonId, setCurrentKeyboardLessonId] = useState(1);
+  const [isKeyboardLessonReady, setIsKeyboardLessonReady] = useState(false);
 
   // Generator
   const generator = useMemo(() => new Generator(language), [language]);
+  const germanGenerator = useMemo(() => new Generator("de"), []);
 
   // Custom Mode State
   const [customText, setCustomText] = useState(() => getStorageItem("customText") || "");
@@ -35,8 +55,29 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
   // Track if this is the initial mount
   const isInitialMountRef = useRef(true);
 
+  const currentKeyboardLesson = useMemo(
+    () => getKeyboardLessonById(currentKeyboardLessonId),
+    [currentKeyboardLessonId]
+  );
+
   const generateText = useCallback(() => {
-    if (mode === "custom") {
+    if (sessionTrainingPhase === "phase1") {
+      if (!isKeyboardLessonReady) {
+        return;
+      }
+      setText(
+        Array.from({ length: 3 }, () => pickRandomItem(currentKeyboardLesson.exercises)).join(" ")
+      );
+      setInput("");
+    } else if (sessionTrainingPhase === "phase2") {
+      germanGenerator.update();
+      setText(germanGenerator.getWords());
+      setInput("");
+    } else if (sessionTrainingPhase === "phase3") {
+      const sourceTerms = medicalTrainingTerms.length > 0 ? medicalTrainingTerms : medicalTerms;
+      setText(Array.from({ length: 8 }, () => pickRandomItem(sourceTerms)).join(" "));
+      setInput("");
+    } else if (mode === "custom") {
       setInput("");
     } else if (mode === "beginner") {
       setText(generator.getOne());
@@ -54,12 +95,25 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
     setAccuracy(100);
     // Defer focus to ensure DOM is ready
     setTimeout(() => inputRef.current?.focus(), 0);
-  }, [mode, generator]);
+  }, [
+    mode,
+    generator,
+    germanGenerator,
+    sessionTrainingPhase,
+    medicalTrainingTerms,
+    isKeyboardLessonReady,
+    currentKeyboardLesson,
+  ]);
 
   // Initialize text when mode or language changes
   /* eslint-disable react-hooks/set-state-in-effect -- intentional mode/language initialization */
   useEffect(() => {
-    if (mode === "custom") {
+    if (sessionTrainingPhase) {
+      setIsCustomSetup(false);
+      if (!(sessionTrainingPhase === "phase1" && !isKeyboardLessonReady)) {
+        generateText();
+      }
+    } else if (mode === "custom") {
       const saved = getStorageItem("customText");
       const isSwitchingToCustom = !isInitialMountRef.current && prevModeRef.current !== "custom";
 
@@ -87,8 +141,81 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
     if (isInitialMountRef.current) {
       isInitialMountRef.current = false;
     }
-  }, [mode, language, generateText]);
+  }, [mode, language, generateText, sessionTrainingPhase, isKeyboardLessonReady]);
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  useEffect(() => {
+    if (sessionTrainingPhase !== "phase1") {
+      return;
+    }
+    let cancelled = false;
+    const timeout = setTimeout(() => {
+      setIsKeyboardLessonReady(false);
+      void fetch("/api/training/progress", { cache: "no-store" })
+        .then((response) => {
+          if (!response.ok) {
+            return null;
+          }
+          return response.json() as Promise<{ currentKeyboardLesson?: number }>;
+        })
+        .then((data) => {
+          if (cancelled) {
+            return;
+          }
+          if (typeof data?.currentKeyboardLesson === "number") {
+            setCurrentKeyboardLessonId(data.currentKeyboardLesson);
+          } else {
+            setCurrentKeyboardLessonId(1);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setCurrentKeyboardLessonId(1);
+          }
+        })
+        .finally(() => {
+          if (!cancelled) {
+            setIsKeyboardLessonReady(true);
+          }
+        });
+    }, 0);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [sessionTrainingPhase]);
+
+  useEffect(() => {
+    if (sessionTrainingPhase !== "phase3") {
+      return;
+    }
+    let cancelled = false;
+    void fetch("/api/training/medical-terms", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) {
+          return null;
+        }
+        return response.json() as Promise<{ terms?: string[] }>;
+      })
+      .then((data) => {
+        if (cancelled || !data || !Array.isArray(data.terms)) {
+          return;
+        }
+        const nextTerms = data.terms
+          .map((term) => term.trim())
+          .filter((term) => term.length > 0);
+        if (nextTerms.length === 0) {
+          return;
+        }
+        setMedicalTrainingTerms(nextTerms);
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionTrainingPhase]);
 
   // Timer for WPM updates
   useEffect(() => {
@@ -102,6 +229,11 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
     }
     return () => clearInterval(interval);
   }, [startTime, totalTyped]);
+
+  const triggerKeyFeedback = (status: KeyFeedbackStatus) => {
+    feedbackEventCounterRef.current += 1;
+    setKeyFeedbackEvent({ status, eventId: feedbackEventCounterRef.current });
+  };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -123,6 +255,7 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
       setTotalTyped((prev) => prev + 1);
 
       if (typedChar !== expectedChar) {
+        triggerKeyFeedback("incorrect");
         soundManager.playError();
         setErrors((prev) => {
           const newErrors = prev + 1;
@@ -133,6 +266,7 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
 
         if (correctionMode) return;
       } else {
+        triggerKeyFeedback("correct");
         soundManager.playClick();
         const newTotal = totalTyped + 1;
         setAccuracy(Math.max(0, ((newTotal - errors) / newTotal) * 100));
@@ -185,6 +319,15 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
     const timeoutRefs: ReturnType<typeof setTimeout>[] = [];
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isCustomSetup) return;
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.tagName === "SELECT" ||
+        target.isContentEditable
+      ) {
+        return;
+      }
       timeoutRefs.forEach(clearTimeout);
       timeoutRefs.length = 0;
 
@@ -212,6 +355,8 @@ export function useTypingEngine({ mode, language, correctionMode }: TypingEngine
     text, input, setInput, inputRef,
     startTime, errors, totalTyped, wpm, accuracy,
     lastPressedKey, activeKey,
+    currentKeyboardLesson,
+    keyFeedbackEvent,
     customText, setCustomText, isCustomSetup, setIsCustomSetup,
     handleInput, handleCustomSubmit, generateText
   };

@@ -1,0 +1,2 @@
+export const SESSION_TTL_MS = 10 * 60 * 1000;
+export const SESSION_TTL_SECONDS = SESSION_TTL_MS / 1000;
