@@ -5,6 +5,7 @@ import { getStorageItem, setStorageItem } from "../utils/storage";
 import { medicalTerms } from "@/data/medicalTerms";
 import { keyboardTrainingLessons } from "@/data/keyboardTraining";
 import type { SessionTrainingPhase } from "@/utils/sessionTraining";
+import type { KeyFeedbackEvent, KeyFeedbackStatus } from "@/components/game/KeyFeedbackIndicator";
 
 interface TypingEngineProps {
   mode: "practice" | "beginner" | "custom";
@@ -44,6 +45,8 @@ export function useTypingEngine({
   const [wpm, setWpm] = useState(0);
   const [accuracy, setAccuracy] = useState(100);
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
+  const [keyFeedbackEvent, setKeyFeedbackEvent] = useState<KeyFeedbackEvent | null>(null);
+  const feedbackEventCounterRef = useRef(0);
 
   // Generator
   const generator = useMemo(() => new Generator(language), [language]);
@@ -139,6 +142,11 @@ export function useTypingEngine({
     return () => clearInterval(interval);
   }, [startTime, totalTyped]);
 
+  const triggerKeyFeedback = (status: KeyFeedbackStatus) => {
+    feedbackEventCounterRef.current += 1;
+    setKeyFeedbackEvent({ status, eventId: feedbackEventCounterRef.current });
+  };
+
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
 
@@ -159,6 +167,7 @@ export function useTypingEngine({
       setTotalTyped((prev) => prev + 1);
 
       if (typedChar !== expectedChar) {
+        triggerKeyFeedback("incorrect");
         soundManager.playError();
         setErrors((prev) => {
           const newErrors = prev + 1;
@@ -169,6 +178,7 @@ export function useTypingEngine({
 
         if (correctionMode) return;
       } else {
+        triggerKeyFeedback("correct");
         soundManager.playClick();
         const newTotal = totalTyped + 1;
         setAccuracy(Math.max(0, ((newTotal - errors) / newTotal) * 100));
@@ -257,6 +267,7 @@ export function useTypingEngine({
     text, input, setInput, inputRef,
     startTime, errors, totalTyped, wpm, accuracy,
     lastPressedKey, activeKey,
+    keyFeedbackEvent,
     customText, setCustomText, isCustomSetup, setIsCustomSetup,
     handleInput, handleCustomSubmit, generateText
   };

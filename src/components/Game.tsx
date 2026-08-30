@@ -11,6 +11,7 @@ import { TypingDisplay } from "./game/TypingDisplay";
 import { GameControls } from "./game/GameControls";
 import { BottomControls } from "./game/BottomControls";
 import { CustomSetup } from "./game/CustomSetup";
+import { KeyFeedbackIndicator } from "./game/KeyFeedbackIndicator";
 import type { LanguageCode } from "../types/keyboard";
 import type { TranslationKeys } from "../translations";
 import type { SessionTrainingPhase } from "@/utils/sessionTraining";
@@ -65,6 +66,7 @@ export const Game: React.FC<GameProps> = ({
     errors,
     lastPressedKey,
     activeKey,
+    keyFeedbackEvent,
     customText,
     setCustomText,
     isCustomSetup,
@@ -112,6 +114,10 @@ export const Game: React.FC<GameProps> = ({
           {sessionTrainingPhaseLabel}
         </div>
       )}
+
+      <div className="w-full max-w-4xl mb-2 flex justify-end">
+        <KeyFeedbackIndicator feedbackEvent={keyFeedbackEvent} />
+      </div>
 
       <TypingDisplay
         text={text}

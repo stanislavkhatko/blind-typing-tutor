@@ -24,6 +24,7 @@ interface HeaderProps {
   learningMode: ContentType;
   sessionExpiresAt?: number | null;
   onSessionRemainingChange?: (remainingMs: number) => void;
+  sessionUsername?: string | null;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -37,6 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
   learningMode,
   sessionExpiresAt,
   onSessionRemainingChange,
+  sessionUsername,
 }) => {
   const [showLanding, setShowLanding] = useState(false);
   return (
@@ -67,6 +69,14 @@ export const Header: React.FC<HeaderProps> = ({
               expiresAt={sessionExpiresAt}
               onRemainingChange={onSessionRemainingChange}
             />
+          )}
+          {sessionUsername && (
+            <span
+              className="max-w-36 truncate text-sm font-medium text-gray-700 dark:text-gray-300"
+              title={sessionUsername}
+            >
+              {sessionUsername}
+            </span>
           )}
           <AuthMenu />
           <button

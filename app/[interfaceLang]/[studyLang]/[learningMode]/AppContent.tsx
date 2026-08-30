@@ -34,6 +34,7 @@ export function AppContent({ params }: AppContentProps) {
   const t = translations[settings.interfaceLanguage];
   const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
   const [sessionRemainingMs, setSessionRemainingMs] = useState<number | null>(null);
+  const [sessionUsername, setSessionUsername] = useState<string | null>(null);
   const [sessionChecked, setSessionChecked] = useState(false);
 
   // Initialize GA
@@ -56,6 +57,7 @@ export function AppContent({ params }: AppContentProps) {
         } else {
           setSessionExpiresAt(data.expiresAt);
           setSessionRemainingMs(getSessionRemainingMs(data.expiresAt));
+          setSessionUsername(typeof data.username === "string" ? data.username : null);
           setSessionChecked(true);
         }
       })
@@ -104,6 +106,7 @@ export function AppContent({ params }: AppContentProps) {
         learningMode={params.learningMode as "words" | "phrases" | "custom"}
         sessionExpiresAt={sessionExpiresAt}
         onSessionRemainingChange={setSessionRemainingMs}
+        sessionUsername={sessionUsername}
       />
 
       <main className="grow pt-20">

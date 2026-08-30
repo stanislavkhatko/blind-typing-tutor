@@ -8,8 +8,8 @@ export interface SessionTrainingPhaseMeta {
   display: string;
 }
 
-const TEN_MINUTES_MS = 10 * 60 * 1000;
-const FIVE_MINUTES_MS = 5 * 60 * 1000;
+const PHASE_1_THRESHOLD_MS = 400 * 1000;
+const PHASE_2_THRESHOLD_MS = 200 * 1000;
 
 export function getSessionRemainingMs(expiresAt: number) {
   const remainingMs = new Date(expiresAt).getTime() - Date.now();
@@ -17,10 +17,10 @@ export function getSessionRemainingMs(expiresAt: number) {
 }
 
 export function getSessionTrainingPhase(remainingMs: number): SessionTrainingPhase {
-  if (remainingMs > TEN_MINUTES_MS) {
+  if (remainingMs > PHASE_1_THRESHOLD_MS) {
     return "phase1";
   }
-  if (remainingMs > FIVE_MINUTES_MS) {
+  if (remainingMs > PHASE_2_THRESHOLD_MS) {
     return "phase2";
   }
   return "phase3";
@@ -36,4 +36,3 @@ export function getSessionTrainingPhaseMeta(remainingMs: number): SessionTrainin
   }
   return { phase, label: "Medizinische Begriffe", display: "3/3 · Medizinische Begriffe" };
 }
-
