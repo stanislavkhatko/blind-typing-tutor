@@ -12,22 +12,27 @@ interface KeyFeedbackIndicatorProps {
 }
 
 export function KeyFeedbackIndicator({ feedbackEvent }: KeyFeedbackIndicatorProps) {
-  if (!feedbackEvent) {
-    return <div className="w-9 h-9" />;
-  }
-
-  const classes = feedbackEvent.status === "correct"
-    ? "bg-green-500 text-green-50"
-    : "bg-red-500 text-red-50";
+  const classes =
+    feedbackEvent?.status === "correct"
+      ? "bg-green-500"
+      : feedbackEvent?.status === "incorrect"
+        ? "bg-red-500"
+        : "bg-transparent";
 
   return (
-    <div className="w-9 h-9 flex items-center justify-center" aria-live="polite" aria-atomic="true">
-      <span
-        key={feedbackEvent.eventId}
-        className={`key-feedback-pulse w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold shadow-lg ${classes}`}
-      >
-        {feedbackEvent.status === "correct" ? "✓" : "×"}
-      </span>
+    <div
+      className="w-full max-w-4xl mb-4 flex justify-center"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <div className="w-[85%] h-4 rounded-full bg-transparent">
+        {feedbackEvent && (
+          <span
+            key={feedbackEvent.eventId}
+            className={`key-feedback-bar-pulse block h-4 w-full rounded-full ${classes}`}
+          />
+        )}
+      </div>
     </div>
   );
 }

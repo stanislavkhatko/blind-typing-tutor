@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User, X } from "lucide-react";
+import type { UserRole } from "@/types/auth";
 
 type AuthMode = "change-password";
 
@@ -13,7 +14,10 @@ interface ApiResponse {
 
 interface SessionResponse {
   authenticated: boolean;
-  username?: string;
+  user?: {
+    username: string;
+    role: UserRole;
+  };
 }
 
 export function AuthMenu() {
@@ -23,6 +27,7 @@ export function AuthMenu() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -53,8 +58,10 @@ export function AuthMenu() {
       });
       const data = (await response.json()) as SessionResponse;
       setIsAuthenticated(data.authenticated);
+      setIsAdmin(data.user?.role === "admin");
     } catch {
       setIsAuthenticated(false);
+      setIsAdmin(false);
     }
   };
 
@@ -129,11 +136,22 @@ export function AuthMenu() {
                 }}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
               >
-                Anmelden / Registrieren
+                Anmelden
               </button>
             )}
             {isAuthenticated && (
               <>
+                {isAdmin && (
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      router.push("/admin/users");
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    Benutzerverwaltung
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     void logout();

@@ -15,5 +15,13 @@ export async function GET(request: NextRequest) {
     return response;
   }
 
-  return NextResponse.json({ authenticated: true, username: user.username, expiresAt: user.expiresAt });
+  return NextResponse.json({
+    authenticated: true,
+    user: {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    },
+    expiresAt: user.expiresAt,
+  });
 }

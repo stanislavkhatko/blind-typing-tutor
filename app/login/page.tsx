@@ -4,8 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Keyboard as KeyboardIcon } from "lucide-react";
 
-type Mode = "login" | "register";
-
 interface ApiResponse {
   ok: boolean;
   message: string;
@@ -13,7 +11,6 @@ interface ApiResponse {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<Mode>("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +20,8 @@ export default function LoginPage() {
     event.preventDefault();
     setIsLoading(true);
     setMessage(null);
-    const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -33,13 +29,7 @@ export default function LoginPage() {
       const data = (await response.json()) as ApiResponse;
       setMessage(data.message);
       if (data.ok) {
-        if (mode === "login") {
-          router.push("/");
-        } else {
-          setMode("login");
-          setUsername("");
-          setPassword("");
-        }
+        router.push("/");
       }
     } catch {
       setMessage("Fehler bei der Anfrage.");
@@ -59,9 +49,7 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-            {mode === "login" ? "Anmelden" : "Registrieren"}
-          </h1>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Anmelden</h1>
 
           <form className="space-y-4" onSubmit={(e) => void handleSubmit(e)}>
             <div>
@@ -98,7 +86,7 @@ export default function LoginPage() {
                 placeholder="Passwort"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 required
-                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                autoComplete="current-password"
               />
             </div>
 
@@ -109,45 +97,13 @@ export default function LoginPage() {
             >
               {isLoading
                 ? "Bitte warten..."
-                : mode === "login"
-                  ? "Anmelden"
-                  : "Registrieren"}
+                : "Anmelden"}
             </button>
           </form>
 
           {message && (
             <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">{message}</p>
           )}
-
-          <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-            {mode === "login" ? (
-              <>
-                Noch kein Konto?{" "}
-                <button
-                  onClick={() => {
-                    setMode("register");
-                    setMessage(null);
-                  }}
-                  className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
-                >
-                  Registrieren
-                </button>
-              </>
-            ) : (
-              <>
-                Bereits ein Konto?{" "}
-                <button
-                  onClick={() => {
-                    setMode("login");
-                    setMessage(null);
-                  }}
-                  className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
-                >
-                  Anmelden
-                </button>
-              </>
-            )}
-          </div>
         </div>
       </div>
     </div>

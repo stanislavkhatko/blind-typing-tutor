@@ -115,16 +115,14 @@ export const Game: React.FC<GameProps> = ({
         </div>
       )}
 
-      <div className="w-full max-w-4xl mb-2 flex justify-end">
-        <KeyFeedbackIndicator feedbackEvent={keyFeedbackEvent} />
-      </div>
-
       <TypingDisplay
         text={text}
         input={input}
         handleInput={handleInput}
         inputRef={inputRef}
       />
+
+      <KeyFeedbackIndicator feedbackEvent={keyFeedbackEvent} />
 
       <BottomControls
         showKeyboard={showKeyboard}

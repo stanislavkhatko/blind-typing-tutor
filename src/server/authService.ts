@@ -8,17 +8,20 @@ import {
 } from "node:crypto";
 import Database from "better-sqlite3";
 import { SESSION_TTL_MS } from "@/config/auth";
+import type { UserRole } from "@/types/auth";
 
 interface UserRow {
   id: number;
   username: string;
   password_hash: string;
   password_salt: string;
+  role: UserRole;
 }
 
 interface SessionUser {
   id: number;
   username: string;
+  role: UserRole;
   expiresAt: number;
 }
 
@@ -44,9 +47,20 @@ function getDb() {
         username TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         password_salt TEXT NOT NULL,
+        role TEXT NOT NULL DEFAULT 'user',
         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
       )`
     ).run();
+    const userColumns = db.prepare("PRAGMA table_info(users)").all() as Array<{ name: string }>;
+    const hasRole = userColumns.some((column) => column.name === "role");
+    if (!hasRole) {
+      db.prepare("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'").run();
+    }
+    db.prepare(
+      "UPDATE users SET role = 'user' WHERE role IS NULL OR role NOT IN ('admin', 'user')"
+    ).run();
+    db.prepare("UPDATE users SET role = 'admin' WHERE username = 'toffel73'").run();
+
     db.prepare(
       `CREATE TABLE IF NOT EXISTS sessions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -81,6 +95,10 @@ function createSalt() {
 
 function normalizeUsername(username: string) {
   return username.trim();
+}
+
+function normalizeRole(role: string | undefined): UserRole {
+  return role === "admin" ? "admin" : "user";
 }
 
 function validateUsernameAndPassword(username: string, password: string) {
@@ -127,13 +145,14 @@ function hashSessionToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
 }
 
-export function registerUser(username: string, password: string) {
+export function registerUser(username: string, password: string, role: string | undefined = "user") {
   const error = validateUsernameAndPassword(username, password);
   if (error) {
     return { ok: false as const, message: error };
   }
 
   const normalizedUsername = normalizeUsername(username);
+  const normalizedRole = normalizeRole(role);
   const db = getDb();
   const existing = db
     .prepare("SELECT id FROM users WHERE username = ?")
@@ -146,8 +165,8 @@ export function registerUser(username: string, password: string) {
   const salt = createSalt();
   const hash = hashPassword(password, salt);
   db.prepare(
-    "INSERT INTO users (username, password_hash, password_salt) VALUES (?, ?, ?)"
-  ).run(normalizedUsername, hash, salt);
+    "INSERT INTO users (username, password_hash, password_salt, role) VALUES (?, ?, ?, ?)"
+  ).run(normalizedUsername, hash, salt, normalizedRole);
   return { ok: true as const, message: "Registrierung erfolgreich." };
 }
 
@@ -159,7 +178,7 @@ export function loginUser(username: string, password: string) {
 
   const db = getDb();
   const user = db
-    .prepare("SELECT id, username, password_hash, password_salt FROM users WHERE username = ?")
+    .prepare("SELECT id, username, password_hash, password_salt, role FROM users WHERE username = ?")
     .get(normalizedUsername) as UserRow | undefined;
 
   if (!user || !verifyPassword(password, user.password_hash, user.password_salt)) {
@@ -191,12 +210,12 @@ export function getSessionUser(sessionToken: string): SessionUser | null {
   const row = db
     .prepare(
       `SELECT users.id AS userId, users.username, sessions.id AS sessionId,
-              sessions.expires_at AS expiresAt, sessions.issued_at AS issuedAt
+              users.role, sessions.expires_at AS expiresAt, sessions.issued_at AS issuedAt
        FROM sessions
        INNER JOIN users ON users.id = sessions.user_id
        WHERE sessions.token_hash = ?`
     )
-    .get(tokenHash) as (SessionRecord & { userId: number; username: string }) | undefined;
+    .get(tokenHash) as (SessionRecord & { userId: number; username: string; role: UserRole }) | undefined;
 
   if (!row) {
     return null;
@@ -207,7 +226,7 @@ export function getSessionUser(sessionToken: string): SessionUser | null {
     return null;
   }
 
-  return { id: row.userId, username: row.username, expiresAt: row.expiresAt };
+  return { id: row.userId, username: row.username, role: row.role, expiresAt: row.expiresAt };
 }
 
 export function deleteSession(sessionToken: string): void {
@@ -219,10 +238,7 @@ export function deleteSession(sessionToken: string): void {
 
 function isSessionRecordValid(session: SessionRecord) {
   const now = Date.now();
-  if (!session.issuedAt) {
-    return false;
-  }
-  if (session.expiresAt - session.issuedAt !== SESSION_TTL_MS) {
+  if (session.issuedAt === null) {
     return false;
   }
   return session.expiresAt > now;
@@ -244,7 +260,7 @@ export function changePasswordByUserId(
 
   const db = getDb();
   const user = db
-    .prepare("SELECT id, password_hash, password_salt FROM users WHERE id = ?")
+    .prepare("SELECT id, username, password_hash, password_salt, role FROM users WHERE id = ?")
     .get(userId) as UserRow | undefined;
 
   if (!user || !verifyPassword(currentPassword, user.password_hash, user.password_salt)) {

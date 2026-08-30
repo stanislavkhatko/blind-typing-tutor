@@ -8,6 +8,7 @@ import { useAppSettings } from "@/hooks/useAppSettings";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Header } from "@/components/layout/Header";
 import { MobileMessage } from "@/components/layout/MobileMessage";
+import type { UserRole } from "@/types/auth";
 import { initGA, trackPageView } from "@/utils/analytics";
 import {
   getSessionRemainingMs,
@@ -24,7 +25,11 @@ interface AppContentProps {
 
 interface SessionData {
   authenticated: boolean;
-  username?: string;
+  user?: {
+    id: number;
+    username: string;
+    role: UserRole;
+  };
   expiresAt?: number;
 }
 
@@ -57,7 +62,7 @@ export function AppContent({ params }: AppContentProps) {
         } else {
           setSessionExpiresAt(data.expiresAt);
           setSessionRemainingMs(getSessionRemainingMs(data.expiresAt));
-          setSessionUsername(typeof data.username === "string" ? data.username : null);
+          setSessionUsername(typeof data.user?.username === "string" ? data.user.username : null);
           setSessionChecked(true);
         }
       })
