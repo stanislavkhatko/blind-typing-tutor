@@ -1,20 +1,33 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import type { UserRole } from "@/types/auth";
+import { USER_ROLE_LABELS, type UserRole } from "@/types/auth";
 
 interface ApiResponse {
   ok: boolean;
   message: string;
 }
 
-export function AdminUsersForm() {
+interface AdminUsersFormProps {
+  onCancel: () => void;
+  onSuccess: (message: string) => void;
+}
+
+export function AdminUsersForm({ onCancel, onSuccess }: AdminUsersFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [role, setRole] = useState<UserRole>("user");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const resetForm = () => {
+    setUsername("");
+    setPassword("");
+    setPasswordConfirm("");
+    setRole("user");
+    setMessage(null);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,11 +47,8 @@ export function AdminUsersForm() {
       });
       const data = (await response.json()) as ApiResponse;
       if (data.ok) {
-        setMessage("Benutzer wurde erfolgreich angelegt.");
-        setUsername("");
-        setPassword("");
-        setPasswordConfirm("");
-        setRole("user");
+        resetForm();
+        onSuccess("Benutzer wurde erfolgreich angelegt.");
       } else {
         setMessage(data.message);
       }
@@ -115,18 +125,30 @@ export function AdminUsersForm() {
           onChange={(event) => setRole(event.target.value as UserRole)}
           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
         >
-          <option value="user">user</option>
-          <option value="admin">admin</option>
+          <option value="user">{USER_ROLE_LABELS.user}</option>
+          <option value="admin">{USER_ROLE_LABELS.admin}</option>
         </select>
       </div>
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60"
-      >
-        {isLoading ? "Bitte warten..." : "Benutzer anlegen"}
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="flex-1 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60"
+        >
+          {isLoading ? "Bitte warten..." : "Benutzer anlegen"}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            resetForm();
+            onCancel();
+          }}
+          className="flex-1 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+        >
+          Abbrechen
+        </button>
+      </div>
 
       {message && <p className="text-sm text-gray-700 dark:text-gray-300">{message}</p>}
     </form>

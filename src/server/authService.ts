@@ -18,6 +18,12 @@ interface UserRow {
   role: UserRole;
 }
 
+interface AdminUserListRow {
+  id: number;
+  username: string;
+  role: UserRole;
+}
+
 interface SessionUser {
   id: number;
   username: string;
@@ -168,6 +174,13 @@ export function registerUser(username: string, password: string, role: string | 
     "INSERT INTO users (username, password_hash, password_salt, role) VALUES (?, ?, ?, ?)"
   ).run(normalizedUsername, hash, salt, normalizedRole);
   return { ok: true as const, message: "Registrierung erfolgreich." };
+}
+
+export function listUsersForAdmin(): AdminUserListRow[] {
+  const db = getDb();
+  return db
+    .prepare("SELECT id, username, role FROM users ORDER BY username COLLATE NOCASE ASC")
+    .all() as AdminUserListRow[];
 }
 
 export function loginUser(username: string, password: string) {
