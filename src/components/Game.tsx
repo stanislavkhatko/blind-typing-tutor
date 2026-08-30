@@ -66,6 +66,7 @@ export const Game: React.FC<GameProps> = ({
     errors,
     lastPressedKey,
     activeKey,
+    currentKeyboardLesson,
     keyFeedbackEvent,
     customText,
     setCustomText,
@@ -112,6 +113,11 @@ export const Game: React.FC<GameProps> = ({
       {sessionTrainingPhaseLabel && (
         <div className="w-full max-w-4xl mb-3 text-sm text-gray-600 dark:text-gray-300">
           {sessionTrainingPhaseLabel}
+        </div>
+      )}
+      {sessionTrainingPhase === "phase1" && (
+        <div className="w-full max-w-4xl mb-3 text-sm text-gray-600 dark:text-gray-300">
+          Lektion {currentKeyboardLesson.id} · {currentKeyboardLesson.title}
         </div>
       )}
 

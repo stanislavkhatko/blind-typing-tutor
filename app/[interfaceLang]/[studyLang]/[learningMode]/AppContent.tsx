@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Game } from "@/components/Game";
 import { translations } from "@/translations";
@@ -73,6 +73,25 @@ export function AppContent({ params }: AppContentProps) {
 
   const sessionPhaseMeta =
     sessionRemainingMs != null ? getSessionTrainingPhaseMeta(sessionRemainingMs) : null;
+  const phaseCompletionSessionRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!sessionExpiresAt || !sessionPhaseMeta) {
+      return;
+    }
+    if (sessionPhaseMeta.phase === "phase1") {
+      return;
+    }
+    if (phaseCompletionSessionRef.current === sessionExpiresAt) {
+      return;
+    }
+
+    phaseCompletionSessionRef.current = sessionExpiresAt;
+    void fetch("/api/training/progress/complete-keyboard-phase", {
+      method: "POST",
+      cache: "no-store",
+    }).catch(() => undefined);
+  }, [sessionExpiresAt, sessionPhaseMeta]);
 
   // Mobile detection
   const isMobile = useIsMobile();

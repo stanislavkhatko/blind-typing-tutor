@@ -8,6 +8,7 @@ import {
 } from "node:crypto";
 import Database from "better-sqlite3";
 import { SESSION_TTL_MS } from "@/config/auth";
+import { getKeyboardLessonById, getLastKeyboardLessonId } from "@/data/keyboardTraining";
 import { medicalTerms as defaultMedicalTerms } from "@/data/medicalTerms";
 import type { UserRole } from "@/types/auth";
 
@@ -41,6 +42,12 @@ interface SessionRecord {
   sessionId: number;
   expiresAt: number;
   issuedAt: number | null;
+}
+
+interface UserLearningProgressRow {
+  userId: number;
+  currentKeyboardLesson: number;
+  lastCompletedSessionExpiresAt: number | null;
 }
 
 declare global {
@@ -99,6 +106,15 @@ function getDb() {
         issued_at INTEGER,
         expires_at INTEGER NOT NULL,
         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )`
+    ).run();
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS user_learning_progress (
+        user_id INTEGER PRIMARY KEY,
+        current_keyboard_lesson INTEGER NOT NULL DEFAULT 1,
+        last_completed_session_expires_at INTEGER,
+        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )`
     ).run();
@@ -175,6 +191,14 @@ function hashSessionToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
 }
 
+function sanitizeKeyboardLesson(lesson: number) {
+  const maxLesson = getLastKeyboardLessonId();
+  if (!Number.isFinite(lesson)) {
+    return 1;
+  }
+  return Math.min(Math.max(Math.floor(lesson), 1), maxLesson);
+}
+
 export function registerUser(username: string, password: string, role: string | undefined = "user") {
   const error = validateUsernameAndPassword(username, password);
   if (error) {
@@ -205,6 +229,75 @@ export function listUsersForAdmin(): AdminUserListRow[] {
   return db
     .prepare("SELECT id, username, role FROM users ORDER BY username COLLATE NOCASE ASC")
     .all() as AdminUserListRow[];
+}
+
+export function getKeyboardProgressForUser(userId: number) {
+  const db = getDb();
+  db.prepare("INSERT OR IGNORE INTO user_learning_progress (user_id) VALUES (?)").run(userId);
+  const row = db
+    .prepare(
+      `SELECT user_id AS userId,
+              current_keyboard_lesson AS currentKeyboardLesson,
+              last_completed_session_expires_at AS lastCompletedSessionExpiresAt
+       FROM user_learning_progress
+       WHERE user_id = ?`
+    )
+    .get(userId) as UserLearningProgressRow | undefined;
+
+  const lessonId = sanitizeKeyboardLesson(row?.currentKeyboardLesson ?? 1);
+  if (!row || row.currentKeyboardLesson !== lessonId) {
+    db.prepare(
+      `UPDATE user_learning_progress
+       SET current_keyboard_lesson = ?, updated_at = CURRENT_TIMESTAMP
+       WHERE user_id = ?`
+    ).run(lessonId, userId);
+  }
+  const lesson = getKeyboardLessonById(lessonId);
+  return {
+    currentKeyboardLesson: lesson.id,
+    lessonTitle: lesson.title,
+  };
+}
+
+export function completeKeyboardPhaseForSession(userId: number, sessionExpiresAt: number) {
+  const db = getDb();
+  const maxLesson = getLastKeyboardLessonId();
+  const tx = db.transaction((dbUserId: number, dbSessionExpiresAt: number) => {
+    db.prepare("INSERT OR IGNORE INTO user_learning_progress (user_id) VALUES (?)").run(dbUserId);
+    const current = db
+      .prepare(
+        `SELECT current_keyboard_lesson AS currentKeyboardLesson,
+                last_completed_session_expires_at AS lastCompletedSessionExpiresAt
+         FROM user_learning_progress
+         WHERE user_id = ?`
+      )
+      .get(dbUserId) as UserLearningProgressRow;
+
+    const currentLesson = sanitizeKeyboardLesson(current.currentKeyboardLesson);
+    if (current.lastCompletedSessionExpiresAt === dbSessionExpiresAt) {
+      return { lessonId: currentLesson, advanced: false };
+    }
+
+    const nextLesson = Math.min(currentLesson + 1, maxLesson);
+    db.prepare(
+      `UPDATE user_learning_progress
+       SET current_keyboard_lesson = ?,
+           last_completed_session_expires_at = ?,
+           updated_at = CURRENT_TIMESTAMP
+       WHERE user_id = ?`
+    ).run(nextLesson, dbSessionExpiresAt, dbUserId);
+
+    return { lessonId: nextLesson, advanced: nextLesson !== currentLesson };
+  });
+
+  const result = tx(userId, sessionExpiresAt);
+  const lesson = getKeyboardLessonById(result.lessonId);
+  return {
+    ok: true as const,
+    advanced: result.advanced,
+    currentKeyboardLesson: lesson.id,
+    lessonTitle: lesson.title,
+  };
 }
 
 export function deleteUserByAdmin(
